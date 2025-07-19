@@ -147,7 +147,7 @@ const signIn = () => {
             {Platform.OS === "ios" && (
               <Button onPress={handleSignInWithApple} className="bg-black">
                 <Text className="text-white font-semibold">
-                  🍎 Sign in with Apple
+                  Sign in with Apple
                 </Text>
               </Button>
             )}

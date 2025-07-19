@@ -7,7 +7,7 @@ export async function signOut() {
       "Sign out",
       "Do you want to sign out of your account?",
       async () => {
-        await amplifySignOut({ global: true });
+        await amplifySignOut({ global: false });
       }
     );
     console.log("Signed out");
@@ -18,7 +18,7 @@ export async function signOut() {
 
 export async function signOutAutomatic() {
   try {
-    await amplifySignOut({ global: true });
+    await amplifySignOut({ global: false });
     console.log("Signed out");
   } catch (error) {
     console.error("Error signing out:", error);
