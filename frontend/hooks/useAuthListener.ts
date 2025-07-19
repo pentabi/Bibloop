@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { fetchUserAttributes } from "aws-amplify/auth";
 import { clearUser, setUser, userLogIn } from "../redux/slices/userSlice";
 import { Hub } from "aws-amplify/utils";
+import { signOutAutomatic } from "~/utils/signOut";
 
 //Checks the user's login status
 //changes their email and login parameters on redux
@@ -31,6 +32,7 @@ export default function useAuthListener() {
         dispatch(userLogIn(userIdentifier));
       } catch (error) {
         console.log("Error fetching user attributes:", error);
+        signOutAutomatic();
         dispatch(clearUser());
       } finally {
         setIsAuthLoaded(true);

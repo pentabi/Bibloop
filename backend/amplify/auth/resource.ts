@@ -14,8 +14,13 @@ export const auth = defineAuth({
         privateKey: secret("SIWA_PRIVATE_KEY"),
         teamId: secret("SIWA_TEAM_ID"),
       },
-      callbackUrls: ["myapp://main"],
-      logoutUrls: ["myapp://auth/signIn"],
+      callbackUrls: ["myapp://"],
+      logoutUrls: ["myapp://"],
+    },
+  },
+  userAttributes: {
+    email: {
+      required: false, // Make email optional for external providers
     },
   },
 });

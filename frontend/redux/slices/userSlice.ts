@@ -2,13 +2,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface UserState {
   isLoggedIn: boolean;
-  email: string | null;
+  userIdentifier: string | null; // Changed from 'email' to be more generic
   name: string | null;
 }
 
 const initialState: UserState = {
   isLoggedIn: false,
-  email: null,
+  userIdentifier: null, // Changed from 'email'
   name: null,
 };
 
@@ -17,18 +17,19 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser(state, action: PayloadAction<Omit<UserState, "isLoggedIn">>) {
-      (state.email = action.payload.email), (state.name = action.payload.name);
+      (state.userIdentifier = action.payload.userIdentifier),
+        (state.name = action.payload.name);
       state.isLoggedIn = true;
       console.log("redux: full user profile set:", action.payload);
     },
     userLogIn(state, action: PayloadAction<string>) {
-      state.email = action.payload;
+      state.userIdentifier = action.payload;
       // Set logged in status if we have any identifier (email, sub, or fallback)
       state.isLoggedIn = !!action.payload && action.payload.trim() !== "";
-      console.log("redux: user logged in: ", state.email);
+      console.log("redux: user logged in: ", state.userIdentifier);
     },
     clearUser(state) {
-      state.email = null;
+      state.userIdentifier = null;
       state.name = null;
       state.isLoggedIn = false;
       console.log("redux: user cleared");
