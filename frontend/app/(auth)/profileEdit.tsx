@@ -4,7 +4,7 @@ import React from "react";
 const profileEdit = () => {
   return (
     <View>
-      <Text>profileEdit</Text>
+      <Text>プロフィール編集</Text>
     </View>
   );
 };

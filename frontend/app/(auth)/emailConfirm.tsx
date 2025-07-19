@@ -29,17 +29,18 @@ const emailConfirm = () => {
 
   const handleConfirm = async () => {
     try {
+      const emailString = Array.isArray(email) ? email[0] : email;
       const { isSignUpComplete } = await confirmSignUp({
-        username: email,
+        username: emailString,
         confirmationCode: code,
       });
 
       if (isSignUpComplete) {
-        Alert.alert("Success", "Email confirmed. Please sign in.");
+        Alert.alert("成功", "メールが確認されました。サインインしてください。");
         //   dispatch(
         //     showToast({
-        //       title: "Successfully created account",
-        //       context: "Email confirmed. Please sign in",
+        //       title: "アカウント作成成功",
+        //       context: "メールが確認されました。サインインしてください",
         //       type: ToastType.Success,
         //     })
         //   );
@@ -80,8 +81,8 @@ const emailConfirm = () => {
             <ChevronLeft size={30}></ChevronLeft>
           </TouchableOpacity>
           <View>
-            <H1>Confirm Email</H1>
-            <H3>Check your email for the 6-digit code</H3>
+            <H1>メール確認</H1>
+            <H3>6桁の確認コードをメールでご確認ください</H3>
             <View className="flex-row gap-2 w-40 mt-3">
               <View className="h-1.5 flex-1 bg-gray-300 rounded-full" />
               <View className="h-1.5 flex-1 bg-black rounded-full" />
@@ -136,7 +137,7 @@ const emailConfirm = () => {
           </View>
           <View className="gap-1">
             <Button onPress={handleConfirm} className="bg-theme">
-              <Text className="text-white font-semibold">Confirm</Text>
+              <Text className="text-white font-semibold">確認</Text>
             </Button>
           </View>
         </KeyboardAvoidingView>

@@ -7,7 +7,7 @@ export async function confirm(
   onConfirm: () => void
 ) {
   Alert.alert(title, message, [
-    { text: "No", style: "cancel" },
-    { text: "Yes", style: "destructive", onPress: onConfirm },
+    { text: "いいえ", style: "cancel" },
+    { text: "はい", style: "destructive", onPress: onConfirm },
   ]);
 }

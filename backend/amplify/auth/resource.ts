@@ -14,6 +14,10 @@ export const auth = defineAuth({
         privateKey: secret("SIWA_PRIVATE_KEY"),
         teamId: secret("SIWA_TEAM_ID"),
       },
+      google: {
+        clientId: secret("GOOGLE_CLIENT_ID"),
+        clientSecret: secret("GOOGLE_CLIENT_SECRET"),
+      },
       callbackUrls: ["myapp://"],
       logoutUrls: ["myapp://"],
     },

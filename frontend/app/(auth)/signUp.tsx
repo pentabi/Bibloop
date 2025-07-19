@@ -30,7 +30,7 @@ const signUp = () => {
         console.log("not same password");
         //   dispatch(
         //     showToast({
-        //       context: "passwords don not much",
+        //       context: "パスワードが一致しません",
         //       ToastType: ToastType.Error,
         //     })
         //   );
@@ -80,7 +80,7 @@ const signUp = () => {
           {/* Title */}
           <View className="h-40" />
           <View className="gap-3">
-            <H1>Sign Up</H1>
+            <H1>アカウント作成</H1>
             <View className="flex-row gap-2 w-40">
               <View className="h-1.5 flex-1 bg-black rounded-full" />
               <View className="h-1.5 flex-1 bg-gray-300 rounded-full" />
@@ -88,7 +88,7 @@ const signUp = () => {
           </View>
           {/* Form */}
           <View>
-            <Text className="text-lg opacity-50">Email</Text>
+            <Text className="text-lg opacity-50">Eメール</Text>
             <View className="flex-row items-center rounded-2xl relative">
               <View
                 style={{ borderRadius: 16, overflow: "hidden" }}
@@ -105,7 +105,7 @@ const signUp = () => {
                 </BlurView>
               </View>
             </View>
-            <Text className="text-lg opacity-50">Password</Text>
+            <Text className="text-lg opacity-50">パスワード</Text>
             <View className="flex-row items-center relative">
               <View
                 style={{ borderRadius: 16, overflow: "hidden" }}
@@ -122,7 +122,7 @@ const signUp = () => {
                 </BlurView>
               </View>
             </View>
-            <Text className="text-lg opacity-50">Confirm Password</Text>
+            <Text className="text-lg opacity-50">パスワード確認</Text>
             <View className="flex-row items-center relative">
               <View
                 style={{ borderRadius: 16, overflow: "hidden" }}
@@ -143,7 +143,7 @@ const signUp = () => {
           {/* Submit */}
           <View className="gap-1">
             <Button onPress={handleSignUp} className="bg-theme">
-              <Text className="text-white font-semibold">LogIn</Text>
+              <Text className="text-white font-semibold">サインイン</Text>
             </Button>
             <TouchableOpacity
               onPress={() => {
@@ -151,8 +151,10 @@ const signUp = () => {
               }}
               className="flex-row justify-center gap-1"
             >
-              <Text className="opacity-50">Already have an account?</Text>
-              <Text className="font-semibold">Sign Up</Text>
+              <Text className="opacity-50">
+                すでにアカウントをお持ちですか？
+              </Text>
+              <Text className="font-semibold">ログイン</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>

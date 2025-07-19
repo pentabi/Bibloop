@@ -14,18 +14,19 @@ const home = () => {
 
   // Helper function to determine what type of identifier we have
   const getUserDisplayInfo = () => {
-    if (!user.userIdentifier) return { type: "None", display: "Not logged in" };
+    if (!user.userIdentifier)
+      return { type: "なし", display: "ログインしていません" };
 
     if (user.userIdentifier.includes("@")) {
-      return { type: "Email", display: user.userIdentifier };
+      return { type: "メール", display: user.userIdentifier };
     } else if (user.userIdentifier.includes("-")) {
       return {
         type: "Apple ID",
         display:
-          "Apple User (ID: " + user.userIdentifier.substring(0, 8) + "...)",
+          "Appleユーザー (ID: " + user.userIdentifier.substring(0, 8) + "...)",
       };
     } else {
-      return { type: "Other", display: user.userIdentifier };
+      return { type: "その他", display: user.userIdentifier };
     }
   };
 
@@ -33,13 +34,15 @@ const home = () => {
 
   return (
     <View className="mt-20 p-4">
-      <Text className="text-xl font-bold mb-4">Hello Michi! 👋</Text>
+      <Text className="text-xl font-bold mb-4">こんにちは、みち！👋</Text>
 
       <View className="mb-4 p-3 bg-gray-100 rounded-lg">
-        <Text className="font-semibold">User Info:</Text>
-        <Text>Type: {displayInfo.type}</Text>
-        <Text>Identifier: {displayInfo.display}</Text>
-        <Text>Logged In: {user.isLoggedIn ? "Yes" : "No"}</Text>
+        <Text className="font-semibold">ユーザー情報:</Text>
+        <Text>種類: {displayInfo.type}</Text>
+        <Text>識別子: {displayInfo.display}</Text>
+        <Text>
+          ログイン状態: {user.isLoggedIn ? "ログイン中" : "ログアウト中"}
+        </Text>
       </View>
 
       <TouchableOpacity
@@ -47,7 +50,7 @@ const home = () => {
         className="flex-row items-center bg-red-500 p-3 rounded-lg mb-4"
       >
         <LogOut color="white" size={20} />
-        <Text className="text-white ml-2 font-semibold">Sign Out</Text>
+        <Text className="text-white ml-2 font-semibold">ログアウト</Text>
       </TouchableOpacity>
 
       <Image

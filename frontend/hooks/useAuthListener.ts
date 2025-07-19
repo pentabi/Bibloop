@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { fetchUserAttributes } from "aws-amplify/auth";
+import { fetchUserAttributes, getCurrentUser } from "aws-amplify/auth";
 import { clearUser, setUser, userLogIn } from "../redux/slices/userSlice";
 import { Hub } from "aws-amplify/utils";
 import { signOutAutomatic } from "~/utils/signOut";
@@ -15,8 +15,9 @@ export default function useAuthListener() {
     //function to attempt to getUser
     const getUser = async () => {
       try {
+        const user = await getCurrentUser();
         const attrs = await fetchUserAttributes();
-        console.log("user attributes:", attrs);
+        console.log({ user, attrs });
 
         // For Apple Sign In, use any available identifier
         let userIdentifier = attrs.email;
@@ -62,6 +63,7 @@ export default function useAuthListener() {
           break;
         case "signInWithRedirect":
           getUser(); // Fetch user attributes after successful Apple Sign In
+
           console.log("signInWithRedirect API has successfully been resolved.");
           break;
         case "signInWithRedirect_failure":
@@ -71,6 +73,11 @@ export default function useAuthListener() {
           );
           // Still try to get user in case they're actually signed in
           getUser();
+          break;
+        case "customOAuthState":
+          console.log("custom Oauth state");
+          const state = data.data;
+          console.log(state);
           break;
         case "signOut_failure":
           dispatch(clearUser());

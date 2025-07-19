@@ -45,7 +45,7 @@ const signIn = () => {
       console.error("Error logging in:", e);
       // dispatch(
       //   showToast({
-      //     title: "Error logging in",
+      //     title: "ログインエラー",
       //     context: e instanceof Error ? e.message : String(e),
       //     type: ToastType.Error,
       //   })
@@ -62,7 +62,7 @@ const signIn = () => {
       console.error("Error signing in with Apple:", error);
       // dispatch(
       //   showToast({
-      //     title: "Error signing in with Apple",
+      //     title: "Appleサインインエラー",
       //     context: error instanceof Error ? error.message : String(error),
       //     type: ToastType.Error,
       //   })
@@ -147,7 +147,7 @@ const signIn = () => {
             {Platform.OS === "ios" && (
               <Button onPress={handleSignInWithApple} className="bg-black">
                 <Text className="text-white font-semibold">
-                  Sign in with Apple
+                  🍎 Appleでサインイン
                 </Text>
               </Button>
             )}
