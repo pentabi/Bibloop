@@ -16,12 +16,12 @@ export const auth = defineAuth({
         scopes: ["email"],
       },
       callbackUrls: [
-        "myapp://auth/callback/",
-        "http://localhost:3000/auth/callback", // For development
+        "myapp://auth/callback",
+        // "exp://127.0.0.1:8081/--/auth/callback", // For Expo development
       ],
       logoutUrls: [
-        "myapp://auth/signout/",
-        "http://localhost:3000/auth/signout", // For development
+        "myapp://auth/signout",
+        // "exp://127.0.0.1:8081/--/auth/signout", // For Expo development
       ],
     },
   },

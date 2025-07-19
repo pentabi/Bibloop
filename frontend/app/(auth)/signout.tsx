@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import { View, Text } from 'react-native';
-import { useRouter } from 'expo-router';
-import { signOut } from 'aws-amplify/auth';
+import React, { useEffect } from "react";
+import { View, Text } from "react-native";
+import { useRouter } from "expo-router";
+import { signOut } from "aws-amplify/auth";
 
 export default function SignOutCallback() {
   const router = useRouter();
@@ -10,13 +10,13 @@ export default function SignOutCallback() {
     const handleSignOut = async () => {
       try {
         await signOut();
-        console.log('Sign out successful');
+        console.log("Sign out successful");
         // Navigate to sign in page
-        router.replace('/(auth)/signIn');
+        router.replace("/(auth)/signIn");
       } catch (error) {
-        console.error('Error signing out:', error);
+        console.error("Error signing out:", error);
         // Still navigate to sign in page
-        router.replace('/(auth)/signIn');
+        router.replace("/(auth)/signIn");
       }
     };
 

@@ -51,10 +51,10 @@ const signIn = () => {
   const handleSignInWithApple = async () => {
     try {
       await signInWithRedirect({
-        provider: 'Apple'
+        provider: "Apple",
       });
     } catch (error) {
-      console.error('Error signing in with Apple:', error);
+      console.error("Error signing in with Apple:", error);
       // dispatch(
       //   showToast({
       //     title: "Error signing in with Apple",
@@ -130,13 +130,15 @@ const signIn = () => {
             <Button onPress={handleLogIn} className="bg-theme">
               <Text className="text-white font-semibold">ログイン</Text>
             </Button>
-            
-            {Platform.OS === 'ios' && (
+
+            {Platform.OS === "ios" && (
               <Button onPress={handleSignInWithApple} className="bg-black">
-                <Text className="text-white font-semibold">🍎 Sign in with Apple</Text>
+                <Text className="text-white font-semibold">
+                  🍎 Sign in with Apple
+                </Text>
               </Button>
             )}
-            
+
             <TouchableOpacity
               onPress={() => {
                 router.navigate("/signUp");
