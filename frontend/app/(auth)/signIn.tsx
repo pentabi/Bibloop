@@ -15,6 +15,7 @@ import { H1 } from "~/components/ui/typography";
 import { Button } from "~/components/ui/button";
 import { useDispatch } from "react-redux";
 import { BlurView } from "expo-blur";
+import { ThemeToggle } from "~/components/ThemeToggle";
 
 const signIn = () => {
   const dispatch = useDispatch();
@@ -49,7 +50,7 @@ const signIn = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View className="bg-white h-full w-full">
+      <View className="bg-background h-full w-full">
         {/* <Toast /> */}
         {/* background */}
         {/* <ImageBackground
@@ -65,11 +66,12 @@ const signIn = () => {
           {/* Title */}
           <View className="h-40" />
           <View className="gap-3">
-            <H1>Log In</H1>
+            <H1>ログイン</H1>
+            <ThemeToggle></ThemeToggle>
           </View>
           {/* Form */}
           <View>
-            <Text className="text-lg opacity-50">Email</Text>
+            <Text className="text-lg text-foreground opacity-50">Eメール</Text>
             <View className="flex-row items-center rounded-2xl relative">
               <View
                 style={{ borderRadius: 16, overflow: "hidden" }}
@@ -86,7 +88,9 @@ const signIn = () => {
                 </BlurView>
               </View>
             </View>
-            <Text className="text-lg opacity-50">Password</Text>
+            <Text className="text-lg text-foreground opacity-50">
+              パスワード
+            </Text>
             <View className="flex-row items-center relative">
               <View
                 style={{ borderRadius: 16, overflow: "hidden" }}
@@ -107,7 +111,7 @@ const signIn = () => {
           {/* Submit */}
           <View className="gap-1">
             <Button onPress={handleLogIn} className="bg-theme">
-              <Text className="text-white font-semibold">LogIn</Text>
+              <Text className="text-white font-semibold">ログイン</Text>
             </Button>
             <TouchableOpacity
               onPress={() => {
@@ -115,8 +119,12 @@ const signIn = () => {
               }}
               className="flex-row justify-center gap-1"
             >
-              <Text className="opacity-50">Already have an account?</Text>
-              <Text className="font-semibold">Sign Up</Text>
+              <Text className="text-foreground opacity-50">
+                アカウントがなければ
+              </Text>
+              <Text className="text-foreground font-semibold">
+                こっちだよ、すみません
+              </Text>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
