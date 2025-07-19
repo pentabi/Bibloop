@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
-import { signIn as amplifySignIn } from "aws-amplify/auth";
+import { signIn as amplifySignIn, signInWithRedirect } from "aws-amplify/auth";
 import { H1 } from "~/components/ui/typography";
 import { Button } from "~/components/ui/button";
 import { useDispatch } from "react-redux";
@@ -42,6 +42,23 @@ const signIn = () => {
       //   showToast({
       //     title: "Error logging in",
       //     context: e instanceof Error ? e.message : String(e),
+      //     type: ToastType.Error,
+      //   })
+      // );
+    }
+  };
+
+  const handleSignInWithApple = async () => {
+    try {
+      await signInWithRedirect({
+        provider: 'Apple'
+      });
+    } catch (error) {
+      console.error('Error signing in with Apple:', error);
+      // dispatch(
+      //   showToast({
+      //     title: "Error signing in with Apple",
+      //     context: error instanceof Error ? error.message : String(error),
       //     type: ToastType.Error,
       //   })
       // );
@@ -109,10 +126,17 @@ const signIn = () => {
             </View>
           </View>
           {/* Submit */}
-          <View className="gap-1">
+          <View className="gap-3">
             <Button onPress={handleLogIn} className="bg-theme">
               <Text className="text-white font-semibold">ログイン</Text>
             </Button>
+            
+            {Platform.OS === 'ios' && (
+              <Button onPress={handleSignInWithApple} className="bg-black">
+                <Text className="text-white font-semibold">🍎 Sign in with Apple</Text>
+              </Button>
+            )}
+            
             <TouchableOpacity
               onPress={() => {
                 router.navigate("/signUp");
