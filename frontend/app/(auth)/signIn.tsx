@@ -16,6 +16,7 @@ import { Button } from "~/components/ui/button";
 import { useDispatch } from "react-redux";
 import { BlurView } from "expo-blur";
 import { ThemeToggle } from "~/components/ThemeToggle";
+import SignOutCallback from "./signout";
 
 const signIn = () => {
   const dispatch = useDispatch();

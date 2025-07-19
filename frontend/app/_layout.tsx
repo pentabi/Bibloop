@@ -115,12 +115,11 @@ function RootLayoutNav() {
   const isAuthLoaded = useAuthListener();
 
   const user = useSelector((state: RootState) => state.user);
-  const isSignedIn = !!user.email;
 
   // Route decision
   useEffect(() => {
     if (isAuthLoaded) {
-      if (!isSignedIn) {
+      if (!user.isLoggedIn) {
         console.log("route to sign in");
         router.replace("/(auth)/signIn");
       } else {
@@ -128,7 +127,7 @@ function RootLayoutNav() {
         router.replace("/(main)/home");
       }
     }
-  }, [isAuthLoaded, isSignedIn, router]);
+  }, [isAuthLoaded, user.isLoggedIn, router]);
 
   return <>{isAuthLoaded ? <Slot /> : null}</>;
 }

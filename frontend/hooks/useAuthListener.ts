@@ -15,8 +15,22 @@ export default function useAuthListener() {
     const getUser = async () => {
       try {
         const attrs = await fetchUserAttributes();
-        dispatch(userLogIn(attrs.email || ""));
-      } catch {
+        console.log("user attributes:", attrs);
+
+        // For Apple Sign In, use any available identifier
+        let userIdentifier = attrs.email;
+        if (!userIdentifier) {
+          // Try other attributes that Apple might provide
+          userIdentifier =
+            attrs.sub ||
+            attrs.preferred_username ||
+            attrs.name ||
+            "apple_user_" + Date.now();
+        }
+
+        dispatch(userLogIn(userIdentifier));
+      } catch (error) {
+        console.log("Error fetching user attributes:", error);
         dispatch(clearUser());
       } finally {
         setIsAuthLoaded(true);
@@ -45,12 +59,16 @@ export default function useAuthListener() {
           console.log("failure while refreshing auth tokens.");
           break;
         case "signInWithRedirect":
+          getUser(); // Fetch user attributes after successful Apple Sign In
           console.log("signInWithRedirect API has successfully been resolved.");
           break;
         case "signInWithRedirect_failure":
           console.log(
-            "failure while trying to resolve signInWithRedirect API."
+            "failure while trying to resolve signInWithRedirect API.",
+            data.payload
           );
+          // Still try to get user in case they're actually signed in
+          getUser();
           break;
         case "signOut_failure":
           dispatch(clearUser());

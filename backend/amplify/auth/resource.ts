@@ -13,16 +13,9 @@ export const auth = defineAuth({
         keyId: secret("SIWA_KEY_ID"),
         privateKey: secret("SIWA_PRIVATE_KEY"),
         teamId: secret("SIWA_TEAM_ID"),
-        scopes: ["email"],
       },
-      callbackUrls: [
-        "myapp://auth/callback",
-        // "exp://127.0.0.1:8081/--/auth/callback", // For Expo development
-      ],
-      logoutUrls: [
-        "myapp://auth/signout",
-        // "exp://127.0.0.1:8081/--/auth/signout", // For Expo development
-      ],
+      callbackUrls: ["myapp://main"],
+      logoutUrls: ["myapp://auth/signIn"],
     },
   },
 });

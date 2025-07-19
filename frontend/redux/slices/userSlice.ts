@@ -23,7 +23,8 @@ export const userSlice = createSlice({
     },
     userLogIn(state, action: PayloadAction<string>) {
       state.email = action.payload;
-      state.isLoggedIn = true;
+      // Set logged in status if we have any identifier (email, sub, or fallback)
+      state.isLoggedIn = !!action.payload && action.payload.trim() !== "";
       console.log("redux: user logged in: ", state.email);
     },
     clearUser(state) {
