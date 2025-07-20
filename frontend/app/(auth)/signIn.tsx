@@ -35,7 +35,8 @@ const signIn = () => {
         password,
       });
       if (result.nextStep.signInStep === "CONFIRM_SIGN_UP") {
-        // router.navigate("ConfirmEmail", { email });
+        // User exists but email not confirmed, redirect to confirmation page
+        router.push({ pathname: "/(auth)/emailConfirm", params: { email, password } });
       } else if (result.nextStep.signInStep === "DONE") {
         return;
       } else {
@@ -43,6 +44,14 @@ const signIn = () => {
       }
     } catch (e) {
       console.error("Error logging in:", e);
+      
+      // Check if the error is due to unconfirmed email
+      if (e instanceof Error && e.message.includes("User is not confirmed")) {
+        // Redirect to email confirmation page
+        router.push({ pathname: "/(auth)/emailConfirm", params: { email, password } });
+        return;
+      }
+      
       // dispatch(
       //   showToast({
       //     title: "ログインエラー",
@@ -63,6 +72,23 @@ const signIn = () => {
       // dispatch(
       //   showToast({
       //     title: "Appleサインインエラー",
+      //     context: error instanceof Error ? error.message : String(error),
+      //     type: ToastType.Error,
+      //   })
+      // );
+    }
+  };
+
+  const handleSignInWithGoogle = async () => {
+    try {
+      await signInWithRedirect({
+        provider: "Google",
+      });
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+      // dispatch(
+      //   showToast({
+      //     title: "Googleサインインエラー",
       //     context: error instanceof Error ? error.message : String(error),
       //     type: ToastType.Error,
       //   })
@@ -151,6 +177,12 @@ const signIn = () => {
                 </Text>
               </Button>
             )}
+
+            <Button onPress={handleSignInWithGoogle} className="bg-red-600">
+              <Text className="text-white font-semibold">
+                📧 Googleでサインイン
+              </Text>
+            </Button>
 
             <TouchableOpacity
               onPress={() => {

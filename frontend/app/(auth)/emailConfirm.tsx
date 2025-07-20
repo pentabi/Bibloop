@@ -10,43 +10,90 @@ import {
   Platform,
   Keyboard,
 } from "react-native";
+import Clipboard from "@react-native-clipboard/clipboard";
 import React, { useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { confirmSignUp } from "aws-amplify/auth";
-import { ChevronLeft } from "lucide-react-native";
+import { confirmSignUp, signIn } from "aws-amplify/auth";
+import { ChevronLeft, ClipboardIcon } from "lucide-react-native";
 import { H1, H3 } from "~/components/ui/typography";
 import { BlurView } from "expo-blur";
 import { Button } from "~/components/ui/button";
+import { useDispatch } from "react-redux";
+import { userLogIn } from "~/redux/slices/userSlice";
 
 const emailConfirm = () => {
   const router = useRouter();
-  const { email } = useLocalSearchParams();
+  const dispatch = useDispatch();
+  const { email, password } = useLocalSearchParams();
   const [code, setCode] = useState("");
   const inputRef = useRef<TextInput>(null);
   const [isFocused, setIsFocused] = useState(false);
 
   const digits = code.padEnd(6, " ").split(""); // fill with blanks
 
+  const handlePaste = async () => {
+    try {
+      const clipboardContent = await Clipboard.getString();
+      const sanitized = clipboardContent.replace(/[^0-9]/g, "").slice(0, 6);
+      if (sanitized.length > 0) {
+        setCode(sanitized);
+      }
+    } catch (error) {
+      console.error("Failed to paste from clipboard:", error);
+    }
+  };
+
   const handleConfirm = async () => {
     try {
       const emailString = Array.isArray(email) ? email[0] : email;
+      const passwordString = Array.isArray(password) ? password[0] : password;
+
       const { isSignUpComplete } = await confirmSignUp({
         username: emailString,
         confirmationCode: code,
       });
 
       if (isSignUpComplete) {
-        Alert.alert("成功", "メールが確認されました。サインインしてください。");
+        // Automatically sign in the user after confirmation
+        try {
+          const result = await signIn({
+            username: emailString,
+            password: passwordString,
+          });
+
+          if (result.nextStep.signInStep === "DONE") {
+            // Dispatch login action with email identifier
+            dispatch(userLogIn(emailString));
+            // Navigate to main app instead of sign-in page
+            router.replace("/(main)/home");
+          } else {
+            // Fallback to manual sign-in
+            Alert.alert(
+              "成功",
+              "メールが確認されました。サインインしてください。"
+            );
+            router.navigate("/(auth)/signIn");
+          }
+        } catch (signInError) {
+          console.error("Auto sign-in failed:", signInError);
+          // If auto sign-in fails, still show success and go to sign-in page
+          Alert.alert(
+            "成功",
+            "メールが確認されました。サインインしてください。"
+          );
+          router.navigate("/(auth)/signIn");
+        }
+
         //   dispatch(
         //     showToast({
         //       title: "アカウント作成成功",
-        //       context: "メールが確認されました。サインインしてください",
+        //       context: "メールが確認され、自動的にサインインしました",
         //       type: ToastType.Success,
         //     })
         //   );
-        router.navigate("/(auth)/signIn");
       }
     } catch (e) {
+      Alert.alert("エラー", "正しいコードをご入力ください");
       console.error("Confirmation error:", e);
       // dispatch(
       //   showToast({
@@ -88,7 +135,11 @@ const emailConfirm = () => {
               <View className="h-1.5 flex-1 bg-black rounded-full" />
             </View>
 
-            <View className="flex-row gap-2 justify-center items-center mt-6">
+            <View className="flex-row justify-between items-center mt-4">
+              <Text className="text-sm text-gray-600">確認コード</Text>
+            </View>
+            {/* input */}
+            <View className="flex-row gap-2 justify-center items-center mt-4">
               {/* Visual boxes */}
               {digits.map((digit, index) => (
                 <View
@@ -119,6 +170,15 @@ const emailConfirm = () => {
                 className="absolute py-8 w-full"
               ></Pressable>
             </View>
+            {/* Paste Button */}
+            <TouchableOpacity
+              onPress={handlePaste}
+              className="bg-gray-500 p-2 rounded-lg flex-row items-center gap-2 self-start m-4 justify-start"
+            >
+              <ClipboardIcon color={"white"} />
+              <Text className="text-white text-2xl font-medium">ペースト</Text>
+            </TouchableOpacity>
+
             {/* Hidden text input */}
             <TextInput
               ref={inputRef}
@@ -135,6 +195,7 @@ const emailConfirm = () => {
               className="w-0 h-0 text-lg absolute left-16"
             />
           </View>
+
           <View className="gap-1">
             <Button onPress={handleConfirm} className="bg-theme">
               <Text className="text-white font-semibold">確認</Text>
