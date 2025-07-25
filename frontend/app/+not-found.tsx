@@ -8,10 +8,6 @@ export default function NotFoundScreen() {
       <Stack.Screen options={{ title: "おっと！" }} />
       <View className="mt-16">
         <Text>このページは存在しません。</Text>
-
-        <Link href="/">
-          <Text>ホーム画面に戻る</Text>
-        </Link>
       </View>
     </>
   );

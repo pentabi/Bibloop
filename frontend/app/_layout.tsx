@@ -75,7 +75,7 @@ export default function RootLayout() {
       } finally {
         // Tell the application to render
         setAppIsReady(true);
-        console.log("app ready");
+        console.log("app is ready, hide splash screen");
       }
     }
 

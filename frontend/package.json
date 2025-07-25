@@ -17,7 +17,7 @@
     "@aws-amplify/rtn-web-browser": "^1.1.4",
     "@aws-amplify/ui-react": "^6.11.2",
     "@aws-amplify/ui-react-native": "^2.5.3",
-    "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-community/netinfo": "^11.4.1",
     "@react-navigation/native": "^7.0.0",
@@ -66,15 +66,16 @@
     "react-native": "0.79.5",
     "react-native-get-random-values": "^1.11.0",
     "react-native-reanimated": "^3.18.0",
-    "react-native-safe-area-context": "^5.5.2",
-    "react-native-screens": "^4.10.0",
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
     "react-native-web": "~0.20.0",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
     "tailwind-merge": "^2.2.1",
     "tailwindcss": "3.3.5",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "expo-dev-client": "~5.2.4"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

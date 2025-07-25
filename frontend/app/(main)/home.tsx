@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, { useEffect } from "react";
+import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
 import { LogOut } from "lucide-react-native";
 import { signOut } from "~/utils/signOut";
 import { useSelector } from "react-redux";
@@ -7,10 +7,10 @@ import { RootState } from "~/redux/rootReducer";
 
 const home = () => {
   const user = useSelector((state: RootState) => state.user);
+  const [genesisChapter, setGenesisChapter] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    console.log(user);
-  }, []);
+  const BASE_URL = "http://192.168.1.7:3000"; // Replace with your IP
 
   // Helper function to determine what type of identifier we have
   const getUserDisplayInfo = () => {
@@ -33,7 +33,7 @@ const home = () => {
   const displayInfo = getUserDisplayInfo();
 
   return (
-    <View className="mt-20 p-4">
+    <View className="flex-1 mt-20 p-4">
       <Text className="text-xl font-bold mb-4">こんにちは、みち！👋</Text>
 
       <View className="mb-4 p-3 bg-gray-100 rounded-lg">
@@ -52,10 +52,10 @@ const home = () => {
         <LogOut color="white" size={20} />
         <Text className="text-white ml-2 font-semibold">ログアウト</Text>
       </TouchableOpacity>
-
       <Image
         source={require("../../assets/images/michi.jpg")}
         style={{ width: 300, height: 350, borderRadius: 10 }}
+        className="mb-64"
       />
     </View>
   );

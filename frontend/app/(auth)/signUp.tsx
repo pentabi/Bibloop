@@ -47,7 +47,10 @@ const signUp = () => {
       });
 
       if (nextStep.signUpStep === "CONFIRM_SIGN_UP") {
-        router.push({ pathname: "/(auth)/emailConfirm", params: { email, password } });
+        router.push({
+          pathname: "/(auth)/emailConfirm",
+          params: { email, password },
+        });
       } else if (isSignUpComplete) {
         dispatch(userLogIn(email));
       }

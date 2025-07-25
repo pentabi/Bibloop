@@ -12,6 +12,7 @@ export default function useAuthListener() {
   const [isAuthLoaded, setIsAuthLoaded] = useState(false);
 
   useEffect(() => {
+    console.log("auth listner run");
     //function to attempt to getUser
     const getUser = async () => {
       try {

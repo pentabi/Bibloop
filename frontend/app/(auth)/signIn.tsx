@@ -20,7 +20,6 @@ import { Button } from "~/components/ui/button";
 import { useDispatch } from "react-redux";
 import { BlurView } from "expo-blur";
 import { ThemeToggle } from "~/components/ThemeToggle";
-import SignOutCallback from "./signout";
 
 const signIn = () => {
   const dispatch = useDispatch();
@@ -36,7 +35,10 @@ const signIn = () => {
       });
       if (result.nextStep.signInStep === "CONFIRM_SIGN_UP") {
         // User exists but email not confirmed, redirect to confirmation page
-        router.push({ pathname: "/(auth)/emailConfirm", params: { email, password } });
+        router.push({
+          pathname: "/(auth)/emailConfirm",
+          params: { email, password },
+        });
       } else if (result.nextStep.signInStep === "DONE") {
         return;
       } else {
@@ -44,14 +46,17 @@ const signIn = () => {
       }
     } catch (e) {
       console.error("Error logging in:", e);
-      
+
       // Check if the error is due to unconfirmed email
       if (e instanceof Error && e.message.includes("User is not confirmed")) {
         // Redirect to email confirmation page
-        router.push({ pathname: "/(auth)/emailConfirm", params: { email, password } });
+        router.push({
+          pathname: "/(auth)/emailConfirm",
+          params: { email, password },
+        });
         return;
       }
-      
+
       // dispatch(
       //   showToast({
       //     title: "ログインエラー",
