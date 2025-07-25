@@ -17,11 +17,15 @@
         "backgroundColor": "#000000"
       }
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.frontend",
-      "associatedDomains": ["applinks:myapp"]
+      "associatedDomains": [
+        "applinks:myapp"
+      ]
     },
     "android": {
       "adaptiveIcon": {
@@ -37,9 +41,26 @@
               "scheme": "myapp"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        },
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "myapp"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
-      ]
+      ],
+      "package": "com.anonymous.frontend"
     },
     "web": {
       "bundler": "metro",

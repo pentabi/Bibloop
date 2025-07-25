@@ -124,7 +124,7 @@ function RootLayoutNav() {
         router.replace("/(auth)/signIn");
       } else {
         console.log("route to home");
-        router.replace("/(main)/home");
+        router.replace("/(main)/chapter");
       }
     }
   }, [isAuthLoaded, user.isLoggedIn, router]);

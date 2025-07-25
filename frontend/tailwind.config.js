@@ -8,6 +8,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        primary: "hsl(var(--primary)",
+        secondary: "hsl(var(--secondary))",
+        accent: "hsl(var(--accent))",
         theme: "hsl(var(--theme))", // the lexsee theme orange color
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
