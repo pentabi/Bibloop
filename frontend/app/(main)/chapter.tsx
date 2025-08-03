@@ -87,7 +87,7 @@ const Comment = () => {
                 <View className="flex-row items-center mb-3">
                   <TouchableOpacity
                     onPress={() => {
-                      router.push("/(socials)/communityProfile");
+                      router.push("/communityProfile");
                     }}
                     className="w-8 h-8 bg-blue-500 rounded-full items-center justify-center mr-3"
                   >

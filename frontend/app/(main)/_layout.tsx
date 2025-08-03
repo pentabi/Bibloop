@@ -19,13 +19,6 @@ export default function MainLayout() {
       }}
     >
       <Tabs.Screen
-        name="home"
-        options={{
-          title: "ホーム",
-          tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
-        }}
-      />
-      <Tabs.Screen
         name="chapter"
         options={{
           title: "今日の一章",
@@ -33,10 +26,24 @@ export default function MainLayout() {
         }}
       />
       <Tabs.Screen
+        name="home"
+        options={{
+          title: "ホーム",
+          tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: "プロフィール",
           tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen
+        name="(socials)"
+        options={{
+          href: null,
+          tabBarStyle: { display: "none" },
         }}
       />
     </Tabs>

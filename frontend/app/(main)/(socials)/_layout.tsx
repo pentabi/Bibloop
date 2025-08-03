@@ -1,6 +1,11 @@
 import { Stack } from "expo-router";
 import { useColorScheme } from "~/lib/useColorScheme";
 
+export const unstable_settings = {
+  // this ensures it's not picked up as a tab
+  href: null,
+};
+
 export default function SocialsLayout() {
   const { isDarkColorScheme } = useColorScheme();
 
@@ -8,6 +13,7 @@ export default function SocialsLayout() {
     <Stack
       screenOptions={{
         headerShown: true,
+        headerBackVisible: true,
         headerStyle: {
           backgroundColor: isDarkColorScheme ? "#1c1c1e" : "#ffffff",
         },
@@ -16,14 +22,6 @@ export default function SocialsLayout() {
           fontWeight: "600",
         },
       }}
-    >
-      <Stack.Screen
-        name="index"
-        options={{
-          title: "ソーシャル",
-          headerBackVisible: true,
-        }}
-      />
-    </Stack>
+    />
   );
 }
