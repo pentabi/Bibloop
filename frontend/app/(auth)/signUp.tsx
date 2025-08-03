@@ -17,7 +17,7 @@ import { Button } from "~/components/ui/button";
 import { userLogIn } from "~/redux/slices/userSlice";
 import { H1 } from "~/components/ui/typography";
 
-const signUp = () => {
+const SignUp = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -166,4 +166,4 @@ const signUp = () => {
   );
 };
 
-export default signUp;
+export default SignUp;

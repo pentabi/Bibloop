@@ -5,7 +5,7 @@ import { signOut } from "~/utils/signOut";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/rootReducer";
 
-const home = () => {
+const Home = () => {
   const user = useSelector((state: RootState) => state.user);
   const [genesisChapter, setGenesisChapter] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
@@ -61,4 +61,4 @@ const home = () => {
   );
 };
 
-export default home;
+export default Home;

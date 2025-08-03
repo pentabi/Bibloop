@@ -21,7 +21,7 @@ import { Button } from "~/components/ui/button";
 import { useDispatch } from "react-redux";
 import { userLogIn } from "~/redux/slices/userSlice";
 
-const emailConfirm = () => {
+const EmailConfirm = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { email, password } = useLocalSearchParams();
@@ -207,4 +207,4 @@ const emailConfirm = () => {
   );
 };
 
-export default emailConfirm;
+export default EmailConfirm;

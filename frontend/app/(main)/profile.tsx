@@ -5,7 +5,7 @@ import { signOut } from "~/utils/signOut";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/rootReducer";
 
-const profile = () => {
+const Profile = () => {
   const user = useSelector((state: RootState) => state.user);
 
   // Helper function to determine what type of identifier we have
@@ -127,4 +127,4 @@ const profile = () => {
   );
 };
 
-export default profile;
+export default Profile;

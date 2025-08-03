@@ -7,14 +7,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { Redirect, Slot, Stack, useRouter } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import {
-  ActivityIndicator,
-  Appearance,
-  Platform,
-  Text,
-  View,
-} from "react-native";
+import { Appearance, Platform, View } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
@@ -22,9 +15,6 @@ import { ThemeToggle } from "~/components/ThemeToggle";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { Provider } from "react-redux";
-import { store } from "~/redux/store";
-import { Authenticator } from "@aws-amplify/ui-react-native";
 import { Amplify } from "aws-amplify";
 import outputs from "../../backend/amplify_outputs.json";
 import { useSelector } from "react-redux";
@@ -63,6 +53,7 @@ SplashScreen.setOptions({
 export default function RootLayout() {
   const [appIsReady, setAppIsReady] = useState(false);
   const { isDarkColorScheme } = useColorScheme();
+  const isAuthLoaded = useAuthListener();
 
   useEffect(() => {
     async function prepare() {
@@ -94,25 +85,20 @@ export default function RootLayout() {
   }
 
   return (
-    <Authenticator.Provider>
-      <Provider store={store}>
-        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-          <View
-            className="flex-1 h-full w-full bg-background"
-            onLayout={onLayoutRootView}
-          >
-            <RootLayoutNav />
-            <PortalHost />
-          </View>
-        </ThemeProvider>
-      </Provider>
-    </Authenticator.Provider>
+    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+      <View
+        className="flex-1 h-full w-full bg-background"
+        onLayout={onLayoutRootView}
+      >
+        <RootLayoutNav isAuthLoaded={isAuthLoaded} />
+        <PortalHost />
+      </View>
+    </ThemeProvider>
   );
 }
-function RootLayoutNav() {
+function RootLayoutNav({ isAuthLoaded }: { isAuthLoaded: boolean }) {
   const router = useRouter();
   usePlatformSpecificSetup();
-  const isAuthLoaded = useAuthListener();
 
   const user = useSelector((state: RootState) => state.user);
 
