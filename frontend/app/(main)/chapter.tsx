@@ -10,8 +10,10 @@ import {
 import { Button } from "~/components/ui/button";
 import BottomSheet, { BottomSheetRefProps } from "~/components/BottomSheet";
 import { mockComments } from "~/lib/CommentData";
+import { useRouter } from "expo-router";
 
 const Comment = () => {
+  const router = useRouter();
   const [sort, setSort] = useState("date");
   const [showSortMenu, setShowSortMenu] = useState(false);
 
@@ -84,7 +86,9 @@ const Comment = () => {
                 {/* User Info */}
                 <View className="flex-row items-center mb-3">
                   <TouchableOpacity
-                    onPress={() => {}}
+                    onPress={() => {
+                      router.push("/(socials)/communityProfile");
+                    }}
                     className="w-8 h-8 bg-blue-500 rounded-full items-center justify-center mr-3"
                   >
                     <Text className="text-white text-sm font-semibold">
