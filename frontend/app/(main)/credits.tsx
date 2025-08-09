@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { useRouter } from "expo-router";
-import AnimatedTestimonials from "~/components/AnimatedTestimonials";
+import AnimatedInfoCards from "~/components/AnimatedInfoCards";
 
 const testimonials = [
   {
@@ -35,7 +35,7 @@ const credits = () => {
       >
         <Text>back</Text>
       </TouchableOpacity>
-      <AnimatedTestimonials testimonials={testimonials} autoplay />
+      <AnimatedInfoCards testimonials={testimonials} autoplay />
     </View>
   );
 };

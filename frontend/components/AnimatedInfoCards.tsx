@@ -19,7 +19,7 @@ type Props = {
   autoplay?: boolean;
 };
 
-export default function AnimatedTestimonials({
+export default function AnimatedInfoCards({
   testimonials,
   autoplay = false,
 }: Props) {
