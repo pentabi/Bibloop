@@ -110,7 +110,7 @@ function RootLayoutNav({ isAuthLoaded }: { isAuthLoaded: boolean }) {
         router.replace("/(auth)/signIn");
       } else {
         console.log("route to home");
-        router.replace("/(main)/chapter");
+        router.replace("/home");
       }
     }
   }, [isAuthLoaded, user.isLoggedIn, router]);

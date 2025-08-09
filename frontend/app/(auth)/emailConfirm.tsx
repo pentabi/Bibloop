@@ -65,7 +65,7 @@ const EmailConfirm = () => {
             // Dispatch login action with email identifier
             dispatch(userLogIn(emailString));
             // Navigate to main app instead of sign-in page
-            router.replace("/(main)/home");
+            router.replace("/home");
           } else {
             // Fallback to manual sign-in
             Alert.alert(

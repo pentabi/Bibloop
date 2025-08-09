@@ -12,15 +12,7 @@ export default function SocialsLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: true,
-        headerBackVisible: true,
-        headerStyle: {
-          backgroundColor: isDarkColorScheme ? "#1c1c1e" : "#ffffff",
-        },
-        headerTintColor: isDarkColorScheme ? "#ffffff" : "#007AFF",
-        headerTitleStyle: {
-          fontWeight: "600",
-        },
+        headerShown: false,
       }}
     />
   );

@@ -5,6 +5,7 @@ import {
   Book,
   Calendar,
   ChevronRight,
+  ChevronUp,
   User,
 } from "lucide-react-native";
 import { Button } from "~/components/ui/button";
@@ -104,7 +105,7 @@ const Comment = () => {
                 </View>
 
                 {/* Comment Content */}
-                <Text className="text-gray-700 leading-5 ml-11">
+                <Text className="text-gray-700 leading-5 ml-11 text-lg">
                   {comment.content}
                 </Text>
 
@@ -145,7 +146,7 @@ const Comment = () => {
                       </View>
 
                       {/* Reply Content */}
-                      <Text className="text-sm text-gray-700 leading-4 ml-8">
+                      <Text className="text-lg text-gray-700 leading-5 ml-8 ">
                         {reply.content}
                       </Text>
 
@@ -203,13 +204,16 @@ const Chapter = () => {
     if (isActive) {
       ref.current?.scrollTo(0);
     } else {
-      ref.current?.scrollTo(-120);
+      ref.current?.scrollTo(-200);
     }
   };
 
   const [isLoading, setIsLoading] = useState(true);
   const [genesisChapter, setGenesisChapter] = useState("");
-
+  //家
+  //192.168.1.30
+  //教会
+  //192.168.100.155
   const BASE_URL = "http://192.168.1.30:3000"; // Replace with your IP
 
   useEffect(() => {
@@ -253,13 +257,13 @@ const Chapter = () => {
           style={{ backgroundColor: "#ddf6ff" }}
         >
           {/* Top Buttons */}
-          <View className="flex-row mt-10 justify-end items-center">
+          <View className="flex-row mt-10 justify-between items-center">
             <Button
               onPress={() => {
                 handleOpenBottomSheet();
               }}
             >
-              <Calendar />
+              <ChevronUp />
             </Button>
             <Button
               onPress={() => {
@@ -309,12 +313,6 @@ const Chapter = () => {
             </Text>
           )}
         </View>
-
-        <Image
-          source={require("../../assets/images/michi.jpg")}
-          style={{ width: 300, height: 350, borderRadius: 10 }}
-          className="mb-64"
-        />
       </ScrollView>
 
       <BottomSheet ref={ref}>

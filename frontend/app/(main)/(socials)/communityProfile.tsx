@@ -42,10 +42,10 @@ const CommunityProfile = () => {
   ];
 
   return (
-    <ScrollView className="flex-1 bg-white">
+    <ScrollView className="flex-1 bg-white mt-20">
       <TouchableOpacity
         onPress={() => {
-          router.replace("/(main)/chapter");
+          router.back();
         }}
       >
         <Text>back</Text>

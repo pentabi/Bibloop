@@ -1,9 +1,10 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import React from "react";
-import { User, MapPin, Calendar, Heart } from "lucide-react-native";
+import { User, MapPin, Calendar, Heart, Settings } from "lucide-react-native";
 import { signOut } from "~/utils/signOut";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/rootReducer";
+import { router } from "expo-router";
 
 const Profile = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -33,9 +34,18 @@ const Profile = () => {
       <ScrollView className="flex-1">
         <View className="mt-20 p-4">
           {/* Header */}
-          <View className="flex-row items-center mb-6">
-            <User size={28} color="#007AFF" />
-            <Text className="text-2xl font-bold ml-3">プロフィール</Text>
+          <View className="flex-row items-center mb-6 justify-between">
+            <View className="flex-row items-center">
+              <User size={28} color="#007AFF" />
+              <Text className="text-2xl font-bold ml-3">プロフィール</Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                router.push("/settings");
+              }}
+            >
+              <Settings />
+            </TouchableOpacity>
           </View>
 
           {/* Profile Card */}
@@ -48,6 +58,18 @@ const Profile = () => {
               <Text className="text-sm text-gray-600">聖書の読者</Text>
             </View>
           </View>
+
+          <TouchableOpacity className="p-4 bg-primary rounded-xl mt-4">
+            <Text>add friend</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              router.push("/friendsList");
+            }}
+            className="p-4 bg-primary rounded-xl my-4"
+          >
+            <Text>friends list</Text>
+          </TouchableOpacity>
 
           {/* User Info */}
           <View className="bg-white rounded-xl border border-gray-200 mb-6">
@@ -107,10 +129,6 @@ const Profile = () => {
 
           {/* Michi Image */}
           <View className="items-center mb-6">
-            <Image
-              source={require("../../assets/images/michi.jpg")}
-              style={{ width: 200, height: 240, borderRadius: 15 }}
-            />
             <Text className="text-sm text-gray-600 mt-2">みちちゃん 🐾</Text>
           </View>
 
