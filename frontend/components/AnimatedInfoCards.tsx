@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, Image, Pressable } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -7,45 +7,60 @@ import Animated, {
   withSequence,
 } from "react-native-reanimated";
 
-type Testimonial = {
-  quote: string;
-  name: string;
-  designation: string;
+type Information = {
+  content: string;
+  title: string;
+  subTitle: string;
   src: string; // local require or remote URL
 };
 
-type Props = {
-  testimonials: Testimonial[];
+type AnimatedInfoCardsProps = {
+  informations: Information[];
   autoplay?: boolean;
+  interval_length?: number;
 };
 
 export default function AnimatedInfoCards({
-  testimonials,
+  informations,
   autoplay = false,
-}: Props) {
+  interval_length = 5000,
+}: AnimatedInfoCardsProps) {
   const [active, setActive] = useState(0);
 
+  // Safety check for empty array
+  if (!informations || informations.length === 0) {
+    return (
+      <View className="w-full px-4 py-6">
+        <Text className="text-center text-gray-500">
+          No information available
+        </Text>
+      </View>
+    );
+  }
+
+  //moves the index
   const handleNext = () => {
-    setActive((prev) => (prev + 1) % testimonials.length);
+    setActive((prev) => (prev + 1) % informations.length);
   };
 
   const handlePrev = () => {
-    setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setActive((prev) => (prev - 1 + informations.length) % informations.length);
   };
 
   const isActive = (index: number) => {
     return index === active;
   };
 
+  //optional autoplay functionality
   useEffect(() => {
     if (autoplay) {
-      const interval = setInterval(handleNext, 5000);
+      const interval = setInterval(handleNext, interval_length);
       return () => clearInterval(interval);
     }
   }, [autoplay]);
 
   const randomRotateY = () => {
-    return Math.floor(Math.random() * 21) - 10;
+    return Math.floor(Math.random() * 25) - 10;
   };
 
   return (
@@ -53,19 +68,19 @@ export default function AnimatedInfoCards({
       <View className="flex-row">
         {/* Left: stacked images */}
         <View className="w-1/2 h-80 relative mr-6">
-          {testimonials.map((testimonial, index) => {
+          {informations.map((information, index) => {
             const AnimatedCard = () => {
               const opacity = useSharedValue(isActive(index) ? 1 : 0.7);
               const scale = useSharedValue(isActive(index) ? 1 : 0.95);
               const zIndex = useSharedValue(
-                isActive(index) ? 40 : testimonials.length + 2 - index
+                isActive(index) ? 40 : informations.length + 2 - index
               );
               const rotate = useSharedValue(
                 isActive(index) ? 0 : randomRotateY()
               );
               const translateY = useSharedValue(0);
 
-              React.useEffect(() => {
+              useEffect(() => {
                 opacity.value = withTiming(isActive(index) ? 1 : 0.7, {
                   duration: 400,
                 });
@@ -73,7 +88,7 @@ export default function AnimatedInfoCards({
                   duration: 400,
                 });
                 zIndex.value = withTiming(
-                  isActive(index) ? 40 : testimonials.length + 2 - index,
+                  isActive(index) ? 40 : informations.length + 2 - index,
                   { duration: 400 }
                 );
                 rotate.value = withTiming(
@@ -107,13 +122,13 @@ export default function AnimatedInfoCards({
 
               // Support local require or remote URL
               const source =
-                typeof testimonial.src === "number"
-                  ? testimonial.src
-                  : { uri: testimonial.src };
+                typeof information.src === "number"
+                  ? information.src
+                  : { uri: information.src };
 
               return (
                 <Animated.View
-                  key={`${testimonial.src}-${index}`}
+                  key={`${information.src}-${index}`}
                   className="absolute inset-0 rounded-3xl overflow-hidden bg-gray-200"
                   style={animatedStyle}
                 >
@@ -121,6 +136,8 @@ export default function AnimatedInfoCards({
                     source={source}
                     resizeMode="cover"
                     className="w-full h-full"
+                    onError={(error) => console.log("Image load error:", error)}
+                    onLoad={() => console.log("Image loaded successfully")}
                   />
                 </Animated.View>
               );
@@ -132,7 +149,7 @@ export default function AnimatedInfoCards({
 
         {/* Right: text & controls */}
         <View className="w-1/2 justify-between py-2">
-          <AnimatedTextBlock key={active} testimonial={testimonials[active]} />
+          <AnimatedTextBlock key={active} information={informations[active]} />
 
           <View className="flex-row gap-3 pt-6">
             <CircleButton onPress={handlePrev} label="‹" />
@@ -144,17 +161,17 @@ export default function AnimatedInfoCards({
   );
 }
 
-function AnimatedTextBlock({ testimonial }: { testimonial: Testimonial }) {
+function AnimatedTextBlock({ information }: { information: Information }) {
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(20);
 
-  React.useEffect(() => {
+  useEffect(() => {
     opacity.value = 0;
     translateY.value = 20;
 
     opacity.value = withTiming(1, { duration: 200 });
     translateY.value = withTiming(0, { duration: 200 });
-  }, [testimonial]);
+  }, [information]);
 
   const textAnim = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -164,20 +181,20 @@ function AnimatedTextBlock({ testimonial }: { testimonial: Testimonial }) {
   return (
     <Animated.View style={textAnim}>
       <Text className="text-2xl font-bold text-black dark:text-white">
-        {testimonial.name}
+        {information.title}
       </Text>
       <Text className="mt-0.5 text-sm text-gray-500 dark:text-neutral-500">
-        {testimonial.designation}
+        {information.subTitle}
       </Text>
       <View className="mr-4">
-        <AnimatedQuote quote={testimonial.quote} />
+        <AnimatedQuote content={information.content} />
       </View>
     </Animated.View>
   );
 }
 
-function AnimatedQuote({ quote }: { quote: string }) {
-  const words = quote.split(" ");
+function AnimatedQuote({ content }: { content: string }) {
+  const words = content.split(" ");
 
   return (
     <View className="mt-4 flex-row flex-wrap">
@@ -186,7 +203,7 @@ function AnimatedQuote({ quote }: { quote: string }) {
           const opacity = useSharedValue(0);
           const translateY = useSharedValue(5);
 
-          React.useEffect(() => {
+          useEffect(() => {
             const delay = 20 * index; // 0.02s * index converted to ms
 
             setTimeout(() => {
