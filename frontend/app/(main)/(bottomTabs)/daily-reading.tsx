@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowDownWideNarrow, MessageSquare } from "lucide-react-native";
-import { Button } from "~/components/ui/button";
+import { ArrowDownWideNarrow } from "lucide-react-native";
+import { CommentButton } from "~/components/CommentButton";
 import BottomSheet, { BottomSheetRefProps } from "~/components/BottomSheet";
 import { mockComments } from "~/lib/CommentData";
 import { useRouter } from "expo-router";
@@ -36,21 +36,12 @@ const Chapter = () => {
 
   return (
     <>
+      <CommentButton onPress={handleOpenBottomSheet} />
       <ScrollView className="flex-1 bg-background">
         <View
-          className="h-[350px] p-8 justify-between "
+          className="h-[350px] p-8 justify-end "
           style={{ backgroundColor: "#ddf6ff" }}
         >
-          {/* Top Buttons */}
-          <View className="flex-row mt-10 items-center">
-            <Button
-              onPress={() => {
-                handleOpenBottomSheet();
-              }}
-            >
-              <MessageSquare />
-            </Button>
-          </View>
           {/* Date and Chapter */}
           <View className="mb-6">
             <Text className="text-3xl mb-2 text-accent/90">
