@@ -27,11 +27,11 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CommentInput from "./CommentInput";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const MAX_SHEET_HEIGHT = -SCREEN_HEIGHT + 50;
-const COMMENT_THRESHOLD = -SCREEN_HEIGHT / 2.7;
 
 type BottomSheetProps = { children?: React.ReactNode };
 export type BottomSheetRefProps = {
@@ -41,6 +41,14 @@ export type BottomSheetRefProps = {
 
 const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
   ({ children }, ref) => {
+    const insets = useSafeAreaInsets();
+
+    // Calculate dynamic closed position based on tab bar height
+    // Typical tab bar height is ~50px + safe area bottom + some padding
+    const TAB_BAR_HEIGHT = 60; // Standard tab bar height
+    const CLOSED_POSITION = -(insets.bottom + TAB_BAR_HEIGHT + 20); // 20px padding above tab bar
+    const COMMENT_THRESHOLD = -SCREEN_HEIGHT / 2.7;
+
     const translateY = useSharedValue(0);
     const context = useSharedValue({ y: 0 });
     const active = useSharedValue(false);
@@ -83,7 +91,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
       })
       .onEnd(() => {
         if (translateY.value > -SCREEN_HEIGHT / 3) {
-          scrollTo(-120);
+          scrollTo(CLOSED_POSITION);
         } else if (translateY.value < -SCREEN_HEIGHT / 1.5) {
           scrollTo(MAX_SHEET_HEIGHT);
         } else {
@@ -92,7 +100,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
       });
 
     useEffect(() => {
-      scrollTo(-SCREEN_HEIGHT / 3);
+      scrollTo(0);
     }, []);
 
     const rBottomSheetStyle = useAnimatedStyle(() => {

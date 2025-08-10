@@ -1,25 +1,9 @@
-import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
-import { ArrowDownWideNarrow } from "lucide-react-native";
-import { CommentButton } from "~/components/CommentButton";
-import BottomSheet, { BottomSheetRefProps } from "~/components/BottomSheet";
-import { mockComments } from "~/lib/CommentData";
-import { useRouter } from "expo-router";
+import { View, Text, ScrollView } from "react-native";
+import React from "react";
 import { useKougoChapterData } from "~/hooks/useKougoChapterData";
-import CommentSection from "~/components/comments/CommentSection";
+import { SheetWithComments } from "~/components/bible/SheetWithComments";
 
 const Chapter = () => {
-  const ref = useRef<BottomSheetRefProps>(null);
-
-  const handleOpenBottomSheet = () => {
-    const isActive = ref.current?.isActive();
-    if (isActive) {
-      ref.current?.scrollTo(0);
-    } else {
-      ref.current?.scrollTo(-200);
-    }
-  };
-
   // Today's reading: Genesis 1 (you can make this dynamic later)
   const todaysReading = {
     bookId: 1, // Genesis
@@ -35,8 +19,10 @@ const Chapter = () => {
   );
 
   return (
-    <>
-      <CommentButton onPress={handleOpenBottomSheet} />
+    <SheetWithComments
+      bookName={todaysReading.bookName}
+      chapter={todaysReading.chapter}
+    >
       <ScrollView className="flex-1 bg-background">
         <View
           className="h-[350px] p-8 justify-end "
@@ -78,14 +64,7 @@ const Chapter = () => {
           )}
         </View>
       </ScrollView>
-
-      <BottomSheet ref={ref}>
-        <CommentSection
-          bookName={todaysReading.bookName}
-          chapter={todaysReading.chapter}
-        />
-      </BottomSheet>
-    </>
+    </SheetWithComments>
   );
 };
 
