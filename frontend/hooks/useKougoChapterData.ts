@@ -17,19 +17,13 @@ export const useKougoChapterData = (bookId: number, chapter: number) => {
       setLoading(true);
       setError(null);
 
-      // Start loading data and minimum delay simultaneously
-      const [dataResult] = await Promise.all([
-        (async () => {
-          const db = await openKougoDB();
-          return db.getAllSync(
-            "SELECT verse, text FROM JapKougo_verses WHERE book_id = ? AND chapter = ? ORDER BY verse ASC",
-            [bookId, chapter]
-          ) as Array<{ verse: number; text: string }>;
-        })(),
-        new Promise((resolve) => setTimeout(resolve, 300)), // Minimum 300ms loading
-      ]);
+      const db = await openKougoDB();
+      const data = db.getAllSync(
+        "SELECT verse, text FROM JapKougo_verses WHERE book_id = ? AND chapter = ? ORDER BY verse ASC",
+        [bookId, chapter]
+      ) as Array<{ verse: number; text: string }>;
 
-      setVerses(dataResult);
+      setVerses(data);
     } catch (error) {
       console.error("Error loading chapter:", error);
       setError("章の読み込みに失敗しました");

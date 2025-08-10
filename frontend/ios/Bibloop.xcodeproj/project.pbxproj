@@ -7,26 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0356A0C3BFBD88B682E0CEA8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 8FE3CDA3F4565EE376D0E2E8 /* PrivacyInfo.xcprivacy */; };
+		0D61881C717CE93D0E06AE1E /* libPods-Bibloop.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5699A46CB1904687CA1FAC2F /* libPods-Bibloop.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		8A4C2EB8F57ECBBEAF4CCF25 /* libPods-Bibloop.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AED8334922E64F5B45831FC7 /* libPods-Bibloop.a */; };
+		7010749ED80F4EC4E7FF5D6C /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA4C813E443399E0DD2CA7C /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		EAB54D154CA2C22BE2B71340 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 6607C9088C07E197FA391EC6 /* PrivacyInfo.xcprivacy */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
-		F78FA4A087CAAF6E153C5CFC /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3244E212C8F73B18B7DD3E1F /* ExpoModulesProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* Bibloop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bibloop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Bibloop/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Bibloop/Info.plist; sourceTree = "<group>"; };
-		3244E212C8F73B18B7DD3E1F /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Bibloop/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		581A5F3E5CA099E1E7E65516 /* Pods-Bibloop.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bibloop.release.xcconfig"; path = "Target Support Files/Pods-Bibloop/Pods-Bibloop.release.xcconfig"; sourceTree = "<group>"; };
-		6607C9088C07E197FA391EC6 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Bibloop/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		71F8B64C6AA1595A97A81A3B /* Pods-Bibloop.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bibloop.debug.xcconfig"; path = "Target Support Files/Pods-Bibloop/Pods-Bibloop.debug.xcconfig"; sourceTree = "<group>"; };
+		1791CC972090F80DB2137436 /* Pods-Bibloop.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bibloop.debug.xcconfig"; path = "Target Support Files/Pods-Bibloop/Pods-Bibloop.debug.xcconfig"; sourceTree = "<group>"; };
+		1FA4C813E443399E0DD2CA7C /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Bibloop/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		5699A46CB1904687CA1FAC2F /* libPods-Bibloop.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Bibloop.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8FE3CDA3F4565EE376D0E2E8 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Bibloop/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Bibloop/SplashScreen.storyboard; sourceTree = "<group>"; };
-		AED8334922E64F5B45831FC7 /* libPods-Bibloop.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Bibloop.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
+		CDA3F34C910CA8C9D8B0192F /* Pods-Bibloop.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bibloop.release.xcconfig"; path = "Target Support Files/Pods-Bibloop/Pods-Bibloop.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Bibloop/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* Bibloop-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Bibloop-Bridging-Header.h"; path = "Bibloop/Bibloop-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A4C2EB8F57ECBBEAF4CCF25 /* libPods-Bibloop.a in Frameworks */,
+				0D61881C717CE93D0E06AE1E /* libPods-Bibloop.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,26 +53,24 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				6607C9088C07E197FA391EC6 /* PrivacyInfo.xcprivacy */,
+				8FE3CDA3F4565EE376D0E2E8 /* PrivacyInfo.xcprivacy */,
 			);
 			name = Bibloop;
 			sourceTree = "<group>";
 		};
-		1B123D03C3F2BBBEDAE4E5A5 /* Pods */ = {
+		206EC639800B321C00A36324 /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				71F8B64C6AA1595A97A81A3B /* Pods-Bibloop.debug.xcconfig */,
-				581A5F3E5CA099E1E7E65516 /* Pods-Bibloop.release.xcconfig */,
+				BDB68CF70BF44284A8EA6287 /* Bibloop */,
 			);
-			name = Pods;
-			path = Pods;
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				AED8334922E64F5B45831FC7 /* libPods-Bibloop.a */,
+				5699A46CB1904687CA1FAC2F /* libPods-Bibloop.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -91,8 +89,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				1B123D03C3F2BBBEDAE4E5A5 /* Pods */,
-				95E232C8E7B7C53F83C93611 /* ExpoModulesProviders */,
+				CA4857C9AA4BC80675BEDCBB /* Pods */,
+				206EC639800B321C00A36324 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -107,14 +105,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		95E232C8E7B7C53F83C93611 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				F63B1780B6481FC84D1CDEBF /* Bibloop */,
-			);
-			name = ExpoModulesProviders;
-			sourceTree = "<group>";
-		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
@@ -124,12 +114,22 @@
 			path = Bibloop/Supporting;
 			sourceTree = "<group>";
 		};
-		F63B1780B6481FC84D1CDEBF /* Bibloop */ = {
+		BDB68CF70BF44284A8EA6287 /* Bibloop */ = {
 			isa = PBXGroup;
 			children = (
-				3244E212C8F73B18B7DD3E1F /* ExpoModulesProvider.swift */,
+				1FA4C813E443399E0DD2CA7C /* ExpoModulesProvider.swift */,
 			);
 			name = Bibloop;
+			sourceTree = "<group>";
+		};
+		CA4857C9AA4BC80675BEDCBB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1791CC972090F80DB2137436 /* Pods-Bibloop.debug.xcconfig */,
+				CDA3F34C910CA8C9D8B0192F /* Pods-Bibloop.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,13 +140,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Bibloop" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				9FF2CA77A3DB23A4193011EF /* [Expo] Configure project */,
+				06D8BB33902360636D72A5B1 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				EB028D40F53ACA0C7A575245 /* [CP] Embed Pods Frameworks */,
+				2B91D74A4BBE70FE0E5898F7 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -198,7 +198,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				EAB54D154CA2C22BE2B71340 /* PrivacyInfo.xcprivacy in Resources */,
+				0356A0C3BFBD88B682E0CEA8 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,6 +220,25 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\nif [[ \"$CONFIGURATION\" = *Debug* ]]; then\n  export SKIP_BUNDLING=1\nfi\nif [[ -z \"$ENTRY_FILE\" ]]; then\n  # Set the entry JS file using the bundler's entry resolution.\n  export ENTRY_FILE=\"$(\"$NODE_BINARY\" -e \"require('expo/scripts/resolveAppEntry')\" \"$PROJECT_ROOT\" ios absolute | tail -n 1)\"\nfi\n\nif [[ -z \"$CLI_PATH\" ]]; then\n  # Use Expo CLI\n  export CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require.resolve('@expo/cli', { paths: [require.resolve('expo/package.json')] })\")\"\nfi\nif [[ -z \"$BUNDLE_COMMAND\" ]]; then\n  # Default Expo CLI command for bundling\n  export BUNDLE_COMMAND=\"export:embed\"\nfi\n\n# Source .xcode.env.updates if it exists to allow\n# SKIP_BUNDLING to be unset if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.updates\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.updates\"\nfi\n# Source local changes to allow overrides\n# if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n`\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\"`\n\n";
 		};
+		06D8BB33902360636D72A5B1 /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-Bibloop/expo-configure-project.sh\"\n";
+		};
 		08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -240,6 +259,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2B91D74A4BBE70FE0E5898F7 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Bibloop/Pods-Bibloop-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Bibloop/Pods-Bibloop-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
@@ -284,43 +321,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Bibloop/Pods-Bibloop-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9FF2CA77A3DB23A4193011EF /* [Expo] Configure project */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-Bibloop/expo-configure-project.sh\"\n";
-		};
-		EB028D40F53ACA0C7A575245 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Bibloop/Pods-Bibloop-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Bibloop/Pods-Bibloop-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -329,7 +329,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				F78FA4A087CAAF6E153C5CFC /* ExpoModulesProvider.swift in Sources */,
+				7010749ED80F4EC4E7FF5D6C /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,7 +338,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 71F8B64C6AA1595A97A81A3B /* Pods-Bibloop.debug.xcconfig */;
+			baseConfigurationReference = 1791CC972090F80DB2137436 /* Pods-Bibloop.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -362,8 +362,8 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tabitosatoh.Bibloop";
-				PRODUCT_NAME = "Bibloop";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tabitosatoh.Bibloop;
+				PRODUCT_NAME = Bibloop;
 				SWIFT_OBJC_BRIDGING_HEADER = "Bibloop/Bibloop-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -377,7 +377,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 581A5F3E5CA099E1E7E65516 /* Pods-Bibloop.release.xcconfig */;
+			baseConfigurationReference = CDA3F34C910CA8C9D8B0192F /* Pods-Bibloop.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -396,8 +396,8 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tabitosatoh.Bibloop";
-				PRODUCT_NAME = "Bibloop";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tabitosatoh.Bibloop;
+				PRODUCT_NAME = Bibloop;
 				SWIFT_OBJC_BRIDGING_HEADER = "Bibloop/Bibloop-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
