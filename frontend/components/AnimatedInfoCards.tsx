@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, Pressable } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -27,6 +27,30 @@ export default function AnimatedInfoCards({
 }: AnimatedInfoCardsProps) {
   const [active, setActive] = useState(0);
 
+  //moves the index
+  const handleNext = () => {
+    setActive((prev) => (prev + 1) % (informations?.length || 1));
+  };
+
+  const handlePrev = () => {
+    setActive(
+      (prev) =>
+        (prev - 1 + (informations?.length || 1)) % (informations?.length || 1)
+    );
+  };
+
+  const isActive = (index: number) => {
+    return index === active;
+  };
+
+  //optional autoplay functionality
+  useEffect(() => {
+    if (autoplay && informations && informations.length > 0) {
+      const interval = setInterval(handleNext, interval_length);
+      return () => clearInterval(interval);
+    }
+  }, [autoplay, informations, interval_length, handleNext]);
+
   // Safety check for empty array
   if (!informations || informations.length === 0) {
     return (
@@ -37,27 +61,6 @@ export default function AnimatedInfoCards({
       </View>
     );
   }
-
-  //moves the index
-  const handleNext = () => {
-    setActive((prev) => (prev + 1) % informations.length);
-  };
-
-  const handlePrev = () => {
-    setActive((prev) => (prev - 1 + informations.length) % informations.length);
-  };
-
-  const isActive = (index: number) => {
-    return index === active;
-  };
-
-  //optional autoplay functionality
-  useEffect(() => {
-    if (autoplay) {
-      const interval = setInterval(handleNext, interval_length);
-      return () => clearInterval(interval);
-    }
-  }, [autoplay]);
 
   const randomRotateY = () => {
     return Math.floor(Math.random() * 25) - 10;

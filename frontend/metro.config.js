@@ -14,12 +14,11 @@ let config = getDefaultConfig(projectRoot);
 // ✅ Add backend to Metro's watchFolders
 config.watchFolders = [backendPath];
 
-// ✅ Allow JSON imports
+// ✅ Allow JSON and DB imports
 config.resolver.assetExts = config.resolver.assetExts || [];
 if (!config.resolver.assetExts.includes("json")) {
   config.resolver.assetExts.push("json");
 }
-
 // ✅ Compose with NativeWind
 config = withNativeWind(config, { input: "./global.css" });
 

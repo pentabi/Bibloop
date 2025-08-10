@@ -1,13 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
-import {
-  ArrowDownWideNarrow,
-  Book,
-  Calendar,
-  ChevronRight,
-  ChevronUp,
-  User,
-} from "lucide-react-native";
+import { ArrowDownWideNarrow, MessageSquare } from "lucide-react-native";
 import { Button } from "~/components/ui/button";
 import BottomSheet, { BottomSheetRefProps } from "~/components/BottomSheet";
 import { mockComments } from "~/lib/CommentData";
@@ -180,18 +173,6 @@ const Comment = () => {
         {/* Add some bottom padding */}
         <View className="h-4" />
       </ScrollView>
-
-      {/* Add Comment Input */}
-      <View className="p-4 border-t border-gray-200 bg-gray-50">
-        <View className="flex-row items-center">
-          <View className="w-8 h-8 bg-gray-400 rounded-full items-center justify-center mr-3">
-            <User size={16} color="white" />
-          </View>
-          <TouchableOpacity className="flex-1 bg-white border border-gray-300 rounded-full px-4 py-3">
-            <Text className="text-gray-500">コメントを追加...</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
     </View>
   );
 };
@@ -257,20 +238,13 @@ const Chapter = () => {
           style={{ backgroundColor: "#ddf6ff" }}
         >
           {/* Top Buttons */}
-          <View className="flex-row mt-10 justify-between items-center">
+          <View className="flex-row mt-10 items-center">
             <Button
               onPress={() => {
                 handleOpenBottomSheet();
               }}
             >
-              <ChevronUp />
-            </Button>
-            <Button
-              onPress={() => {
-                console.log("michi hi");
-              }}
-            >
-              <Calendar />
+              <MessageSquare />
             </Button>
           </View>
           {/* Date and Chapter */}

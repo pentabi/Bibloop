@@ -7,6 +7,11 @@ import { RootState } from "~/redux/rootReducer";
 import { useRouter } from "expo-router";
 import { mockPrayerRequests } from "~/lib/PrayerRequestData";
 import Modal from "~/components/Modal";
+import {
+  openKougoDB,
+  resetKougoDB,
+  testDatabaseContent,
+} from "~/utils/Kougodb";
 
 const Home = () => {
   const router = useRouter();

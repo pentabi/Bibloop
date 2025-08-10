@@ -1,5 +1,17 @@
-import { View, Text, Dimensions, StyleSheet } from "react-native";
-import React, { useCallback, useEffect, useImperativeHandle } from "react";
+import {
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import {
   Gesture,
   GestureDetector,
@@ -8,14 +20,18 @@ import {
 import Animated, {
   Extrapolation,
   interpolate,
+  runOnJS,
+  useAnimatedReaction,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withSpring,
-  withTiming,
 } from "react-native-reanimated";
+import CommentInput from "./CommentInput";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const MAX_SHEET_HEIGHT = -SCREEN_HEIGHT + 50;
+const COMMENT_THRESHOLD = -SCREEN_HEIGHT / 2.7;
 
 type BottomSheetProps = { children?: React.ReactNode };
 export type BottomSheetRefProps = {
@@ -28,6 +44,19 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
     const translateY = useSharedValue(0);
     const context = useSharedValue({ y: 0 });
     const active = useSharedValue(false);
+    const [showComments, setShowComments] = useState(false);
+
+    //tell the components if they should show comment or not
+    const shouldShowComments = useDerivedValue(() => {
+      return translateY.value <= COMMENT_THRESHOLD;
+    });
+    // Bridge from worklet to React state
+    useAnimatedReaction(
+      () => shouldShowComments.value,
+      (current) => {
+        runOnJS(setShowComments)(current);
+      }
+    );
 
     function scrollTo(destination: number) {
       "worklet";
@@ -77,15 +106,18 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
     });
 
     return (
-      <GestureDetector gesture={gesture}>
-        <Animated.View
-          className="flex-1 w-full bg-bottomSheet absolute"
-          style={[styles.bottomSheetContainer, rBottomSheetStyle]}
-        >
-          <View className="self-center bg-gray-500 w-14 h-0.5 my-4 rounded-xl" />
-          {children}
-        </Animated.View>
-      </GestureDetector>
+      <>
+        <GestureDetector gesture={gesture}>
+          <Animated.View
+            className="flex-1 w-full bg-bottomSheet absolute"
+            style={[styles.bottomSheetContainer, rBottomSheetStyle]}
+          >
+            <View className="self-center bg-gray-500 w-14 h-0.5 my-4 rounded-xl" />
+            {children}
+          </Animated.View>
+        </GestureDetector>
+        <CommentInput showComments={showComments} />
+      </>
     );
   }
 );
