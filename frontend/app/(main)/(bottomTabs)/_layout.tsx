@@ -33,7 +33,7 @@ export default function MainLayout() {
         }}
       />
       <Tabs.Screen
-        name="chapter"
+        name="daily-reading"
         options={{
           title: "今日の一章",
           tabBarIcon: ({ color, size }) => (
@@ -42,7 +42,7 @@ export default function MainLayout() {
         }}
       />
       <Tabs.Screen
-        name="bible"
+        name="browse-bible"
         options={{
           title: "聖書",
           tabBarIcon: ({ color, size }) => <Book color={color} size={size} />,

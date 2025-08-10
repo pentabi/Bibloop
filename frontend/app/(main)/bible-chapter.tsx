@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -13,13 +13,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react-native";
-import { openKougoDB } from "~/utils/Kougodb";
 import { Skeleton } from "~/components/ui/skeleton";
-
-interface Verse {
-  verse: number;
-  text: string;
-}
+import { useKougoChapterData, KougoVerse } from "~/hooks/useKougoChapterData";
 
 const BibleChapter = () => {
   const router = useRouter();
@@ -29,60 +24,12 @@ const BibleChapter = () => {
     chapter: string;
   }>();
 
-  const [verses, setVerses] = useState<Verse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [totalChapters, setTotalChapters] = useState<number>(0);
-
   const currentChapter = parseInt(chapter || "1");
   const currentBookId = parseInt(bookId || "1");
 
-  useEffect(() => {
-    if (bookId && chapter) {
-      loadChapter();
-      getTotalChapters();
-    }
-  }, [bookId, chapter]);
-
-  const loadChapter = async () => {
-    try {
-      setLoading(true);
-      const db = await openKougoDB();
-
-      // Start loading data and minimum delay simultaneously
-      const [dataResult] = await Promise.all([
-        (async () => {
-          const db = await openKougoDB();
-          return db.getAllSync(
-            "SELECT verse, text FROM JapKougo_verses WHERE book_id = ? AND chapter = ? ORDER BY verse ASC",
-            [currentBookId, currentChapter]
-          ) as Array<{ verse: number; text: string }>;
-        })(),
-        new Promise((resolve) => setTimeout(resolve, 300)), // Minimum 300ms loading
-      ]);
-      setVerses(dataResult);
-      setError(null);
-    } catch (error) {
-      console.error("Error loading chapter:", error);
-      setError("章の読み込みに失敗しました");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getTotalChapters = async () => {
-    try {
-      const db = await openKougoDB();
-      const result = db.getAllSync(
-        "SELECT COUNT(DISTINCT chapter) as total FROM JapKougo_verses WHERE book_id = ?",
-        [currentBookId]
-      ) as Array<{ total: number }>;
-
-      setTotalChapters(result[0]?.total || 0);
-    } catch (error) {
-      console.error("Error getting total chapters:", error);
-    }
-  };
+  // Use the custom hook
+  const { verses, loading, error, totalChapters, loadKougoChapter } =
+    useKougoChapterData(currentBookId, currentChapter);
 
   const navigateToChapter = (newChapter: number) => {
     router.setParams({
@@ -200,7 +147,7 @@ const BibleChapter = () => {
       <View className="flex-1 justify-center items-center bg-background p-4">
         <Text className="text-red-500 text-center mb-4">{error}</Text>
         <TouchableOpacity
-          onPress={loadChapter}
+          onPress={loadKougoChapter}
           className="bg-blue-500 px-6 py-3 rounded-lg"
         >
           <Text className="text-white">再試行</Text>

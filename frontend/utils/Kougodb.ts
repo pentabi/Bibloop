@@ -3,14 +3,14 @@ import * as SQLite from "expo-sqlite";
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
 
-let dbInstance: SQLite.SQLiteDatabase | null = null;
+let kougoDbInstance: SQLite.SQLiteDatabase | null = null;
 
 const DB_NAME = "JapKougo.db"; // must match the filename you copy into /SQLite
 
 export async function openKougoDB() {
   // Return cached instance
-  if (dbInstance) {
-    return dbInstance;
+  if (kougoDbInstance) {
+    return kougoDbInstance;
   }
 
   try {
@@ -49,8 +49,8 @@ export async function openKougoDB() {
     }
 
     // Open the database
-    dbInstance = SQLite.openDatabaseSync(DB_NAME);
-    return dbInstance;
+    kougoDbInstance = SQLite.openDatabaseSync(DB_NAME);
+    return kougoDbInstance;
   } catch (error) {
     console.error("Error in openKougoDB:", error);
     throw error;
@@ -58,10 +58,10 @@ export async function openKougoDB() {
 }
 
 export function closeKougoDB() {
-  if (!dbInstance) return;
+  if (!kougoDbInstance) return;
   try {
-    dbInstance.closeSync();
-    dbInstance = null;
+    kougoDbInstance.closeSync();
+    kougoDbInstance = null;
   } catch (e) {
     console.error("Error closing database:", e);
   }

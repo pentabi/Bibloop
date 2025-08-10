@@ -11,7 +11,7 @@ import {
   openKougoDB,
   resetKougoDB,
   testDatabaseContent,
-} from "~/utils/Kougodb";
+} from "~/utils/KougoDb";
 
 const Home = () => {
   const router = useRouter();
@@ -24,7 +24,7 @@ const Home = () => {
       {/* chapter shortcut */}
       <TouchableOpacity
         onPress={() => {
-          router.navigate("/chapter");
+          router.navigate("/daily-reading");
         }}
         className="p-8 bg-primary rounded-xl"
       >
