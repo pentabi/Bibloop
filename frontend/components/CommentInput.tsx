@@ -1,10 +1,12 @@
-import { KeyboardAvoidingView, Platform } from "react-native";
+import { KeyboardAvoidingView, Platform, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
 import { Text } from "./ui/text";
 import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { ArrowUp } from "lucide-react-native";
 
 const CommentInput = ({ showComments }: { showComments: boolean }) => {
   const animatedStyle = useAnimatedStyle(() => {
@@ -29,10 +31,15 @@ const CommentInput = ({ showComments }: { showComments: boolean }) => {
         style={animatedStyle}
       >
         <Text className="text-blue-600 mb-2">コメントセクション</Text>
-        <Input
-          placeholder="コメントを入力..."
-          className="bg-gray-50 border-2 border-blue-300"
-        />
+        <View className="flex-row">
+          <Input
+            placeholder="コメントを入力..."
+            className="bg-gray-50 border-2 border-blue-300 flex-1"
+          />
+          <Button>
+            <ArrowUp></ArrowUp>
+          </Button>
+        </View>
       </Animated.View>
     </KeyboardAvoidingView>
   );
