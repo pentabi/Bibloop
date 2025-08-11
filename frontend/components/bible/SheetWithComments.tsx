@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { View, Dimensions } from "react-native";
 import { CommentButton } from "~/components/CommentButton";
 import BottomSheet, { BottomSheetRefProps } from "~/components/BottomSheet";
@@ -18,6 +18,10 @@ export const SheetWithComments = ({
   chapter,
 }: SheetWithCommentsProps) => {
   const ref = useRef<BottomSheetRefProps>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Create a unique postId for this Bible chapter
+  const postId = `${bookName}-${chapter}`;
 
   const handleOpenBottomSheet = () => {
     const isActive = ref.current?.isActive();
@@ -29,12 +33,25 @@ export const SheetWithComments = ({
     }
   };
 
+  const handleCommentSubmitted = () => {
+    // Refresh comments by updating the key
+    setRefreshKey((prev) => prev + 1);
+  };
+
   return (
     <>
       <CommentButton onPress={handleOpenBottomSheet} />
       {children}
-      <BottomSheet ref={ref}>
-        <CommentSection bookName={bookName} chapter={chapter} />
+      <BottomSheet
+        ref={ref}
+        postId={postId}
+        onCommentSubmitted={handleCommentSubmitted}
+      >
+        <CommentSection
+          bookName={bookName}
+          chapter={chapter}
+          key={refreshKey}
+        />
       </BottomSheet>
     </>
   );

@@ -16,6 +16,7 @@ const schema = a.schema({
       testimony: a.string(),
       prayerRequests: a.hasMany("PrayerRequest", "creatorId"),
       comments: a.hasMany("Comment", "creatorId"),
+      completedChapters: a.hasMany("CompletedChapter", "userId"),
       createdAt: a.datetime().required(),
       updatedAt: a.datetime().required(),
     })
@@ -36,7 +37,7 @@ const schema = a.schema({
       content: a.string().required(),
       reportedUser: a.string().array(),
       createdAt: a.datetime().required(),
-      updatedAt: a.integer().required(),
+      updatedAt: a.datetime().required(),
       status: a.string().default("active"), // active | hidden | deleted
     })
     .secondaryIndexes((index) => [
@@ -45,7 +46,7 @@ const schema = a.schema({
       index("createdAt"),
     ])
     .authorization((allow) => [
-      allow.owner(), // creator edits/deletes their own
+      allow.owner().to(["read", "update"]).identityClaim("creatorId"),
       allow.groups(["Moderators"]).to(["read", "update"]), // moderation
       allow.authenticated().to(["read"]), // everyone logged-in can read
     ]),

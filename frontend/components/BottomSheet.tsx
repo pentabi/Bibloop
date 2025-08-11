@@ -33,14 +33,18 @@ import CommentInput from "./CommentInput";
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const MAX_SHEET_HEIGHT = -SCREEN_HEIGHT + 50;
 
-type BottomSheetProps = { children?: React.ReactNode };
+type BottomSheetProps = {
+  children?: React.ReactNode;
+  postId?: string;
+  onCommentSubmitted?: () => void;
+};
 export type BottomSheetRefProps = {
   scrollTo: (destination: number) => void;
   isActive: () => boolean;
 };
 
 const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
-  ({ children }, ref) => {
+  ({ children, postId, onCommentSubmitted }, ref) => {
     const insets = useSafeAreaInsets();
 
     // Calculate dynamic closed position based on tab bar height
@@ -124,7 +128,11 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
             {children}
           </Animated.View>
         </GestureDetector>
-        <CommentInput showComments={showComments} />
+        <CommentInput
+          showComments={showComments}
+          postId={postId}
+          onCommentSubmitted={onCommentSubmitted}
+        />
       </>
     );
   }

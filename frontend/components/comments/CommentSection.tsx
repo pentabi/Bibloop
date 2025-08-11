@@ -1,9 +1,12 @@
 import { ArrowDownWideNarrow } from "lucide-react-native";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "../ui/text";
-import { mockComments } from "~/lib/CommentData";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { client } from "~/lib/amplify-client";
+import type { Schema } from "../../../backend/amplify/data/resource";
+
+type Comment = Schema["Comment"]["type"];
 
 const CommentSection = ({
   bookName,
@@ -15,6 +18,33 @@ const CommentSection = ({
   const router = useRouter();
   const [sort, setSort] = useState("date");
   const [showSortMenu, setShowSortMenu] = useState(false);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Create a unique postId for this Bible chapter
+  const postId = `${bookName}-${chapter}`;
+
+  const fetchComments = async () => {
+    try {
+      setLoading(true);
+      console.log("Fetching comments for postId:", postId);
+
+      // Fetch all comments without filtering to see what's in the database
+      const { data: allComments } = await client.models.Comment.list();
+      console.log("All comments in database:", allComments);
+
+      // For now, show all comments to debug
+      setComments(allComments);
+    } catch (error) {
+      console.error("Failed to fetch comments:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, [postId]);
 
   return (
     <View className="flex-1 bg-white">
@@ -37,11 +67,15 @@ const CommentSection = ({
             <ArrowDownWideNarrow size={20} color="#666" />
           </TouchableOpacity>
           <Text className="text-lg font-semibold text-gray-800">
-            {bookName}
-            {chapter}のコメント
+            全てのコメント (Debug Mode)
           </Text>
-          <Text className="text-sm text-gray-500">{mockComments.length}件</Text>
+          <Text className="text-sm text-gray-500">{comments.length}件</Text>
         </View>
+
+        {/* Debug Info */}
+        <Text className="text-xs text-gray-400 mt-1">
+          Looking for PostID: {postId}
+        </Text>
 
         {/* Sort Menu */}
         {showSortMenu && (
@@ -70,111 +104,91 @@ const CommentSection = ({
 
       {/* Comments List */}
       <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
-        {mockComments
-          .sort((a, b) => {
-            if (sort === "likes") {
-              return b.likes - a.likes; // Sort by likes descending
-            }
-            return (
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-            ); // Sort by date descending
-          })
-          .map((comment, index) => (
-            <View key={comment.id}>
-              {/* Main Comment */}
-              <View className="py-4 border-b border-gray-100">
-                {/* User Info */}
-                <View className="flex-row items-center mb-3">
-                  <TouchableOpacity
-                    onPress={() => {
-                      router.push("/communityProfile");
-                    }}
-                    className="w-8 h-8 bg-blue-500 rounded-full items-center justify-center mr-3"
-                  >
-                    <Text className="text-white text-sm font-semibold">
-                      {comment.author.charAt(0).toUpperCase()}
-                    </Text>
-                  </TouchableOpacity>
-                  <View className="flex-1 flex-row gap-2 items-center">
-                    <Text className="text-sm font-medium text-gray-800">
-                      {comment.author}
-                    </Text>
-                    <Text className="text-xs text-gray-500">2時間前</Text>
+        {loading ? (
+          <View className="flex-1 items-center justify-center py-8">
+            <Text className="text-gray-500">読み込み中...</Text>
+          </View>
+        ) : comments.length === 0 ? (
+          <View className="flex-1 items-center justify-center py-8">
+            <Text className="text-gray-500 text-center mb-4">
+              まだコメントがありません{"\n"}
+              最初のコメントを投稿してみましょう！
+            </Text>
+            <TouchableOpacity 
+              onPress={fetchComments}
+              className="bg-blue-100 px-4 py-2 rounded-lg"
+            >
+              <Text className="text-blue-600">更新</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          comments
+            .sort((a: Comment, b: Comment) => {
+              if (sort === "likes") {
+                // For now, sort by creation date since we don't have likes in the schema yet
+                return (
+                  new Date(b.createdAt).getTime() -
+                  new Date(a.createdAt).getTime()
+                );
+              }
+              return (
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+              );
+            })
+            .map((comment: Comment, index: number) => (
+              <View key={comment.id}>
+                {/* Main Comment */}
+                <View className="py-4 border-b border-gray-100">
+                  {/* User Info */}
+                  <View className="flex-row items-center mb-3">
+                    <TouchableOpacity
+                      onPress={() => {
+                        router.push("/communityProfile");
+                      }}
+                      className="w-8 h-8 bg-blue-500 rounded-full items-center justify-center mr-3"
+                    >
+                      <Text className="text-white text-sm font-semibold">
+                        {comment.creator?.name?.charAt(0).toUpperCase() || "U"}
+                      </Text>
+                    </TouchableOpacity>
+                    <View className="flex-1 flex-row gap-2 items-center">
+                      <Text className="text-sm font-medium text-gray-800">
+                        {comment.creator?.name || "Anonymous"}
+                      </Text>
+                      <Text className="text-xs text-gray-500">
+                        {new Date(comment.createdAt).toLocaleDateString(
+                          "ja-JP"
+                        )}
+                      </Text>
+                    </View>
+                  </View>
+
+                  {/* Comment Content */}
+                  <Text className="text-gray-700 leading-5 ml-11 text-lg">
+                    {comment.content}
+                  </Text>
+
+                  {/* Debug Info */}
+                  <Text className="text-xs text-gray-400 ml-11 mt-1">
+                    PostID: {comment.postId} | Status: {comment.status}
+                  </Text>
+
+                  {/* Actions */}
+                  <View className="flex-row items-center mt-3 ml-11">
+                    <TouchableOpacity className="flex-row items-center mr-6">
+                      <Text className="text-xs text-gray-500">いいね</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity className="flex-row items-center">
+                      <Text className="text-xs text-gray-500">返信</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
 
-                {/* Comment Content */}
-                <Text className="text-gray-700 leading-5 ml-11 text-lg">
-                  {comment.content}
-                </Text>
-
-                {/* Actions */}
-                <View className="flex-row items-center mt-3 ml-11">
-                  <TouchableOpacity className="flex-row items-center mr-6">
-                    <Text className="text-xs text-gray-500">
-                      いいね {comment.likes}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity className="flex-row items-center">
-                    <Text className="text-xs text-gray-500">返信</Text>
-                  </TouchableOpacity>
-                </View>
+                {/* TODO: Add replies functionality later */}
               </View>
-
-              {/* Reply Comments */}
-              {comment.replies && comment.replies.length > 0 && (
-                <View className="ml-8  border-gray-100">
-                  {comment.replies.map((reply, replyIndex) => (
-                    <View
-                      key={`${comment.id}-reply-${replyIndex}`}
-                      className="py-3 pl-4"
-                    >
-                      {/* Reply User Info */}
-                      <View className="flex-row items-center mb-2">
-                        <TouchableOpacity className="w-6 h-6 bg-green-500 rounded-full items-center justify-center mr-2">
-                          <Text className="text-white text-xs font-semibold">
-                            {reply.author.charAt(0).toUpperCase()}
-                          </Text>
-                        </TouchableOpacity>
-                        <View className="flex-1 flex-row gap-2 items-center">
-                          <Text className="text-xs font-medium text-gray-800">
-                            {reply.author}
-                          </Text>
-                          <Text className="text-xs text-gray-500">1時間前</Text>
-                        </View>
-                      </View>
-
-                      {/* Reply Content */}
-                      <Text className="text-lg text-gray-700 leading-5 ml-8 ">
-                        {reply.content}
-                      </Text>
-
-                      {/* Reply Actions */}
-                      <View className="flex-row items-center mt-2 ml-8">
-                        <TouchableOpacity className="flex-row items-center mr-4">
-                          <Text className="text-xs text-gray-500">
-                            いいね {reply.likes}
-                          </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity className="flex-row items-center">
-                          <Text className="text-xs text-gray-500">返信</Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  ))}
-
-                  {/* Show more replies if there are many */}
-                  {comment.replies.length > 2 && (
-                    <TouchableOpacity className="py-2 pl-4">
-                      <Text className="text-xs text-blue-500">
-                        他の{comment.replies.length - 2}件の返信を表示
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              )}
-            </View>
-          ))}
+            ))
+        )}
 
         {/* Add some bottom padding */}
         <View className="h-[250]" />
