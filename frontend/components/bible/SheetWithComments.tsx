@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { View, Dimensions } from "react-native";
+import { Dimensions } from "react-native";
 import { CommentButton } from "~/components/CommentButton";
 import BottomSheet, { BottomSheetRefProps } from "~/components/BottomSheet";
 import CommentSection from "~/components/comments/CommentSection";
