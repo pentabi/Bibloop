@@ -46,7 +46,10 @@ const schema = a.schema({
       index("createdAt"),
     ])
     .authorization((allow) => [
-      allow.owner().to(["read", "update"]).identityClaim("creatorId"),
+      allow
+        .owner()
+        .to(["create", "read", "update", "delete"])
+        .identityClaim("creatorId"),
       allow.groups(["Moderators"]).to(["read", "update"]), // moderation
       allow.authenticated().to(["read"]), // everyone logged-in can read
     ]),

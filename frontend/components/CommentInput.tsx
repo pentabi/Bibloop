@@ -56,9 +56,9 @@ const CommentInput = ({
 
       // Create comment with proper data types
       const result = await client.models.Comment.create({
-        postId: postId,
+        postId: "創世記-1",
         content: commentText.trim(),
-        creatorId: user.userId,
+        creatorId: "1234",
         isPrivate: false,
         status: "active",
         createdAt: new Date().toISOString(),
