@@ -1,5 +1,17 @@
-import { View, Text, Dimensions, StyleSheet } from "react-native";
-import React, { useCallback, useEffect, useImperativeHandle } from "react";
+import {
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import {
   Gesture,
   GestureDetector,
@@ -8,26 +20,55 @@ import {
 import Animated, {
   Extrapolation,
   interpolate,
+  runOnJS,
+  useAnimatedReaction,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withSpring,
-  withTiming,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import CommentInput from "./CommentInput";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const MAX_SHEET_HEIGHT = -SCREEN_HEIGHT + 50;
 
-type BottomSheetProps = { children?: React.ReactNode };
+type BottomSheetProps = {
+  children?: React.ReactNode;
+  postId?: string;
+  onCommentSubmitted?: () => void;
+};
 export type BottomSheetRefProps = {
   scrollTo: (destination: number) => void;
   isActive: () => boolean;
 };
 
 const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
-  ({ children }, ref) => {
+  ({ children, postId, onCommentSubmitted }, ref) => {
+    const insets = useSafeAreaInsets();
+
+    // Calculate dynamic closed position based on tab bar height
+    // Typical tab bar height is ~50px + safe area bottom + some padding
+    const TAB_BAR_HEIGHT = 60; // Standard tab bar height
+    const CLOSED_POSITION = -(insets.bottom + TAB_BAR_HEIGHT + 20); // 20px padding above tab bar
+    const COMMENT_THRESHOLD = -SCREEN_HEIGHT / 2.7;
+
     const translateY = useSharedValue(0);
     const context = useSharedValue({ y: 0 });
     const active = useSharedValue(false);
+    const [showComments, setShowComments] = useState(false);
+
+    //tell the components if they should show comment or not
+    const shouldShowComments = useDerivedValue(() => {
+      return translateY.value <= COMMENT_THRESHOLD;
+    });
+    // Bridge from worklet to React state
+    useAnimatedReaction(
+      () => shouldShowComments.value,
+      (current) => {
+        runOnJS(setShowComments)(current);
+      }
+    );
 
     function scrollTo(destination: number) {
       "worklet";
@@ -54,7 +95,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
       })
       .onEnd(() => {
         if (translateY.value > -SCREEN_HEIGHT / 3) {
-          scrollTo(-120);
+          scrollTo(CLOSED_POSITION);
         } else if (translateY.value < -SCREEN_HEIGHT / 1.5) {
           scrollTo(MAX_SHEET_HEIGHT);
         } else {
@@ -63,7 +104,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
       });
 
     useEffect(() => {
-      scrollTo(-SCREEN_HEIGHT / 3);
+      scrollTo(0);
     }, []);
 
     const rBottomSheetStyle = useAnimatedStyle(() => {
@@ -77,15 +118,22 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
     });
 
     return (
-      <GestureDetector gesture={gesture}>
-        <Animated.View
-          className="flex-1 w-full bg-bottomSheet absolute"
-          style={[styles.bottomSheetContainer, rBottomSheetStyle]}
-        >
-          <View className="self-center bg-gray-500 w-14 h-0.5 my-4 rounded-xl" />
-          {children}
-        </Animated.View>
-      </GestureDetector>
+      <>
+        <GestureDetector gesture={gesture}>
+          <Animated.View
+            className="flex-1 w-full bg-bottomSheet absolute"
+            style={[styles.bottomSheetContainer, rBottomSheetStyle]}
+          >
+            <View className="self-center bg-gray-500 w-14 h-0.5 my-4 rounded-xl" />
+            {children}
+          </Animated.View>
+        </GestureDetector>
+        <CommentInput
+          showComments={showComments}
+          postId={postId}
+          onCommentSubmitted={onCommentSubmitted}
+        />
+      </>
     );
   }
 );

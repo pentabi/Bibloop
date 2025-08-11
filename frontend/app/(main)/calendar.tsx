@@ -16,7 +16,7 @@ const Calendar = () => {
       <Text>calendar</Text>
       <TouchableOpacity
         onPress={() => {
-          router.navigate("/chapter");
+          router.navigate("/daily-reading");
         }}
       >
         <Text>Jump to date</Text>

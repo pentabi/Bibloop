@@ -7,6 +7,11 @@ import { RootState } from "~/redux/rootReducer";
 import { useRouter } from "expo-router";
 import { mockPrayerRequests } from "~/lib/PrayerRequestData";
 import Modal from "~/components/Modal";
+import {
+  openKougoDB,
+  resetKougoDB,
+  testDatabaseContent,
+} from "~/utils/KougoDb";
 
 const Home = () => {
   const router = useRouter();
@@ -19,7 +24,7 @@ const Home = () => {
       {/* chapter shortcut */}
       <TouchableOpacity
         onPress={() => {
-          router.navigate("/chapter");
+          router.navigate("/daily-reading");
         }}
         className="p-8 bg-primary rounded-xl"
       >

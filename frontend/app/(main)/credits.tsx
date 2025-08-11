@@ -5,21 +5,21 @@ import AnimatedInfoCards from "~/components/AnimatedInfoCards";
 
 const testimonials = [
   {
-    quote: "This app changed the way I read every morning.",
-    name: "Mika Tanaka",
-    designation: "Community Member",
+    content: "This app changed the way I read every morning.",
+    title: "Mika Tanaka",
+    subTitle: "Community Member",
     src: "https://picsum.photos/seed/1/800/600",
   },
   {
-    quote: "Clean UI and thoughtful details throughout.",
-    name: "David Chen",
-    designation: "Engineer",
+    content: "Clean UI and thoughtful details throughout.",
+    title: "David Chen",
+    subTitle: "Engineer",
     src: "https://picsum.photos/seed/2/800/600",
   },
   {
-    quote: "It keeps me consistent and focused.",
-    name: "Sara Ito",
-    designation: "Student",
+    content: "It keeps me consistent and focused.",
+    title: "Sara Ito",
+    subTitle: "Student",
     src: "https://picsum.photos/seed/3/800/600",
   },
 ];
@@ -35,7 +35,11 @@ const credits = () => {
       >
         <Text>back</Text>
       </TouchableOpacity>
-      <AnimatedInfoCards testimonials={testimonials} autoplay />
+      <AnimatedInfoCards
+        informations={testimonials}
+        autoplay
+        interval_length={10000}
+      />
     </View>
   );
 };
