@@ -46,12 +46,11 @@ const schema = a.schema({
       index("createdAt"),
     ])
     .authorization((allow) => [
+      allow.authenticated().to(["create", "read"]),
       allow
         .owner()
         .to(["create", "read", "update", "delete"])
         .identityClaim("creatorId"),
-      allow.groups(["Moderators"]).to(["read", "update"]), // moderation
-      allow.authenticated().to(["read"]), // everyone logged-in can read
     ]),
   PrayerRequest: a
     .model({
