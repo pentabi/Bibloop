@@ -1,4 +1,3 @@
-// src/lib/db.ts
 import * as SQLite from "expo-sqlite";
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
