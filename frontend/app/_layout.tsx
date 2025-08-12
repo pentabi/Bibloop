@@ -16,7 +16,7 @@ import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { Amplify } from "aws-amplify";
-import outputs from "../../backend/amplify_outputs.json";
+import outputs from "../amplify_outputs.json";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/rootReducer";
 import useAuthListener from "~/hooks/useAuthListener";
