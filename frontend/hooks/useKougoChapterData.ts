@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { openKougoDB } from "~/utils/Kougodb";
+import { openKougoDB } from "~/utils/KougoDb";
 
 export interface KougoVerse {
   verse: number;

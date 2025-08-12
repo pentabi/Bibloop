@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { openKougoDB } from '~/utils/KougoDb';
-import { kougoBibleMap } from '~/lib/kougoBibleMap';
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { openKougoDB } from "~/utils/KougoDb";
+import { kougoBibleMap } from "~/lib/kougoBibleMap";
 
 export interface KougoBibleBook {
   id: number;
@@ -20,7 +20,7 @@ export const useKougoBibleData = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const db = await openKougoDB();
 
       // Get all books with their chapter counts
@@ -56,36 +56,45 @@ export const useKougoBibleData = () => {
     }
   }, []);
 
-  const filterBooks = useCallback((
-    searchQuery: string,
-    testament: "old" | "new"
-  ): KougoBibleBook[] => {
-    let filtered = books.filter((book) => book.testament === testament);
+  const filterBooks = useCallback(
+    (searchQuery: string, testament: "old" | "new"): KougoBibleBook[] => {
+      let filtered = books.filter((book) => book.testament === testament);
 
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (book) =>
-          book.japName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          book.category.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
+      if (searchQuery) {
+        filtered = filtered.filter(
+          (book) =>
+            book.japName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            book.category.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }
 
-    return filtered;
-  }, [books]);
+      return filtered;
+    },
+    [books]
+  );
 
-  const getBookById = useCallback((bookId: number): KougoBibleBook | undefined => {
-    return books.find(book => book.id === bookId);
-  }, [books]);
+  const getBookById = useCallback(
+    (bookId: number): KougoBibleBook | undefined => {
+      return books.find((book) => book.id === bookId);
+    },
+    [books]
+  );
 
-  const getBooksByTestament = useCallback((testament: "old" | "new"): KougoBibleBook[] => {
-    return books.filter(book => book.testament === testament);
-  }, [books]);
+  const getBooksByTestament = useCallback(
+    (testament: "old" | "new"): KougoBibleBook[] => {
+      return books.filter((book) => book.testament === testament);
+    },
+    [books]
+  );
 
-  const getBooksCount = useMemo(() => ({
-    total: books.length,
-    oldTestament: books.filter(book => book.testament === "old").length,
-    newTestament: books.filter(book => book.testament === "new").length,
-  }), [books]);
+  const getBooksCount = useMemo(
+    () => ({
+      total: books.length,
+      oldTestament: books.filter((book) => book.testament === "old").length,
+      newTestament: books.filter((book) => book.testament === "new").length,
+    }),
+    [books]
+  );
 
   useEffect(() => {
     loadKougoBibleBooks();
@@ -96,13 +105,13 @@ export const useKougoBibleData = () => {
     books,
     loading,
     error,
-    
+
     // Actions
     loadKougoBibleBooks,
     filterBooks,
     getBookById,
     getBooksByTestament,
-    
+
     // Computed values
     getBooksCount,
   };
