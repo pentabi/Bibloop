@@ -11,7 +11,7 @@ import {
   openKougoDB,
   resetKougoDB,
   testDatabaseContent,
-} from "~/utils/KougoDb";
+} from "~/utils/Kougodb";
 
 const Home = () => {
   const router = useRouter();
