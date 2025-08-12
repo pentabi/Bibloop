@@ -38,16 +38,6 @@
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]
-        },
-        {
-          "action": "VIEW",
-          "autoVerify": true,
-          "data": [
-            {
-              "scheme": "myapp"
-            }
-          ],
-          "category": ["BROWSABLE", "DEFAULT"]
         }
       ],
       "package": "com.anonymous.frontend"
