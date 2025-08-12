@@ -19,14 +19,14 @@ export const auth = defineAuth({
         clientSecret: secret("GOOGLE_CLIENT_SECRET"),
       },
       callbackUrls: [
-        "myapp://",  // For development
-        "com.tabitosatoh.Bibloop://",  // For production/preview builds
-        "exp://127.0.0.1:19000/--/",  // For Expo development
+        "myapp://", // For development
+        "com.tabitosatoh.Bibloop://", // For production/preview builds
+        "exp://127.0.0.1:19000/--/", // For Expo development
       ],
       logoutUrls: [
-        "myapp://",  // For development
-        "com.tabitosatoh.Bibloop://",  // For production/preview builds
-        "exp://127.0.0.1:19000/--/",  // For Expo development
+        "myapp://", // For development
+        "com.tabitosatoh.Bibloop://", // For production/preview builds
+        "exp://127.0.0.1:19000/--/", // For Expo development
       ],
     },
   },
