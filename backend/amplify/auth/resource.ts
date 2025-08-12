@@ -18,16 +18,8 @@ export const auth = defineAuth({
         clientId: secret("GOOGLE_CLIENT_ID"),
         clientSecret: secret("GOOGLE_CLIENT_SECRET"),
       },
-      callbackUrls: [
-        "myapp://oauth/callback",
-        "com.tabitosatoh.Bibloop://oauth/callback",
-        "exp://127.0.0.1:19000/--/oauth/callback",
-      ],
-      logoutUrls: [
-        "myapp://oauth/callback",
-        "com.tabitosatoh.Bibloop://oauth/callback",
-        "exp://127.0.0.1:19000/--/oauth/callback",
-      ],
+      callbackUrls: ["myapp://"],
+      logoutUrls: ["myapp://"],
     },
   },
   userAttributes: {

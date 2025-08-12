@@ -27,10 +27,14 @@
         "SIGN_IN_WITH_APPLE"
       ],
       "redirect_sign_in_uri": [
-        "myapp://"
+        "myapp://",
+        "com.tabitosatoh.Bibloop://",
+        "exp://127.0.0.1:19000/--/"
       ],
       "redirect_sign_out_uri": [
-        "myapp://"
+        "myapp://",
+        "com.tabitosatoh.Bibloop://",
+        "exp://127.0.0.1:19000/--/"
       ],
       "response_type": "code",
       "scopes": [
