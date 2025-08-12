@@ -29,12 +29,15 @@ const CommentSection = ({
       setLoading(true);
       console.log("Fetching comments for postId:", postId);
 
-      // Fetch all comments without filtering to see what's in the database
-      const { data: allComments } = await client.models.Comment.list();
-      console.log("All comments in database:", allComments);
+      // Fetch comments filtered by postId and status
+      const { data: filteredComments } = await client.models.Comment.list({
+        filter: {
+          and: [{ postId: { eq: postId } }, { status: { eq: "active" } }],
+        },
+      });
 
-      // For now, show all comments to debug
-      setComments(allComments);
+      console.log("Filtered comments for", postId, ":", filteredComments);
+      setComments(filteredComments);
     } catch (error) {
       console.error("Failed to fetch comments:", error);
     } finally {
@@ -67,14 +70,16 @@ const CommentSection = ({
             <ArrowDownWideNarrow size={20} color="#666" />
           </TouchableOpacity>
           <Text className="text-lg font-semibold text-gray-800">
-            全てのコメント (Debug Mode)
+            {bookName} {chapter}章のコメント
           </Text>
           <Text className="text-sm text-gray-500">{comments.length}件</Text>
         </View>
 
-        {/* Debug Info */}
+        {/* Chapter Info */}
         <Text className="text-xs text-gray-400 mt-1">
-          Looking for PostID: {postId}
+          {comments.length === 0
+            ? "この章にはまだコメントがありません"
+            : `${comments.length}件のコメント`}
         </Text>
 
         {/* Sort Menu */}
@@ -111,7 +116,7 @@ const CommentSection = ({
         ) : comments.length === 0 ? (
           <View className="flex-1 items-center justify-center py-8">
             <Text className="text-gray-500 text-center mb-4">
-              まだコメントがありません{"\n"}
+              この章にはまだコメントがありません{"\n"}
               最初のコメントを投稿してみましょう！
             </Text>
             <TouchableOpacity
@@ -154,7 +159,7 @@ const CommentSection = ({
                     </TouchableOpacity>
                     <View className="flex-1 flex-row gap-2 items-center">
                       <Text className="text-sm font-medium text-gray-800">
-                        {comment.creator?.name || "Anonymous"}
+                        {comment.creator?.name || "匿名"}
                       </Text>
                       <Text className="text-xs text-gray-500">
                         {new Date(comment.createdAt).toLocaleDateString(
@@ -167,11 +172,6 @@ const CommentSection = ({
                   {/* Comment Content */}
                   <Text className="text-gray-700 leading-5 ml-11 text-lg">
                     {comment.content}
-                  </Text>
-
-                  {/* Debug Info */}
-                  <Text className="text-xs text-gray-400 ml-11 mt-1">
-                    PostID: {comment.postId} | Status: {comment.status}
                   </Text>
 
                   {/* Actions */}

@@ -23,7 +23,6 @@ const schema = a.schema({
     .secondaryIndexes((index) => [index("userId")])
     .authorization((allow) => [
       allow.owner(),
-      allow.groups(["Moderators"]).to(["read", "update"]),
       allow.authenticated().to(["read"]),
     ]),
   Comment: a
@@ -38,7 +37,7 @@ const schema = a.schema({
       reportedUser: a.string().array(),
       createdAt: a.datetime().required(),
       updatedAt: a.datetime().required(),
-      status: a.string().default("active"), // active | hidden | deleted
+      status: a.string().default("active"), // active | reported | deleted
     })
     .secondaryIndexes((index) => [
       index("postId"),
@@ -64,9 +63,8 @@ const schema = a.schema({
     })
     .secondaryIndexes((index) => [index("viewableUntil"), index("creatorId")])
     .authorization((allow) => [
+      allow.authenticated().to(["create", "read"]),
       allow.owner(),
-      allow.groups(["Moderators"]).to(["read", "update"]),
-      allow.authenticated().to(["read"]),
     ]),
   CompletedChapter: a
     .model({
@@ -78,8 +76,8 @@ const schema = a.schema({
     })
     .secondaryIndexes((index) => [index("userId"), index("chapter")])
     .authorization((allow) => [
+      allow.authenticated().to(["create", "read"]),
       allow.owner(),
-      allow.authenticated().to(["read"]),
     ]),
 });
 
