@@ -3,6 +3,7 @@ import { Dimensions } from "react-native";
 import { CommentButton } from "~/components/CommentButton";
 import BottomSheet, { BottomSheetRefProps } from "~/components/BottomSheet";
 import CommentSection from "~/components/comments/CommentSection";
+import { post } from "aws-amplify/api";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -36,6 +37,7 @@ export const SheetWithComments = ({
   const handleCommentSubmitted = () => {
     // Refresh comments by updating the key
     setRefreshKey((prev) => prev + 1);
+    console.log("postIDSubmit:", postId);
   };
 
   return (

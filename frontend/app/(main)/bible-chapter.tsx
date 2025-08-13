@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ArrowLeft,
@@ -13,8 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react-native";
-import { Skeleton } from "~/components/ui/skeleton";
-import { useKougoChapterData, KougoVerse } from "~/hooks/useKougoChapterData";
+import { useKougoChapterData } from "~/hooks/useKougoChapterData";
 import { SheetWithComments } from "~/components/bible/SheetWithComments";
 
 const BibleChapter = () => {
@@ -29,7 +22,7 @@ const BibleChapter = () => {
   const currentBookId = parseInt(bookId || "1");
 
   // Use the custom hook
-  const { verses, loading, error, totalChapters, loadKougoChapter } =
+  const { verses, error, totalChapters, loadKougoChapter } =
     useKougoChapterData(currentBookId, currentChapter);
 
   const navigateToChapter = (newChapter: number) => {

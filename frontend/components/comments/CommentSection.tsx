@@ -36,7 +36,6 @@ const CommentSection = ({
         },
       });
 
-      console.log("Filtered comments for", postId, ":", filteredComments);
       setComments(filteredComments);
     } catch (error) {
       console.error("Failed to fetch comments:", error);

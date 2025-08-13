@@ -27,14 +27,14 @@
         "SIGN_IN_WITH_APPLE"
       ],
       "redirect_sign_in_uri": [
-        "myapp://",
-        "com.tabitosatoh.Bibloop://",
-        "exp://127.0.0.1:19000/--/"
+        "myapp://oauth/callback",
+        "com.tabitosatoh.Bibloop://oauth/callback",
+        "exp://127.0.0.1:19000/--/oauth/callback"
       ],
       "redirect_sign_out_uri": [
-        "myapp://",
-        "com.tabitosatoh.Bibloop://",
-        "exp://127.0.0.1:19000/--/"
+        "myapp://oauth/callback",
+        "com.tabitosatoh.Bibloop://oauth/callback",
+        "exp://127.0.0.1:19000/--/oauth/callback"
       ],
       "response_type": "code",
       "scopes": [
