@@ -16,6 +16,8 @@ import { BlurView } from "expo-blur";
 import { Button } from "~/components/ui/button";
 import { userLogIn } from "~/redux/slices/userSlice";
 import { H1 } from "~/components/ui/typography";
+import { showToast } from "~/redux/slices/toastSlice";
+import { ToastType } from "~/redux/types/ToastType";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -28,12 +30,12 @@ const SignUp = () => {
     try {
       if (password !== cfmPassword) {
         console.log("not same password");
-        //   dispatch(
-        //     showToast({
-        //       context: "パスワードが一致しません",
-        //       ToastType: ToastType.Error,
-        //     })
-        //   );
+        dispatch(
+          showToast({
+            context: "パスワードが一致しません",
+            ToastType: ToastType.Error,
+          })
+        );
         return;
       }
       const { isSignUpComplete, nextStep } = await amplifySignUp({

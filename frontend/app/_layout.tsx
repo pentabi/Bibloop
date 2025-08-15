@@ -20,6 +20,7 @@ import outputs from "../amplify_outputs.json";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/rootReducer";
 import useAuthListener from "~/hooks/useAuthListener";
+import Toast from "~/components/Toast";
 
 Amplify.configure(outputs);
 
@@ -90,6 +91,7 @@ export default function RootLayout() {
         className="flex-1 h-full w-full bg-background"
         onLayout={onLayoutRootView}
       >
+        <Toast />
         <RootLayoutNav isAuthLoaded={isAuthLoaded} />
         <PortalHost />
       </View>

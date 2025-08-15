@@ -10,11 +10,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import {
-  signIn as amplifySignIn,
-  fetchAuthSession,
-  signInWithRedirect,
-} from "aws-amplify/auth";
+import { signIn as amplifySignIn, signInWithRedirect } from "aws-amplify/auth";
 import { H1 } from "~/components/ui/typography";
 import { Button } from "~/components/ui/button";
 import { useDispatch } from "react-redux";
