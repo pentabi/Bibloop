@@ -16,9 +16,11 @@ import { Button } from "~/components/ui/button";
 import { useDispatch } from "react-redux";
 import { BlurView } from "expo-blur";
 import { ThemeToggle } from "~/components/ThemeToggle";
+import { useErrorHandler } from "~/hooks/useErrorHandler";
 
 const SignIn = () => {
   const dispatch = useDispatch();
+  const { handleError } = useErrorHandler();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -53,13 +55,7 @@ const SignIn = () => {
         return;
       }
 
-      // dispatch(
-      //   showToast({
-      //     title: "ログインエラー",
-      //     context: e instanceof Error ? e.message : String(e),
-      //     type: ToastType.Error,
-      //   })
-      // );
+      handleError(e, "ログインに失敗しました");
     }
   };
 
@@ -68,15 +64,9 @@ const SignIn = () => {
       await signInWithRedirect({
         provider: "Apple",
       });
-    } catch (error) {
-      console.error("Error signing in with Apple:", error);
-      // dispatch(
-      //   showToast({
-      //     title: "Appleサインインエラー",
-      //     context: error instanceof Error ? error.message : String(error),
-      //     type: ToastType.Error,
-      //   })
-      // );
+    } catch (e) {
+      console.error("Error signing in with Apple:", e);
+      handleError(e, "ログインに失敗しました");
     }
   };
 
@@ -85,15 +75,9 @@ const SignIn = () => {
       await signInWithRedirect({
         provider: "Google",
       });
-    } catch (error) {
-      console.error("Error signing in with Google:", error);
-      // dispatch(
-      //   showToast({
-      //     title: "Googleサインインエラー",
-      //     context: error instanceof Error ? error.message : String(error),
-      //     type: ToastType.Error,
-      //   })
-      // );
+    } catch (e) {
+      console.error("Error signing in with Google:", e);
+      handleError(e, "ログインに失敗しました");
     }
   };
 
@@ -108,8 +92,6 @@ const SignIn = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View className="bg-background h-full w-full">
-        {/* <Toast /> */}
-        {/* background */}
         {/* <ImageBackground
             style={{ height: "100%" }}
             source={require("../../assets/background.png")}

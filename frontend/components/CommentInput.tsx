@@ -10,6 +10,7 @@ import { ArrowUp } from "lucide-react-native";
 import { useState } from "react";
 import { client } from "~/lib/amplify-client";
 import { getCurrentUser } from "aws-amplify/auth";
+import { useErrorHandler } from "~/hooks/useErrorHandler";
 
 interface CommentInputProps {
   showComments: boolean;
@@ -24,15 +25,16 @@ const CommentInput = ({
 }: CommentInputProps) => {
   const [commentText, setCommentText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { handleError } = useErrorHandler();
 
   const handleSubmitComment = async () => {
     if (!commentText.trim()) {
-      Alert.alert("エラー", "コメントを入力してください");
+      handleError("コメントを入力してください", "入力エラー");
       return;
     }
 
     if (!postId) {
-      Alert.alert("エラー", "投稿IDが見つかりません");
+      handleError("投稿IDが見つかりません", "システムエラー");
       return;
     }
 
@@ -42,7 +44,7 @@ const CommentInput = ({
       // Get current user
       const user = await getCurrentUser();
       if (!user) {
-        Alert.alert("エラー", "ログインが必要です");
+        handleError("ログインが必要です", "認証エラー");
         return;
       }
 
@@ -56,9 +58,9 @@ const CommentInput = ({
 
       // Create comment with proper data types
       const result = await client.models.Comment.create({
-        postId: "創世記-1",
+        postId: postId, // 🔧 Fixed: Use actual postId instead of hardcoded
         content: commentText.trim(),
-        creatorId: "1234",
+        creatorId: user.userId, // 🔧 Fixed: Use actual user ID
         isPrivate: false,
         status: "active",
         createdAt: new Date().toISOString(),
@@ -74,7 +76,7 @@ const CommentInput = ({
       Alert.alert("成功", "コメントが投稿されました！");
     } catch (error) {
       console.error("Failed to submit comment:", error);
-      Alert.alert("エラー", "コメントの投稿に失敗しました");
+      handleError(error, "コメントの投稿に失敗しました");
     } finally {
       setIsSubmitting(false);
     }

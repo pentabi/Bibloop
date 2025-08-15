@@ -4,11 +4,13 @@ import { fetchUserAttributes, getCurrentUser } from "aws-amplify/auth";
 import { clearUser, setUser, userLogIn } from "../redux/slices/userSlice";
 import { Hub } from "aws-amplify/utils";
 import { signOutAutomatic } from "~/utils/signOut";
+import { useErrorHandler } from "./useErrorHandler";
 
 //Checks the user's login status
 //changes their email and login parameters on redux
 export default function useAuthListener() {
   const dispatch = useDispatch();
+  const { handleError } = useErrorHandler();
   const [isAuthLoaded, setIsAuthLoaded] = useState(false);
 
   useEffect(() => {
@@ -34,6 +36,7 @@ export default function useAuthListener() {
         dispatch(userLogIn(userIdentifier));
       } catch (error) {
         console.log("Error fetching user attributes:", error);
+        handleError(error, "認証エラーが発生しました");
         signOutAutomatic();
         dispatch(clearUser());
       } finally {
@@ -61,6 +64,7 @@ export default function useAuthListener() {
           break;
         case "tokenRefresh_failure":
           console.log("failure while refreshing auth tokens.");
+          handleError("認証トークンの更新に失敗しました", "認証エラー");
           break;
         case "signInWithRedirect":
           getUser(); // Fetch user attributes after successful Apple Sign In
@@ -72,6 +76,7 @@ export default function useAuthListener() {
             "failure while trying to resolve signInWithRedirect API.",
             data.payload
           );
+          handleError("サインインに失敗しました", "認証エラー");
           // Still try to get user in case they're actually signed in
           getUser();
           break;

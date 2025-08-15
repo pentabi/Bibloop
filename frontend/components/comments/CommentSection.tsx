@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { client } from "~/lib/amplify-client";
 import type { Schema } from "../../../backend/amplify/data/resource";
+import { useErrorHandler } from "~/hooks/useErrorHandler";
 
 type Comment = Schema["Comment"]["type"];
 
@@ -16,6 +17,7 @@ const CommentSection = ({
   chapter: number;
 }) => {
   const router = useRouter();
+  const { handleError } = useErrorHandler();
   const [sort, setSort] = useState("date");
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -39,6 +41,7 @@ const CommentSection = ({
       setComments(filteredComments);
     } catch (error) {
       console.error("Failed to fetch comments:", error);
+      handleError(error, "コメントの読み込みに失敗しました");
     } finally {
       setLoading(false);
     }
