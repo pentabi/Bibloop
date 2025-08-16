@@ -18,6 +18,7 @@ import { userLogIn } from "~/redux/slices/userSlice";
 import { H1 } from "~/components/ui/typography";
 import { showToast } from "~/redux/slices/toastSlice";
 import { ToastType } from "~/redux/types/ToastType";
+import { useErrorHandler } from "~/hooks/useErrorHandler";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [cfmPassword, setCfmPassword] = useState("");
   const router = useRouter();
+  const { handleError } = useErrorHandler();
 
   const handleSignUp = async () => {
     try {
@@ -57,12 +59,7 @@ const SignUp = () => {
         dispatch(userLogIn(email));
       }
     } catch (e) {
-      //   dispatch(
-      // showToast({
-      //   context: e instanceof Error ? e.message : String(e),
-      //   type: ToastType.Error,
-      // })
-      //   );
+      handleError(e, "サインアップエラー");
       console.error("Error signing up:", e);
     }
   };
@@ -70,8 +67,6 @@ const SignUp = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View className="bg-white h-full w-full">
-        {/* <Toast /> */}
-        {/* background */}
         {/* <ImageBackground
               style={{ height: "100%" }}
               source={require("../../assets/background.png")}

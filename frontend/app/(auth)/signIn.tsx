@@ -81,14 +81,6 @@ const SignIn = () => {
     }
   };
 
-  //   useEffect(() => {
-  //     const fetchSession = async () => {
-  //       const session = await fetchAuthSession();
-  //       console.log("Access Token:", session);
-  //     };
-  //     fetchSession();
-  //   }, []);
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View className="bg-background h-full w-full">

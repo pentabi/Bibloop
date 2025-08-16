@@ -11,7 +11,6 @@ import { Appearance, Platform, View } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
-import { ThemeToggle } from "~/components/ThemeToggle";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
@@ -112,7 +111,7 @@ function RootLayoutNav({ isAuthLoaded }: { isAuthLoaded: boolean }) {
         router.replace("/(auth)/signIn");
       } else {
         console.log("route to home");
-        router.replace("/home");
+        router.replace("/(on-boarding)/step-1-name");
       }
     }
   }, [isAuthLoaded, user.isLoggedIn, router]);

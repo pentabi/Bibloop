@@ -4,6 +4,7 @@ const schema = a.schema({
   UserProfile: a
     .model({
       id: a.string().required(),
+      userIdentifier: a.string().required(),
       userId: a.string().required(),
       name: a.string(),
       email: a.string(),
@@ -20,7 +21,7 @@ const schema = a.schema({
       createdAt: a.datetime().required(),
       updatedAt: a.datetime().required(),
     })
-    .secondaryIndexes((index) => [index("userId")])
+    .secondaryIndexes((index) => [index("userId"), index("userIdentifier")])
     .authorization((allow) => [
       allow.owner(),
       allow.authenticated().to(["read"]),
