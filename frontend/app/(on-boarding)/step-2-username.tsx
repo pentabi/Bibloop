@@ -5,14 +5,28 @@ import {
   Platform,
   Pressable,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowBigLeft, ArrowLeft, X } from "lucide-react-native";
 
+//TODO don't allow user to go next until username is valid
 const Step2Username = () => {
+  const { name } = useLocalSearchParams<{ name: string }>();
+  const [username, setUsername] = useState("");
+
+  const handleNext = () => {
+    if (username.trim()) {
+      // Pass both name and username to the next step
+      router.push({
+        pathname: "/(on-boarding)/step-3-profile-image",
+        params: { name: name || "", username: username.trim() },
+      });
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 p-4 bg-background">
       {/* exit */}
@@ -45,14 +59,18 @@ const Step2Username = () => {
               あとでも変えられるよ
             </Text>
           </View>
-          <Input></Input>
+          <Input
+            value={username}
+            onChangeText={setUsername}
+            placeholder="ユーザーIDを入力してください"
+            autoFocus
+          />
         </View>
         <View>
           <Button
-            onPress={() => {
-              router.push("/(on-boarding)/step-3-profile-image");
-            }}
+            onPress={handleNext}
             className="rounded-full my-4 py-4"
+            disabled={!username.trim()}
           >
             <Text className="font-semibold">次にいく</Text>
           </Button>

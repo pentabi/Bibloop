@@ -5,12 +5,15 @@ import { clearUser, setUser, userLogIn } from "../redux/slices/userSlice";
 import { Hub } from "aws-amplify/utils";
 import { signOutAutomatic } from "~/utils/signOut";
 import { useErrorHandler } from "./useErrorHandler";
+import useUserProfile from "./useUserProfile";
 
 //Checks the user's login status
 //changes their email and login parameters on redux
+//handles user profile creation and onboarding flow
 export default function useAuthListener() {
   const dispatch = useDispatch();
   const { handleError } = useErrorHandler();
+  const { checkAndCreateUserProfile } = useUserProfile();
   const [isAuthLoaded, setIsAuthLoaded] = useState(false);
 
   useEffect(() => {
@@ -20,9 +23,10 @@ export default function useAuthListener() {
       try {
         const user = await getCurrentUser();
         const attrs = await fetchUserAttributes();
-        console.log({ user, attrs });
 
         // For Apple Sign In, use any available identifier
+        //TODO add userIdentifier option for google sign in too
+        //TODO Then create userIdentifier generation function in util and use that function here
         let userIdentifier = attrs.email;
         if (!userIdentifier) {
           // Try other attributes that Apple might provide
@@ -33,7 +37,16 @@ export default function useAuthListener() {
             "apple_user_" + Date.now();
         }
 
-        dispatch(userLogIn(userIdentifier));
+        // Check and create user profile in database
+        const profileResult = await checkAndCreateUserProfile(
+          userIdentifier,
+          user.userId
+        );
+
+        console.log("Profile check result:", profileResult);
+
+        // The checkAndCreateUserProfile function already updates Redux state
+        // with setUser action that includes onboarding status
       } catch (error) {
         console.log("Error fetching user attributes:", error);
         handleError(error, "認証エラーが発生しました");

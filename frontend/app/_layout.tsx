@@ -109,12 +109,17 @@ function RootLayoutNav({ isAuthLoaded }: { isAuthLoaded: boolean }) {
       if (!user.isLoggedIn) {
         console.log("route to sign in");
         router.replace("/(auth)/signIn");
-      } else {
-        console.log("route to home");
+      } else if (!user.finishedOnboarding) {
+        console.log(
+          "route to onboarding - first time or incomplete onboarding"
+        );
         router.replace("/(on-boarding)/step-1-name");
+      } else {
+        console.log("route to main app");
+        router.replace("/(main)/(bottomTabs)/home");
       }
     }
-  }, [isAuthLoaded, user.isLoggedIn, router]);
+  }, [isAuthLoaded, user.isLoggedIn, user.finishedOnboarding, router]);
 
   return <>{isAuthLoaded ? <Slot /> : null}</>;
 }
