@@ -10,16 +10,24 @@ export type UserState = {
   // UserProfile fields (all nullable when not logged in)
   [K in keyof Omit<
     UserProfile,
-    | "id"
-    | "createdAt"
-    | "updatedAt"
-    | "prayerRequests"
-    | "comments"
-    | "completedChapters"
+    "prayerRequests" | "comments" | "completedChapters"
   >]: UserProfile[K] | null;
 };
 
+// Helper function to filter out non-serializable fields
+export const filterUserProfileForRedux = (userProfile: any) => {
+  const {
+    prayerRequests,
+    comments,
+    completedChapters,
+    owner,
+    ...serializableProfile
+  } = userProfile;
+  return serializableProfile;
+};
+
 const initialState: UserState = {
+  id: null,
   isLoggedIn: false,
   finishedOnboarding: false,
   userIdentifier: null,
@@ -31,17 +39,21 @@ const initialState: UserState = {
   completed: null,
   isTestimonyPrivate: null,
   testimony: null,
+  createdAt: null,
+  updatedAt: null,
 };
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser(state, action: PayloadAction<Omit<UserState, "isLoggedIn">>) {
-      // Set all UserProfile fields from payload
+    setUser(state, action: PayloadAction<Partial<UserState>>) {
+      // Now payload is already filtered, just set the fields
       Object.keys(action.payload).forEach((key) => {
-        // @ts-ignore
-        state[key] = action.payload[key];
+        if (key !== "isLoggedIn") {
+          // @ts-ignore
+          state[key] = action.payload[key];
+        }
       });
       state.isLoggedIn = true;
       console.log("redux: full user profile set:", action.payload);

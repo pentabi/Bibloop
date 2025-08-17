@@ -13,8 +13,6 @@ import { useRouter } from "expo-router";
 import { X } from "lucide-react-native";
 import { signOut } from "~/utils/signOut";
 
-// Todo: don't allow user to go next unless name is valid
-
 const Step1Name = () => {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -23,7 +21,7 @@ const Step1Name = () => {
     if (name.trim()) {
       // Pass the name to the next step
       router.push({
-        pathname: "/(on-boarding)/step-2-username",
+        pathname: "/(on-boarding)/step-2-user-id",
         params: { name: name.trim() },
       });
     }

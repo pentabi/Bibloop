@@ -1,7 +1,11 @@
 import { useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { client } from "~/lib/amplify-client";
-import { setUser, userLogIn } from "~/redux/slices/userSlice";
+import {
+  setUser,
+  userLogIn,
+  filterUserProfileForRedux,
+} from "~/redux/slices/userSlice";
 import { useErrorHandler } from "./useErrorHandler";
 import type { Schema } from "@/data-schema";
 
@@ -41,9 +45,8 @@ export default function useUserProfile() {
             userId: userId,
             streaks: 0,
             isTestimonyPrivate: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          });
+            // Remove createdAt and updatedAt - they should be auto-managed
+          } as any);
           console.log("createResult", createResult);
 
           if (createResult.data) {
@@ -54,11 +57,11 @@ export default function useUserProfile() {
 
         // Update Redux state
         if (userProfile) {
+          const filteredProfile = filterUserProfileForRedux(userProfile);
           dispatch(
             setUser({
-              userIdentifier: userProfile.userIdentifier,
-              name: userProfile.name || null,
-              finishedOnboarding: !!userProfile.name, // User has finished onboarding if they have a name
+              ...filteredProfile,
+              finishedOnboarding: !!userProfile.name,
             })
           );
 
@@ -105,10 +108,10 @@ export default function useUserProfile() {
           const updatedProfile = updateResult.data as UserProfile;
 
           // Update Redux state
+          const filteredProfile = filterUserProfileForRedux(updatedProfile);
           dispatch(
             setUser({
-              userIdentifier: updatedProfile.userIdentifier,
-              name: updatedProfile.name || null,
+              ...filteredProfile,
               finishedOnboarding: !!updatedProfile.name,
             })
           );

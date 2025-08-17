@@ -6,6 +6,10 @@ import { Hub } from "aws-amplify/utils";
 import { signOutAutomatic } from "~/utils/signOut";
 import { useErrorHandler } from "./useErrorHandler";
 import useUserProfile from "./useUserProfile";
+import {
+  generateUserIdentifier,
+  getAuthProvider,
+} from "~/utils/generateUserIdentifier";
 
 //Checks the user's login status
 //changes their email and login parameters on redux
@@ -23,19 +27,15 @@ export default function useAuthListener() {
       try {
         const user = await getCurrentUser();
         const attrs = await fetchUserAttributes();
+        console.log({ user, attrs });
 
-        // For Apple Sign In, use any available identifier
-        //TODO add userIdentifier option for google sign in too
-        //TODO Then create userIdentifier generation function in util and use that function here
-        let userIdentifier = attrs.email;
-        if (!userIdentifier) {
-          // Try other attributes that Apple might provide
-          userIdentifier =
-            attrs.sub ||
-            attrs.preferred_username ||
-            attrs.name ||
-            "apple_user_" + Date.now();
-        }
+        // Generate userIdentifier using utility function that supports multiple OAuth providers
+        const userIdentifier = generateUserIdentifier(attrs);
+        const authProvider = getAuthProvider(attrs);
+
+        console.log(
+          `Generated userIdentifier: ${userIdentifier} for provider: ${authProvider}`
+        );
 
         // Check and create user profile in database
         const profileResult = await checkAndCreateUserProfile(

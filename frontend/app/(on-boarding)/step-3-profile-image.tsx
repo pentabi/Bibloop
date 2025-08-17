@@ -17,9 +17,9 @@ import { setOnboardingComplete } from "~/redux/slices/userSlice";
 
 const Step3ProfileImage = () => {
   const router = useRouter();
-  const { name, username } = useLocalSearchParams<{
+  const { name, userId } = useLocalSearchParams<{
     name: string;
-    username: string;
+    userId: string;
   }>();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,11 +35,11 @@ const Step3ProfileImage = () => {
         const currentProfile = await getUserProfile(user.userIdentifier);
 
         if (currentProfile) {
-          // Update the user profile with the name (and username if you want to store it)
+          // Update the user profile with the name (and userId if you want to store it)
           await updateUserProfile({
             id: currentProfile.id,
             name: name || "",
-            userId: username,
+            userId: userId,
           });
 
           // Mark onboarding as complete in Redux

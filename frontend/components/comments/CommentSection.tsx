@@ -186,8 +186,6 @@ const CommentSection = ({
                     </TouchableOpacity>
                   </View>
                 </View>
-
-                {/* TODO: Add replies functionality later */}
               </View>
             ))
         )}

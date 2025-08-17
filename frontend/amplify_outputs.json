@@ -89,20 +89,6 @@
               "isRequired": false,
               "attributes": []
             },
-            "email": {
-              "name": "email",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            },
-            "phoneNumber": {
-              "name": "phoneNumber",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            },
             "profileImagePath": {
               "name": "profileImagePath",
               "isArray": false,
@@ -121,7 +107,7 @@
             "streaks": {
               "name": "streaks",
               "isArray": false,
-              "type": "String",
+              "type": "Int",
               "isRequired": false,
               "attributes": []
             },

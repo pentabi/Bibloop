@@ -12,17 +12,16 @@ import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowBigLeft, ArrowLeft, X } from "lucide-react-native";
 
-//TODO don't allow user to go next until username is valid
-const Step2Username = () => {
+const Step2UserId = () => {
   const { name } = useLocalSearchParams<{ name: string }>();
-  const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
 
   const handleNext = () => {
-    if (username.trim()) {
-      // Pass both name and username to the next step
+    if (userId.trim()) {
+      // Pass both name and userId to the next step
       router.push({
         pathname: "/(on-boarding)/step-3-profile-image",
-        params: { name: name || "", username: username.trim() },
+        params: { name: name || "", userId: userId.trim() },
       });
     }
   };
@@ -60,8 +59,8 @@ const Step2Username = () => {
             </Text>
           </View>
           <Input
-            value={username}
-            onChangeText={setUsername}
+            value={userId}
+            onChangeText={setUserId}
             placeholder="ユーザーIDを入力してください"
             autoFocus
           />
@@ -70,7 +69,7 @@ const Step2Username = () => {
           <Button
             onPress={handleNext}
             className="rounded-full my-4 py-4"
-            disabled={!username.trim()}
+            disabled={!userId.trim()}
           >
             <Text className="font-semibold">次にいく</Text>
           </Button>
@@ -80,4 +79,4 @@ const Step2Username = () => {
   );
 };
 
-export default Step2Username;
+export default Step2UserId;

@@ -28,7 +28,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import CommentInput from "./CommentInput";
+import CommentInput from "./comments/CommentInput";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const MAX_SHEET_HEIGHT = -SCREEN_HEIGHT + 50;
