@@ -44,6 +44,7 @@ export default function useUserProfile() {
             userIdentifier: userIdentifier,
             userId: userId,
             streaks: 0,
+            points: 0,
             isTestimonyPrivate: true,
             // Remove createdAt and updatedAt - they should be auto-managed
           } as any);

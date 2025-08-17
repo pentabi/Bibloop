@@ -8,6 +8,7 @@ const schema = a.schema({
       userId: a.string().required(),
       name: a.string(),
       profileImagePath: a.string(),
+      points: a.integer(),
       friendsId: a.string().array(),
       streaks: a.integer(),
       completed: a.string().array(),

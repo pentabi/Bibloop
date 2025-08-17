@@ -20,7 +20,7 @@ const Home = () => {
 
   return (
     <View className="flex-1 mt-20 p-4 gap-4">
-      <Text className="self-end"> 10000000000000000000000000000132 points</Text>
+      <Text className="self-end"> {user.points} points</Text>
       {/* chapter shortcut */}
       <TouchableOpacity
         onPress={() => {
