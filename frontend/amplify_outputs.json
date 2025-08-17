@@ -96,6 +96,13 @@
               "isRequired": false,
               "attributes": []
             },
+            "points": {
+              "name": "points",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
             "friendsId": {
               "name": "friendsId",
               "isArray": true,

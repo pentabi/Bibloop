@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { User, MapPin, Calendar, Heart, Settings } from "lucide-react-native";
-import { signOut } from "~/utils/signOut";
+import { signOut, signOutAutomatic } from "~/utils/signOut";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/rootReducer";
 import { router } from "expo-router";
@@ -12,14 +12,14 @@ const Profile = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View>
+      {/* <View>
         {Object.entries(user).map(([key, value]) => (
           <View key={key} style={{ flexDirection: "row", marginBottom: 4 }}>
             <Text style={{ fontWeight: "bold", marginRight: 8 }}>{key}:</Text>
             <Text>{String(value)}</Text>
           </View>
         ))}
-      </View>
+      </View> */}
       <ScrollView className="flex-1">
         <View className="mt-20 p-4">
           {/* Header */}
@@ -50,7 +50,12 @@ const Profile = () => {
             </View>
           </View>
 
-          <TouchableOpacity className="p-4 bg-primary rounded-xl mt-4">
+          <TouchableOpacity
+            onPress={() => {
+              router.push("/addFriend");
+            }}
+            className="p-4 bg-primary rounded-xl mt-4"
+          >
             <Text>add friend</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -84,7 +89,10 @@ const Profile = () => {
 
           {/* Logout Button */}
           <TouchableOpacity
-            onPress={signOut}
+            onPress={() => {
+              console.log("signout");
+              signOut();
+            }}
             className="bg-red-500 rounded-xl p-4 items-center mb-8"
           >
             <Text className="text-white font-semibold text-lg">ログアウト</Text>

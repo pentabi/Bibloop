@@ -12,6 +12,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowBigLeft, ArrowLeft, X } from "lucide-react-native";
 
+//TODO make sure user_id doesn't overlap
 const Step2UserId = () => {
   const { name } = useLocalSearchParams<{ name: string }>();
   const [userId, setUserId] = useState("");

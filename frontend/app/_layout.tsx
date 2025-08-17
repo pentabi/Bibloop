@@ -14,14 +14,10 @@ import { PortalHost } from "@rn-primitives/portal";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { Amplify } from "aws-amplify";
-import outputs from "../amplify_outputs.json";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/rootReducer";
 import useAuthListener from "~/hooks/useAuthListener";
 import Toast from "~/components/Toast";
-
-Amplify.configure(outputs);
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
