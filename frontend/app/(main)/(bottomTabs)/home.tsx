@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
-import { LogOut, Plus } from "lucide-react-native";
+import { Bell, LogOut, Plus } from "lucide-react-native";
 import { signOut } from "~/utils/signOut";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/rootReducer";
@@ -20,7 +20,16 @@ const Home = () => {
 
   return (
     <View className="flex-1 mt-20 p-4 gap-4">
-      <Text className="self-end"> {user.points} points</Text>
+      <View className="flex-row justify-between">
+        <Text className="self-end"> {user.points} points</Text>
+        <TouchableOpacity
+          onPress={() => {
+            router.push("/notification");
+          }}
+        >
+          <Bell />
+        </TouchableOpacity>
+      </View>
       {/* chapter shortcut */}
       <TouchableOpacity
         onPress={() => {

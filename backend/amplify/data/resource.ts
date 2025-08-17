@@ -9,7 +9,6 @@ const schema = a.schema({
       name: a.string(),
       profileImagePath: a.string(),
       points: a.integer(),
-      friendsId: a.string().array(),
       streaks: a.integer(),
       completed: a.string().array(),
       isTestimonyPrivate: a.boolean(),
@@ -23,7 +22,32 @@ const schema = a.schema({
     .secondaryIndexes((index) => [index("userId"), index("userIdentifier")])
     .authorization((allow) => [
       allow.owner(),
-      allow.authenticated().to(["read"]),
+      allow.authenticated().to(["create", "read"]),
+    ]),
+  Friendship: a
+    .model({
+      id: a.string().required(),
+      requesterId: a.string().required(),
+      addresseeId: a.string().required(),
+      requester: a.belongsTo("UserProfile", "requesterId"),
+      addressee: a.belongsTo("UserProfile", "addresseeId"),
+      status: a.enum(["pending", "accepted", "declined", "blocked"]),
+      // Additional features
+      friendshipDate: a.datetime(), // When friendship was accepted
+      sharedStreaks: a.integer().default(0), // Shared reading streaks
+      createdAt: a.datetime().required(),
+      updatedAt: a.datetime().required(),
+    })
+    .secondaryIndexes((index) => [
+      index("requesterId"),
+      index("addresseeId"),
+      index("status"),
+      index("friendshipDate"),
+    ])
+    .authorization((allow) => [
+      allow.authenticated().to(["create", "read"]),
+      allow.owner().identityClaim("requesterId"),
+      allow.owner().identityClaim("addresseeId"),
     ]),
   Comment: a
     .model({
@@ -46,10 +70,7 @@ const schema = a.schema({
     ])
     .authorization((allow) => [
       allow.authenticated().to(["create", "read"]),
-      allow
-        .owner()
-        .to(["create", "read", "update", "delete"])
-        .identityClaim("creatorId"),
+      allow.owner().identityClaim("creatorId"),
     ]),
   PrayerRequest: a
     .model({
