@@ -10,7 +10,11 @@ export type UserState = {
   // UserProfile fields (all nullable when not logged in)
   [K in keyof Omit<
     UserProfile,
-    "prayerRequests" | "comments" | "completedChapters"
+    | "prayerRequests"
+    | "comments"
+    | "completedChapters"
+    | "sentFriendRequests"
+    | "receivedFriendRequests"
   >]: UserProfile[K] | null;
 };
 
@@ -20,7 +24,8 @@ export const filterUserProfileForRedux = (userProfile: any) => {
     prayerRequests,
     comments,
     completedChapters,
-    owner,
+    sentFriendRequests,
+    receivedFriendRequests,
     ...serializableProfile
   } = userProfile;
   return serializableProfile;
