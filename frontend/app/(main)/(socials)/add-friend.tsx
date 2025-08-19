@@ -1,67 +1,118 @@
+import { View, Text, TouchableOpacity, TextInput, Alert } from "react-native";
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
-import { useSelector } from "react-redux";
-import { RootState } from "~/redux/rootReducer";
-import { client } from "~/lib/amplify-client";
+import { useRouter } from "expo-router";
+import { ArrowLeft, UserPlus } from "lucide-react-native";
+import { useFriendship } from "../../../hooks/useFriendship";
 
-const addFriend = () => {
-  const user = useSelector((state: RootState) => state.user);
-  const [friendUserId, setFriendUserId] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+const AddFriend = () => {
+  const router = useRouter();
+  const [userId, setUserId] = useState("");
+  const { sendFriendRequest, isLoading } = useFriendship();
 
-  const sendFriendRequest = async () => {
-    if (!friendUserId) {
-      Alert.alert("ユーザーIDを入力してください");
+  const handleSendRequest = async () => {
+    if (!userId.trim()) {
+      Alert.alert("エラー", "ユーザーIDを入力してください");
       return;
     }
-    if (!user.id) {
-      Alert.alert("自分のユーザーIDが見つかりません");
-      return;
-    }
-    setIsLoading(true);
+
     try {
-      // Create a new Friendship with status 'pending'
-      const result = await client.models.Friendship.create({
-        requesterId: user.id as string,
-        addresseeId: friendUserId,
-        status: "pending",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-      if (result.data) {
-        Alert.alert("友達申請を送信しました");
-        setFriendUserId("");
-      }
+      await sendFriendRequest(userId.trim());
+      Alert.alert("成功", "フレンドリクエストを送信しました", [
+        {
+          text: "OK",
+          onPress: () => {
+            setUserId("");
+            router.back();
+          },
+        },
+      ]);
     } catch (error) {
-      const message =
-        typeof error === "object" && error && "message" in error
-          ? (error as any).message
-          : String(error);
-      Alert.alert("申請に失敗しました", message);
-    } finally {
-      setIsLoading(false);
+      // Error is already handled by the hook
+      console.log("Friend request failed:", error);
     }
   };
 
   return (
-    <View className="flex-1 p-6 bg-background">
-      <Text className="text-lg font-bold mb-4">友達追加</Text>
-      <TextInput
-        className="border border-gray-300 rounded-lg p-3 mb-4"
-        placeholder="友達のユーザーIDを入力"
-        value={friendUserId}
-        onChangeText={setFriendUserId}
-        autoCapitalize="none"
-      />
-      <TouchableOpacity
-        className="bg-primary rounded-lg p-4 items-center"
-        onPress={sendFriendRequest}
-        disabled={isLoading}
-      >
-        <Text className="text-white font-semibold">友達申請を送信</Text>
-      </TouchableOpacity>
+    <View className="flex-1 bg-background">
+      {/* Header */}
+      <View className="flex-row items-center justify-between p-4 pt-16 border-b border-border">
+        <TouchableOpacity onPress={() => router.back()} className="p-2">
+          <ArrowLeft size={24} color="#000" />
+        </TouchableOpacity>
+        <Text className="text-lg font-semibold text-foreground">
+          フレンド追加
+        </Text>
+        <View className="w-8" />
+      </View>
+
+      {/* Content */}
+      <View className="flex-1 p-4">
+        <View className="bg-card rounded-xl p-6 border border-border">
+          <View className="items-center mb-6">
+            <View className="w-16 h-16 bg-primary/10 rounded-full items-center justify-center mb-4">
+              <UserPlus size={32} color="#007AFF" />
+            </View>
+            <Text className="text-xl font-semibold text-foreground mb-2">
+              フレンドを追加
+            </Text>
+            <Text className="text-sm text-muted-foreground text-center">
+              フレンドのユーザーIDを入力してフレンドリクエストを送信しましょう
+            </Text>
+          </View>
+
+          {/* Input Section */}
+          <View className="mb-6">
+            <Text className="text-sm font-medium text-foreground mb-2">
+              ユーザーID (Cognito User ID)
+            </Text>
+            <TextInput
+              className="w-full p-4 bg-background border border-border rounded-lg text-foreground"
+              placeholder="例: 1234567890abcdef"
+              placeholderTextColor="#999"
+              value={userId}
+              onChangeText={setUserId}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+            <Text className="text-xs text-muted-foreground mt-2">
+              ユーザーIDはプロフィール画面で確認できます (Cognito User ID)
+            </Text>
+          </View>
+
+          {/* Send Button */}
+          <TouchableOpacity
+            onPress={handleSendRequest}
+            disabled={isLoading || !userId.trim()}
+            className={`w-full p-4 rounded-lg items-center ${
+              isLoading || !userId.trim() ? "bg-muted" : "bg-primary"
+            }`}
+          >
+            <Text
+              className={`font-semibold ${
+                isLoading || !userId.trim()
+                  ? "text-muted-foreground"
+                  : "text-white"
+              }`}
+            >
+              {isLoading ? "送信中..." : "フレンドリクエストを送信"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Tips Section */}
+        <View className="mt-6 bg-card rounded-xl p-4 border border-border">
+          <Text className="text-sm font-medium text-foreground mb-2">
+            💡 ヒント
+          </Text>
+          <Text className="text-xs text-muted-foreground leading-relaxed">
+            • ユーザーIDはCognito User IDです{"\n"}•
+            フレンドリクエストが送信されると、相手に通知が届きます{"\n"}•
+            相手が承認すると、お互いのフレンド一覧に表示されます
+          </Text>
+        </View>
+      </View>
     </View>
   );
 };
 
-export default addFriend;
+export default AddFriend;

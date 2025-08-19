@@ -16,6 +16,8 @@ const schema = a.schema({
       prayerRequests: a.hasMany("PrayerRequest", "creatorId"),
       comments: a.hasMany("Comment", "creatorId"),
       completedChapters: a.hasMany("CompletedChapter", "userId"),
+      sentFriendRequests: a.hasMany("Friendship", "requesterId"),
+      receivedFriendRequests: a.hasMany("Friendship", "addresseeId"),
       createdAt: a.datetime().required(),
       updatedAt: a.datetime().required(),
     })
