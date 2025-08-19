@@ -66,7 +66,7 @@ const Home = () => {
           <TouchableOpacity
             className="w-12 mr-4 p-4 bg-card rounded-xl border border-border items-center justify-center"
             onPress={() => {
-              router.push("/createPrayer");
+              router.push("/create-prayer");
             }}
           >
             <Plus />

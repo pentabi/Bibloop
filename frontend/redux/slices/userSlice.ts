@@ -34,7 +34,6 @@ const initialState: UserState = {
   userId: null,
   name: null,
   profileImagePath: null,
-  friendsId: null,
   streaks: null,
   completed: null,
   isTestimonyPrivate: null,
@@ -73,7 +72,6 @@ export const userSlice = createSlice({
       state.userId = null;
       state.name = null;
       state.profileImagePath = null;
-      state.friendsId = null;
       state.streaks = null;
       state.completed = null;
       state.isTestimonyPrivate = null;
