@@ -135,13 +135,16 @@ const FriendsList = () => {
               if (!friendData) return null;
 
               return (
-                <View
+                <TouchableOpacity
+                  onPress={() => {
+                    router.push("/(main)/(socials)/community-profile");
+                  }}
                   key={friend.id}
                   className="bg-card rounded-xl p-4 border border-border mb-3"
                 >
                   <View className="flex-row items-center justify-between">
-                    <View className="flex-1">
-                      <View className="flex-row items-center mb-2">
+                    <View className="flex-1 flex-row">
+                      <View className="flex-row items-center">
                         <View className="w-12 h-12 bg-primary/10 rounded-full items-center justify-center mr-3">
                           <Text className="text-primary font-semibold text-lg">
                             {friendData.name?.charAt(0) ||
@@ -157,55 +160,20 @@ const FriendsList = () => {
                             {friendData.userIdentifier}
                           </Text>
                         </View>
-                      </View>
-
-                      {/* Stats */}
-                      <View className="flex-row mt-2 gap-4">
-                        <View className="flex-row items-center">
-                          <Text className="text-xs text-muted-foreground">
-                            ポイント:{" "}
+                        {/* Stats */}
+                        {friend.friendshipDate && (
+                          <Text className="text-xs text-muted-foreground mt-2">
+                            フレンド歴:{" "}
+                            {new Date(friend.friendshipDate).toLocaleDateString(
+                              "ja-JP"
+                            )}
+                            〜
                           </Text>
-                          <Text className="text-xs font-medium text-foreground">
-                            {friendData.points || 0}
-                          </Text>
-                        </View>
-                        <View className="flex-row items-center">
-                          <Text className="text-xs text-muted-foreground">
-                            連続:{" "}
-                          </Text>
-                          <Text className="text-xs font-medium text-foreground">
-                            {friendData.streaks || 0}日
-                          </Text>
-                        </View>
-                        {friend.sharedStreaks && friend.sharedStreaks > 0 && (
-                          <View className="flex-row items-center">
-                            <Text className="text-xs text-muted-foreground">
-                              共有:{" "}
-                            </Text>
-                            <Text className="text-xs font-medium text-primary">
-                              {friend.sharedStreaks}日
-                            </Text>
-                          </View>
                         )}
                       </View>
-
-                      {friend.friendshipDate && (
-                        <Text className="text-xs text-muted-foreground mt-2">
-                          フレンド歴:{" "}
-                          {new Date(friend.friendshipDate).toLocaleDateString(
-                            "ja-JP"
-                          )}
-                          〜
-                        </Text>
-                      )}
                     </View>
-
-                    {/* Action Button */}
-                    <TouchableOpacity className="ml-4 p-3 bg-primary/10 rounded-lg">
-                      <MessageCircle size={20} color="#007AFF" />
-                    </TouchableOpacity>
                   </View>
-                </View>
+                </TouchableOpacity>
               );
             })
           )}

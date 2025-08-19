@@ -103,14 +103,6 @@
               "isRequired": false,
               "attributes": []
             },
-            "friendsId": {
-              "name": "friendsId",
-              "isArray": true,
-              "type": "String",
-              "isRequired": false,
-              "attributes": [],
-              "isArrayNullable": true
-            },
             "streaks": {
               "name": "streaks",
               "isArray": false,
@@ -188,6 +180,38 @@
                 ]
               }
             },
+            "sentFriendRequests": {
+              "name": "sentFriendRequests",
+              "isArray": true,
+              "type": {
+                "model": "Friendship"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "requesterId"
+                ]
+              }
+            },
+            "receivedFriendRequests": {
+              "name": "receivedFriendRequests",
+              "isArray": true,
+              "type": {
+                "model": "Friendship"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "addresseeId"
+                ]
+              }
+            },
             "createdAt": {
               "name": "createdAt",
               "isArray": false,
@@ -257,6 +281,177 @@
                   {
                     "allow": "private",
                     "operations": [
+                      "create",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": false,
+            "primaryKeyFieldName": "id",
+            "sortKeyFieldNames": []
+          }
+        },
+        "Friendship": {
+          "name": "Friendship",
+          "fields": {
+            "id": {
+              "name": "id",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true,
+              "attributes": []
+            },
+            "requesterId": {
+              "name": "requesterId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true,
+              "attributes": []
+            },
+            "addresseeId": {
+              "name": "addresseeId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true,
+              "attributes": []
+            },
+            "requester": {
+              "name": "requester",
+              "isArray": false,
+              "type": {
+                "model": "UserProfile"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "requesterId"
+                ]
+              }
+            },
+            "addressee": {
+              "name": "addressee",
+              "isArray": false,
+              "type": {
+                "model": "UserProfile"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "addresseeId"
+                ]
+              }
+            },
+            "status": {
+              "name": "status",
+              "isArray": false,
+              "type": {
+                "enum": "FriendshipStatus"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "friendshipDate": {
+              "name": "friendshipDate",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": []
+            },
+            "sharedStreaks": {
+              "name": "sharedStreaks",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true,
+              "attributes": []
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true,
+              "attributes": []
+            }
+          },
+          "syncable": true,
+          "pluralName": "Friendships",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "friendshipsByRequesterId",
+                "queryField": "listFriendshipByRequesterId",
+                "fields": [
+                  "requesterId"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "friendshipsByAddresseeId",
+                "queryField": "listFriendshipByAddresseeId",
+                "fields": [
+                  "addresseeId"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "friendshipsByStatus",
+                "queryField": "listFriendshipByStatus",
+                "fields": [
+                  "status"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "friendshipsByFriendshipDate",
+                "queryField": "listFriendshipByFriendshipDate",
+                "fields": [
+                  "friendshipDate"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
                       "read"
                     ]
                   }
@@ -420,13 +615,13 @@
                     "provider": "userPools",
                     "ownerField": "owner",
                     "allow": "owner",
+                    "identityClaim": "creatorId",
                     "operations": [
                       "create",
-                      "read",
                       "update",
-                      "delete"
-                    ],
-                    "identityClaim": "creatorId"
+                      "delete",
+                      "read"
+                    ]
                   }
                 ]
               }
@@ -699,7 +894,17 @@
           }
         }
       },
-      "enums": {},
+      "enums": {
+        "FriendshipStatus": {
+          "name": "FriendshipStatus",
+          "values": [
+            "pending",
+            "accepted",
+            "declined",
+            "blocked"
+          ]
+        }
+      },
       "nonModels": {}
     }
   },

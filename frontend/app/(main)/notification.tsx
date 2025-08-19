@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { ArrowLeft, Check, X, User } from "lucide-react-native";
@@ -20,6 +27,7 @@ interface FriendRequest {
 const Notification = () => {
   const router = useRouter();
   const [pendingRequests, setPendingRequests] = useState<FriendRequest[]>([]);
+  const [isLoadingRequests, setIsLoadingRequests] = useState(true);
   const {
     getPendingRequests,
     acceptFriendRequest,
@@ -29,10 +37,13 @@ const Notification = () => {
 
   const loadPendingRequests = async () => {
     try {
+      setIsLoadingRequests(true);
       const requests = await getPendingRequests();
       setPendingRequests(requests as FriendRequest[]);
     } catch (error) {
       console.error("Error loading pending requests:", error);
+    } finally {
+      setIsLoadingRequests(false);
     }
   };
 
@@ -81,6 +92,36 @@ const Notification = () => {
       ]
     );
   };
+
+  // Loading Screen Component
+  const LoadingScreen = () => (
+    <View className="flex-1 bg-background">
+      {/* Header */}
+      <View className="flex-row items-center justify-between p-4 pt-16 border-b border-border">
+        <TouchableOpacity onPress={() => router.back()} className="p-2">
+          <ArrowLeft size={24} color="#000" />
+        </TouchableOpacity>
+        <Text className="text-lg font-semibold text-foreground">通知</Text>
+        <View className="w-8" />
+      </View>
+
+      {/* Loading Content */}
+      <View className="flex-1 items-center justify-center px-4">
+        <ActivityIndicator size="large" color="#007AFF" />
+        <Text className="text-muted-foreground mt-4 text-center">
+          通知を読み込み中...
+        </Text>
+        <Text className="text-muted-foreground text-sm mt-2 text-center">
+          フレンドリクエストをチェックしています
+        </Text>
+      </View>
+    </View>
+  );
+
+  // Show loading screen while fetching
+  if (isLoadingRequests) {
+    return <LoadingScreen />;
+  }
 
   return (
     <View className="flex-1 bg-background">
