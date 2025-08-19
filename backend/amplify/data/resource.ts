@@ -46,11 +46,7 @@ const schema = a.schema({
       index("status"),
       index("friendshipDate"),
     ])
-    .authorization((allow) => [
-      allow.authenticated().to(["create", "read"]),
-      allow.owner().identityClaim("requesterId"),
-      allow.owner().identityClaim("addresseeId"),
-    ]),
+    .authorization((allow) => [allow.authenticated()]),
   Comment: a
     .model({
       id: a.string().required(),
