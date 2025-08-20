@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "~/redux/rootReducer";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ProfileImageUploader } from "~/components/ProfileImageUploader";
 
 const Profile = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -40,13 +41,7 @@ const Profile = () => {
           {/* Profile Card */}
           <View className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-6">
             <View className="items-center mb-4">
-              <View className="w-24 h-24 bg-blue-200 rounded-full items-center justify-center mb-3">
-                <User size={40} color="#007AFF" />
-              </View>
-              <Text className="text-xl font-bold text-gray-800">
-                {user.name}
-              </Text>
-              <Text className="text-sm text-gray-600">{user.userId}</Text>
+              <ProfileImageUploader size={96} showUploadButton={true} />
             </View>
           </View>
 

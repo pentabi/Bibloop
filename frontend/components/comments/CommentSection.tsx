@@ -4,6 +4,7 @@ import { Text } from "../ui/text";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useComments } from "~/hooks/useComments";
+import { ProfileAvatar } from "~/components/ProfileAvatar";
 
 const CommentSection = ({
   bookName,
@@ -124,11 +125,14 @@ const CommentSection = ({
                       onPress={() => {
                         router.push("/community-profile");
                       }}
-                      className="w-8 h-8 bg-blue-500 rounded-full items-center justify-center mr-3"
+                      className="mr-3"
                     >
-                      <Text className="text-white text-sm font-semibold">
-                        {comment.creatorName.charAt(0).toUpperCase() || "U"}
-                      </Text>
+                      <ProfileAvatar 
+                        size={32} 
+                        userName={comment.creatorName}
+                        userId={comment.creatorId}
+                        profileImagePath={comment.creatorProfile?.profileImagePath || undefined}
+                      />
                     </TouchableOpacity>
                     <View className="flex-1 flex-row gap-2 items-center">
                       <Text className="text-sm font-medium text-gray-800">

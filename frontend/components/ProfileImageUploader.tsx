@@ -46,7 +46,7 @@ export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
     };
 
     loadProfileImage();
-  }, [user.profileImagePath, getImageUrl]);
+  }, [user.profileImagePath]);
 
   const handleImageUpload = async () => {
     const uploadedPath = await selectAndUploadProfileImage();
