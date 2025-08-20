@@ -2,9 +2,10 @@ import { ArrowDownWideNarrow } from "lucide-react-native";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "../ui/text";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useComments } from "~/hooks/useComments";
 import { ProfileAvatar } from "~/components/ProfileAvatar";
+import { useImagePreloader } from "~/hooks/useImagePreloader";
 
 const CommentSection = ({
   bookName,
@@ -22,6 +23,24 @@ const CommentSection = ({
 
   // Use the new custom hook
   const { comments, isLoading, refetch } = useComments(postId);
+
+  // Add image preloader
+  const { preloadImages, getPreloadedImage } = useImagePreloader();
+
+  // Preload profile images when comments load
+  useEffect(() => {
+    if (comments.length > 0) {
+      // Extract all profile image paths from comments
+      const imagePaths = comments
+        .map((comment) => comment.creatorProfile?.profileImagePath)
+        .filter(Boolean) as string[];
+
+      if (imagePaths.length > 0) {
+        console.log("Preloading profile images:", imagePaths.length);
+        preloadImages(imagePaths);
+      }
+    }
+  }, [comments]);
 
   return (
     <View className="flex-1 bg-white">
@@ -134,6 +153,9 @@ const CommentSection = ({
                         profileImagePath={
                           comment.creatorProfile?.profileImagePath || undefined
                         }
+                        preloadedImageUrl={getPreloadedImage(
+                          comment.creatorProfile?.profileImagePath || ""
+                        )}
                       />
                     </TouchableOpacity>
                     <View className="flex-1 flex-row gap-2 items-center">
