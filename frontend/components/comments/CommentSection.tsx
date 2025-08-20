@@ -127,11 +127,13 @@ const CommentSection = ({
                       }}
                       className="mr-3"
                     >
-                      <ProfileAvatar 
-                        size={32} 
+                      <ProfileAvatar
+                        size={32}
                         userName={comment.creatorName}
                         userId={comment.creatorId}
-                        profileImagePath={comment.creatorProfile?.profileImagePath || undefined}
+                        profileImagePath={
+                          comment.creatorProfile?.profileImagePath || undefined
+                        }
                       />
                     </TouchableOpacity>
                     <View className="flex-1 flex-row gap-2 items-center">

@@ -22,6 +22,7 @@ export const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
   const { getImageUrl } = useImageHandler();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoadingImage, setIsLoadingImage] = useState(false);
+  const [isImageReady, setIsImageReady] = useState(false); // New state for image ready
 
   // Determine which profile image path to use
   const imagePath =
@@ -34,24 +35,39 @@ export const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
     const loadProfileImage = async () => {
       if (imagePath) {
         setIsLoadingImage(true);
+        setIsImageReady(false); // Reset image ready state
         try {
           const url = await getImageUrl(imagePath);
           setImageUrl(url);
+          setIsLoadingImage(false); // Set loading to false when URL is ready
         } catch (error) {
           console.error("Failed to load profile image:", error);
           setImageUrl(null);
-        } finally {
           setIsLoadingImage(false);
+          setIsImageReady(false);
         }
       } else {
         setImageUrl(null);
+        setIsLoadingImage(false);
+        setIsImageReady(false);
       }
     };
 
     loadProfileImage();
   }, [imagePath]);
 
+  const handleImageLoad = () => {
+    setIsImageReady(true);
+  };
+
+  const handleImageError = () => {
+    console.error("Image failed to load");
+    setImageUrl(null);
+    setIsImageReady(false);
+  };
+
   const renderAvatarContent = () => {
+    // Show skeleton while loading URL
     if (isLoadingImage) {
       return (
         <View style={{ width: size, height: size }}>
@@ -60,14 +76,31 @@ export const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
       );
     }
 
+    // Show image with skeleton overlay until it's fully loaded
     if (imageUrl) {
       return (
-        <Image
-          source={{ uri: imageUrl }}
-          style={{ width: size, height: size }}
-          className="rounded-full"
-          resizeMode="cover"
-        />
+        <View style={{ width: size, height: size }}>
+          {/* Skeleton background while image loads */}
+          {!isImageReady && (
+            <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+              <Skeleton className="w-full h-full rounded-full" />
+            </View>
+          )}
+          
+          <Image
+            source={{ uri: imageUrl }}
+            style={{ 
+              width: size, 
+              height: size,
+              opacity: isImageReady ? 1 : 0 // Hide until ready, then fade in
+            }}
+            className="rounded-full"
+            resizeMode="cover"
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+            fadeDuration={150} // Smooth fade-in when image appears
+          />
+        </View>
       );
     }
 
