@@ -3,15 +3,24 @@ import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { ArrowLeft, UserPlus } from "lucide-react-native";
 import { useFriendship } from "../../../hooks/useFriendship";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/rootReducer";
 
 const AddFriend = () => {
   const router = useRouter();
   const [userId, setUserId] = useState("");
   const { sendFriendRequest, isLoading } = useFriendship();
+  const user = useSelector((state: RootState) => state.user);
 
   const handleSendRequest = async () => {
     if (!userId.trim()) {
       Alert.alert("エラー", "ユーザーIDを入力してください");
+      return;
+    }
+
+    // Check if user is trying to add themselves
+    if (userId.trim() === user.userId) {
+      Alert.alert("エラー", "自分自身をフレンドに追加することはできません");
       return;
     }
 
@@ -31,6 +40,9 @@ const AddFriend = () => {
       console.log("Friend request failed:", error);
     }
   };
+
+  // Check if the entered userId matches current user's userId
+  const isOwnUserId = userId.trim() === user.userId;
 
   return (
     <View className="flex-1 bg-background">
@@ -66,7 +78,9 @@ const AddFriend = () => {
               ユーザーID (Cognito User ID)
             </Text>
             <TextInput
-              className="w-full p-4 bg-background border border-border rounded-lg text-foreground"
+              className={`w-full p-4 bg-background border rounded-lg text-foreground ${
+                isOwnUserId ? "border-destructive" : "border-border"
+              }`}
               placeholder="例: 1234567890abcdef"
               placeholderTextColor="#999"
               value={userId}
@@ -74,27 +88,35 @@ const AddFriend = () => {
               autoCapitalize="none"
               autoCorrect={false}
             />
-            <Text className="text-xs text-muted-foreground mt-2">
-              ユーザーIDはプロフィール画面で確認できます (Cognito User ID)
-            </Text>
+            {isOwnUserId ? (
+              <Text className="text-xs text-destructive mt-2">
+                ⚠️ 自分自身をフレンドに追加することはできません
+              </Text>
+            ) : (
+              <Text className="text-xs text-muted-foreground mt-2">
+                ユーザーIDはプロフィール画面で確認できます (Cognito User ID)
+              </Text>
+            )}
           </View>
 
           {/* Send Button */}
           <TouchableOpacity
             onPress={handleSendRequest}
-            disabled={isLoading || !userId.trim()}
+            disabled={isLoading || !userId.trim() || isOwnUserId}
             className={`w-full p-4 rounded-lg items-center ${
-              isLoading || !userId.trim() ? "bg-muted" : "bg-primary"
+              isLoading || !userId.trim() || isOwnUserId ? "bg-muted" : "bg-primary"
             }`}
           >
             <Text
               className={`font-semibold ${
-                isLoading || !userId.trim()
+                isLoading || !userId.trim() || isOwnUserId
                   ? "text-muted-foreground"
                   : "text-white"
               }`}
             >
-              {isLoading ? "送信中..." : "フレンドリクエストを送信"}
+              {isLoading ? "送信中..." : 
+               isOwnUserId ? "自分自身は追加できません" :
+               "フレンドリクエストを送信"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -107,7 +129,8 @@ const AddFriend = () => {
           <Text className="text-xs text-muted-foreground leading-relaxed">
             • ユーザーIDはCognito User IDです{"\n"}•
             フレンドリクエストが送信されると、相手に通知が届きます{"\n"}•
-            相手が承認すると、お互いのフレンド一覧に表示されます
+            相手が承認すると、お互いのフレンド一覧に表示されます{"\n"}•
+            自分のユーザーID: {user.userId || "読み込み中..."}
           </Text>
         </View>
       </View>
