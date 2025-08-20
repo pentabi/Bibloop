@@ -104,7 +104,9 @@ const AddFriend = () => {
             onPress={handleSendRequest}
             disabled={isLoading || !userId.trim() || isOwnUserId}
             className={`w-full p-4 rounded-lg items-center ${
-              isLoading || !userId.trim() || isOwnUserId ? "bg-muted" : "bg-primary"
+              isLoading || !userId.trim() || isOwnUserId
+                ? "bg-muted"
+                : "bg-primary"
             }`}
           >
             <Text
@@ -114,9 +116,11 @@ const AddFriend = () => {
                   : "text-white"
               }`}
             >
-              {isLoading ? "送信中..." : 
-               isOwnUserId ? "自分自身は追加できません" :
-               "フレンドリクエストを送信"}
+              {isLoading
+                ? "送信中..."
+                : isOwnUserId
+                ? "自分自身は追加できません"
+                : "フレンドリクエストを送信"}
             </Text>
           </TouchableOpacity>
         </View>

@@ -21,7 +21,12 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.tabitosatoh.Bibloop",
-      "associatedDomains": ["applinks:myapp"]
+      "associatedDomains": ["applinks:myapp"],
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs access to your camera to take profile pictures and share photos.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to select and share photos.",
+        "NSPhotoLibraryAddUsageDescription": "This app needs access to save photos to your photo library."
+      }
     },
     "android": {
       "intentFilters": [
@@ -55,6 +60,13 @@
             "backgroundColor": "#000000"
           },
           "imageWidth": 200
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them.",
+          "cameraPermission": "The app accesses your camera to let you take photos."
         }
       ]
     ],

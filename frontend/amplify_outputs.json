@@ -908,5 +908,30 @@
       "nonModels": {}
     }
   },
+  "storage": {
+    "aws_region": "us-east-2",
+    "bucket_name": "amplify-d230fk0vexppqv-8u-bibloopstoragebucket5460-4qlz0win012d",
+    "buckets": [
+      {
+        "name": "BibloopStorage",
+        "bucket_name": "amplify-d230fk0vexppqv-8u-bibloopstoragebucket5460-4qlz0win012d",
+        "aws_region": "us-east-2",
+        "paths": {
+          "public/*": {
+            "guest": [
+              "get",
+              "list"
+            ],
+            "entityidentity": [
+              "get",
+              "list",
+              "write",
+              "delete"
+            ]
+          }
+        }
+      }
+    ]
+  },
   "version": "1.4"
 }
