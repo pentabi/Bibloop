@@ -98,6 +98,22 @@ const schema = a.schema({
       allow.authenticated().to(["create", "read"]),
       allow.owner(),
     ]),
+  DailyChapter: a
+    .model({
+      id: a.string().required(),
+      date: a.date().required(), // Format: "2024-08-20"
+      bookName: a.string().required(), // "創世記", "出エジプト記", etc.
+      chapterNumber: a.integer().required(),
+      title: a.string(),
+      description: a.string(),
+      createdAt: a.datetime().required(),
+      updatedAt: a.datetime().required(),
+    })
+    .secondaryIndexes((index) => [index("date")])
+    .authorization((allow) => [
+      allow.authenticated().to(["read"]), // Everyone can read
+      allow.groups(["admin"]).to(["create", "update", "delete"]), // Only admins can manage
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

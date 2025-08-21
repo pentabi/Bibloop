@@ -9,7 +9,6 @@ import { Button } from "../ui/button";
 import { ArrowUp } from "lucide-react-native";
 import { useState } from "react";
 import { client } from "~/lib/amplify-client";
-import { getCurrentUser } from "aws-amplify/auth";
 import { useErrorHandler } from "~/hooks/useErrorHandler";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/rootReducer";
