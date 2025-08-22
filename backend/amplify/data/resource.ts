@@ -88,6 +88,7 @@ const schema = a.schema({
   CompletedChapter: a
     .model({
       id: a.string().required(),
+      bookName: a.string().required(), // "創世記", "出エジプト記", etc.
       chapter: a.string().required(),
       userId: a.string().required(),
       user: a.belongsTo("UserProfile", "userId"),
