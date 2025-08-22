@@ -108,9 +108,11 @@ const Calendar = () => {
           <View className="w-8" />
         </View>
         <View className="flex-1 items-center justify-center p-4">
-          <Text className="text-lg text-red-600 text-center mb-4">エラーが発生しました</Text>
+          <Text className="text-lg text-red-600 text-center mb-4">
+            エラーが発生しました
+          </Text>
           <Text className="text-gray-600 text-center mb-4">{error}</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={refetch}
             className="bg-blue-600 px-4 py-2 rounded-lg"
           >
@@ -238,7 +240,8 @@ const Calendar = () => {
             <View className="flex-row items-center justify-between">
               <View className="flex-1">
                 <Text className="text-lg font-bold text-gray-800">
-                  {chapters[selectedDate].bookName} {chapters[selectedDate].chapterNumber}章
+                  {chapters[selectedDate].bookName}{" "}
+                  {chapters[selectedDate].chapterNumber}章
                 </Text>
                 <Text className="text-gray-600">
                   {chapters[selectedDate].title}
