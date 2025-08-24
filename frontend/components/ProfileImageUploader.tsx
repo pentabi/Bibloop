@@ -64,9 +64,6 @@ export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
           style={{ width: size, height: size }}
         >
           <ActivityIndicator size="large" color="#007AFF" />
-          <Text className="text-xs text-muted-foreground mt-2">
-            {isUploading ? "アップロード中..." : "読み込み中..."}
-          </Text>
         </View>
       );
     }

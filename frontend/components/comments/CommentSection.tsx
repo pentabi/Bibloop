@@ -142,7 +142,10 @@ const CommentSection = ({
                   <View className="flex-row items-center mb-3">
                     <TouchableOpacity
                       onPress={() => {
-                        router.push("/community-profile");
+                        router.push({
+                          pathname: "/(main)/(socials)/community-profile",
+                          params: { id: comment.creatorId },
+                        });
                       }}
                       className="mr-3"
                     >
