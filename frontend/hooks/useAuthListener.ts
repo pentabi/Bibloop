@@ -5,12 +5,19 @@ import { clearUser, setUser, userLogIn } from "../redux/slices/userSlice";
 import { Hub } from "aws-amplify/utils";
 import { signOutAutomatic } from "~/utils/signOut";
 import { useErrorHandler } from "./useErrorHandler";
+import useUserProfile from "./useUserProfile";
+import {
+  generateUserIdentifier,
+  getAuthProvider,
+} from "~/utils/generateUserIdentifier";
 
 //Checks the user's login status
 //changes their email and login parameters on redux
+//handles user profile creation and onboarding flow
 export default function useAuthListener() {
   const dispatch = useDispatch();
   const { handleError } = useErrorHandler();
+  const { checkAndCreateUserProfile } = useUserProfile();
   const [isAuthLoaded, setIsAuthLoaded] = useState(false);
 
   useEffect(() => {
@@ -22,18 +29,24 @@ export default function useAuthListener() {
         const attrs = await fetchUserAttributes();
         console.log({ user, attrs });
 
-        // For Apple Sign In, use any available identifier
-        let userIdentifier = attrs.email;
-        if (!userIdentifier) {
-          // Try other attributes that Apple might provide
-          userIdentifier =
-            attrs.sub ||
-            attrs.preferred_username ||
-            attrs.name ||
-            "apple_user_" + Date.now();
-        }
+        // Generate userIdentifier using utility function that supports multiple OAuth providers
+        const userIdentifier = generateUserIdentifier(attrs);
+        const authProvider = getAuthProvider(attrs);
 
-        dispatch(userLogIn(userIdentifier));
+        console.log(
+          `Generated userIdentifier: ${userIdentifier} for provider: ${authProvider}`
+        );
+
+        // Check and create user profile in database
+        const profileResult = await checkAndCreateUserProfile(
+          userIdentifier,
+          user.userId
+        );
+
+        console.log("Profile check result:", profileResult);
+
+        // The checkAndCreateUserProfile function already updates Redux state
+        // with setUser action that includes onboarding status
       } catch (error) {
         console.log("Error fetching user attributes:", error);
         handleError(error, "認証エラーが発生しました");

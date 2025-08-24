@@ -1,5 +1,6 @@
 import { signOut as amplifySignOut } from "aws-amplify/auth";
 import { confirm } from "./confirm";
+import { useErrorHandler } from "~/hooks/useErrorHandler";
 
 export async function signOut() {
   try {

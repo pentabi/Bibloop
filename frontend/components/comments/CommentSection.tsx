@@ -2,12 +2,10 @@ import { ArrowDownWideNarrow } from "lucide-react-native";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "../ui/text";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { client } from "~/lib/amplify-client";
-import type { Schema } from "../../../backend/amplify/data/resource";
-import { useErrorHandler } from "~/hooks/useErrorHandler";
-
-type Comment = Schema["Comment"]["type"];
+import { useState, useEffect } from "react";
+import { useComments } from "~/hooks/useComments";
+import { ProfileAvatar } from "~/components/ProfileAvatar";
+import { useImagePreloader } from "~/hooks/useImagePreloader";
 
 const CommentSection = ({
   bookName,
@@ -17,39 +15,32 @@ const CommentSection = ({
   chapter: number;
 }) => {
   const router = useRouter();
-  const { handleError } = useErrorHandler();
   const [sort, setSort] = useState("date");
   const [showSortMenu, setShowSortMenu] = useState(false);
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [loading, setLoading] = useState(true);
 
   // Create a unique postId for this Bible chapter
   const postId = `${bookName}-${chapter}`;
 
-  const fetchComments = async () => {
-    try {
-      setLoading(true);
-      console.log("Fetching comments for postId:", postId);
+  // Use the new custom hook
+  const { comments, isLoading, refetch } = useComments(postId);
 
-      // Fetch comments filtered by postId and status
-      const { data: filteredComments } = await client.models.Comment.list({
-        filter: {
-          and: [{ postId: { eq: postId } }, { status: { eq: "active" } }],
-        },
-      });
+  // Add image preloader
+  const { preloadImages, getPreloadedImage } = useImagePreloader();
 
-      setComments(filteredComments);
-    } catch (error) {
-      console.error("Failed to fetch comments:", error);
-      handleError(error, "コメントの読み込みに失敗しました");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Preload profile images when comments load
   useEffect(() => {
-    fetchComments();
-  }, [postId]);
+    if (comments.length > 0) {
+      // Extract all profile image paths from comments
+      const imagePaths = comments
+        .map((comment) => comment.creatorProfile?.profileImagePath)
+        .filter(Boolean) as string[];
+
+      if (imagePaths.length > 0) {
+        console.log("Preloading profile images:", imagePaths.length);
+        preloadImages(imagePaths);
+      }
+    }
+  }, [comments]);
 
   return (
     <View className="flex-1 bg-white">
@@ -111,7 +102,7 @@ const CommentSection = ({
 
       {/* Comments List */}
       <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
-        {loading ? (
+        {isLoading ? (
           <View className="flex-1 items-center justify-center py-8">
             <Text className="text-gray-500">読み込み中...</Text>
           </View>
@@ -122,7 +113,7 @@ const CommentSection = ({
               最初のコメントを投稿してみましょう！
             </Text>
             <TouchableOpacity
-              onPress={fetchComments}
+              onPress={refetch}
               className="bg-blue-100 px-4 py-2 rounded-lg"
             >
               <Text className="text-blue-600">更新</Text>
@@ -130,7 +121,7 @@ const CommentSection = ({
           </View>
         ) : (
           comments
-            .sort((a: Comment, b: Comment) => {
+            .sort((a, b) => {
               if (sort === "likes") {
                 // For now, sort by creation date since we don't have likes in the schema yet
                 return (
@@ -143,7 +134,7 @@ const CommentSection = ({
                 new Date(a.createdAt).getTime()
               );
             })
-            .map((comment: Comment, index: number) => (
+            .map((comment, index: number) => (
               <View key={comment.id}>
                 {/* Main Comment */}
                 <View className="py-4 border-b border-gray-100">
@@ -151,17 +142,25 @@ const CommentSection = ({
                   <View className="flex-row items-center mb-3">
                     <TouchableOpacity
                       onPress={() => {
-                        router.push("/communityProfile");
+                        router.push("/community-profile");
                       }}
-                      className="w-8 h-8 bg-blue-500 rounded-full items-center justify-center mr-3"
+                      className="mr-3"
                     >
-                      <Text className="text-white text-sm font-semibold">
-                        {comment.creator?.name?.charAt(0).toUpperCase() || "U"}
-                      </Text>
+                      <ProfileAvatar
+                        size={32}
+                        userName={comment.creatorName}
+                        userId={comment.creatorId}
+                        profileImagePath={
+                          comment.creatorProfile?.profileImagePath || undefined
+                        }
+                        preloadedImageUrl={getPreloadedImage(
+                          comment.creatorProfile?.profileImagePath || ""
+                        )}
+                      />
                     </TouchableOpacity>
                     <View className="flex-1 flex-row gap-2 items-center">
                       <Text className="text-sm font-medium text-gray-800">
-                        {comment.creator?.name || "匿名"}
+                        {comment.creatorName}
                       </Text>
                       <Text className="text-xs text-gray-500">
                         {new Date(comment.createdAt).toLocaleDateString(
@@ -181,13 +180,8 @@ const CommentSection = ({
                     <TouchableOpacity className="flex-row items-center mr-6">
                       <Text className="text-xs text-gray-500">いいね</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity className="flex-row items-center">
-                      <Text className="text-xs text-gray-500">返信</Text>
-                    </TouchableOpacity>
                   </View>
                 </View>
-
-                {/* TODO: Add replies functionality later */}
               </View>
             ))
         )}

@@ -4,9 +4,8 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": [
-        "*"
-      ]
+      "@/data-schema": ["../backend/amplify/data/resource.ts"],
+      "~/*": ["*"]
     }
   },
   "include": [

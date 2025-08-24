@@ -3,14 +3,15 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-import { Text } from "./ui/text";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Text } from "../ui/text";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import { ArrowUp } from "lucide-react-native";
 import { useState } from "react";
 import { client } from "~/lib/amplify-client";
-import { getCurrentUser } from "aws-amplify/auth";
 import { useErrorHandler } from "~/hooks/useErrorHandler";
+import { useSelector } from "react-redux";
+import { RootState } from "~/redux/rootReducer";
 
 interface CommentInputProps {
   showComments: boolean;
@@ -23,6 +24,7 @@ const CommentInput = ({
   postId,
   onCommentSubmitted,
 }: CommentInputProps) => {
+  const user = useSelector((state: RootState) => state.user);
   const [commentText, setCommentText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { handleError } = useErrorHandler();
@@ -41,13 +43,6 @@ const CommentInput = ({
     try {
       setIsSubmitting(true);
 
-      // Get current user
-      const user = await getCurrentUser();
-      if (!user) {
-        handleError("ログインが必要です", "認証エラー");
-        return;
-      }
-
       console.log("Creating comment with:", {
         postId,
         content: commentText.trim(),
@@ -58,10 +53,10 @@ const CommentInput = ({
 
       // Create comment with proper data types
       const result = await client.models.Comment.create({
-        postId: postId, // 🔧 Fixed: Use actual postId instead of hardcoded
+        postId: postId,
         content: commentText.trim(),
-        creatorId: user.userId, // 🔧 Fixed: Use actual user ID
-        isPrivate: false,
+        creatorId: user.id ?? "",
+        isPrivate: false, //TODO make friends only chat and staff
         status: "active",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),

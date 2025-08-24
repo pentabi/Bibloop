@@ -11,18 +11,16 @@ import { Appearance, Platform, View } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
-import { ThemeToggle } from "~/components/ThemeToggle";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { Amplify } from "aws-amplify";
-import outputs from "../amplify_outputs.json";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "~/redux/rootReducer";
 import useAuthListener from "~/hooks/useAuthListener";
 import Toast from "~/components/Toast";
-
-Amplify.configure(outputs);
+import { useDailyReading } from "~/hooks/useDailyReading";
+import { useDateChange } from "~/hooks/useDateChange";
+import { RestartAlert } from "~/components/RestartAlert";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -51,17 +49,36 @@ SplashScreen.setOptions({
   duration: 1000,
   fade: true,
 });
-export default function RootLayout() {
+const RootLayout = () => {
   const [appIsReady, setAppIsReady] = useState(false);
   const { isDarkColorScheme } = useColorScheme();
   const isAuthLoaded = useAuthListener();
 
+  // Load today's chapter data during splash screen
+  const { dailyReading, loading: dailyReadingLoading } = useDailyReading();
+
+  // Monitor for date changes and show restart alert
+  const { showRestartAlert, dismissAlert } = useDateChange();
+
   useEffect(() => {
     async function prepare() {
       try {
-        // Pre-load fonts, make any API calls you need to do here
-        // Artificially delay for two seconds to simulate a slow loading experience
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        // Wait for today's chapter to load
+        console.log("📚 Loading today's chapter data...");
+
+        // Wait until daily reading is loaded or we have an error
+        while (dailyReadingLoading) {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+
+        console.log(
+          "✅ Today's chapter loaded:",
+          dailyReading?.bookName,
+          dailyReading?.chapterNumber
+        );
+
+        // Small delay for smooth splash screen experience
+        await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (e) {
         console.warn(e);
       } finally {
@@ -72,7 +89,7 @@ export default function RootLayout() {
     }
 
     prepare();
-  }, []);
+  }, [dailyReadingLoading, dailyReading]);
 
   const onLayoutRootView = useCallback(() => {
     if (appIsReady) {
@@ -92,12 +109,13 @@ export default function RootLayout() {
         onLayout={onLayoutRootView}
       >
         <Toast />
+        <RestartAlert visible={showRestartAlert} onDismiss={dismissAlert} />
         <RootLayoutNav isAuthLoaded={isAuthLoaded} />
         <PortalHost />
       </View>
     </ThemeProvider>
   );
-}
+};
 function RootLayoutNav({ isAuthLoaded }: { isAuthLoaded: boolean }) {
   const router = useRouter();
   usePlatformSpecificSetup();
@@ -110,12 +128,17 @@ function RootLayoutNav({ isAuthLoaded }: { isAuthLoaded: boolean }) {
       if (!user.isLoggedIn) {
         console.log("route to sign in");
         router.replace("/(auth)/signIn");
+      } else if (!user.finishedOnboarding) {
+        console.log(
+          "route to onboarding - first time or incomplete onboarding"
+        );
+        router.replace("/(on-boarding)/step-1-name");
       } else {
-        console.log("route to home");
-        router.replace("/home");
+        console.log("route to main app");
+        router.replace("/(main)/(bottomTabs)/home");
       }
     }
-  }, [isAuthLoaded, user.isLoggedIn, router]);
+  }, [isAuthLoaded, user.isLoggedIn, user.finishedOnboarding, router]);
 
   return <>{isAuthLoaded ? <Slot /> : null}</>;
 }
@@ -139,3 +162,5 @@ function useSetAndroidNavigationBar() {
 }
 
 function noop() {}
+
+export default RootLayout;
