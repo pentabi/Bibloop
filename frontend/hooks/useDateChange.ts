@@ -38,11 +38,6 @@ export const useDateChange = () => {
   const checkDateChange = () => {
     const today = getTodayDateString();
 
-    console.log("🔍 Date check:");
-    console.log("Today (local):", today);
-    console.log("Redux date:", reduxChapterDate);
-    console.log("Last checked:", lastCheckDate.current);
-
     // Check if the actual date has changed
     const dateHasChanged = lastCheckDate.current !== today;
 
@@ -56,8 +51,6 @@ export const useDateChange = () => {
 
       lastCheckDate.current = today;
       setShowRestartAlert(true);
-    } else {
-      console.log("✅ No alert needed");
     }
   };
 

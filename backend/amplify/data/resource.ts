@@ -16,7 +16,7 @@ const schema = a.schema({
       testimony: a.string(),
       prayerRequests: a.hasMany("PrayerRequest", "creatorId"),
       comments: a.hasMany("Comment", "creatorId"),
-      completedChapters: a.hasMany("CompletedChapter", "userId"),
+      completedChapters: a.hasMany("CompletedChapter", "creatorId"),
       sentFriendRequests: a.hasMany("Friendship", "requesterId"),
       receivedFriendRequests: a.hasMany("Friendship", "addresseeId"),
       createdAt: a.datetime().required(),
@@ -92,7 +92,7 @@ const schema = a.schema({
       bookName: a.string().required(), // "創世記", "出エジプト記", etc.
       chapter: a.string().required(),
       creatorId: a.string().required(),
-      user: a.belongsTo("UserProfile", "userId"),
+      user: a.belongsTo("UserProfile", "creatorId"),
       completedAt: a.datetime().required(),
     })
     .secondaryIndexes((index) => [index("creatorId"), index("chapter")])

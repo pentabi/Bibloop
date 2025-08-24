@@ -36,91 +36,116 @@ export const useCalendar = (
       setLoading(true);
       setError(null);
 
-      // Get current user ID
-      const user = await getCurrentUser();
-      const userId = user.userId;
+      // Get current user's Cognito ID
+      const { userId } = await getCurrentUser();
 
-      // Fetch DailyChapter data
-      const { data: dailyChapters } = await client.models.DailyChapter.list();
+      // Fetch daily chapters
+      const { data: dailyChapters } = await client.models.DailyChapter.list({
+        limit: 366,
+      });
 
       // Fetch user's completed chapters
       const { data: completedChapters } =
         await client.models.CompletedChapter.list({
-          filter: {
-            userId: {
-              eq: userId,
-            },
-          },
+          filter: { creatorId: { eq: userId } },
         });
 
-      // Create a map of completed chapters for quick lookup
-      // Key format: "bookName-chapterNumber"
-      const completedChapterMap = new Set(
-        completedChapters.map((cc) => `${cc.bookName}-${cc.chapter}`)
+      // Create a set of completed chapter dates for quick lookup
+      const completedDates = new Set(
+        completedChapters.map((completed) => {
+          // Extract date from completedAt datetime
+          return completed.completedAt.split("T")[0];
+        })
       );
 
-      // Transform data into calendar format
-      const chaptersMap: Record<string, CalendarChapter> = {};
+      // Build chapters object
+      const chaptersData: Record<string, CalendarChapter> = {};
 
-      dailyChapters.forEach((chapter) => {
-        if (chapter.date) {
-          const chapterKey = `${chapter.bookName}-${chapter.chapterNumber}`;
-          const isCompleted = completedChapterMap.has(chapterKey);
-
-          chaptersMap[chapter.date] = {
-            id: chapter.id,
-            date: chapter.date,
-            bookName: chapter.bookName,
-            chapterNumber: chapter.chapterNumber,
-            title: chapter.title || "",
-            description: chapter.description || "",
-            completed: isCompleted,
-          };
-        }
+      dailyChapters.forEach((dailyChapter) => {
+        const date = dailyChapter.date;
+        chaptersData[date] = {
+          id: dailyChapter.id,
+          date: date,
+          bookName: dailyChapter.bookName,
+          chapterNumber: dailyChapter.chapterNumber,
+          title: dailyChapter.title || undefined,
+          description: dailyChapter.description || undefined,
+          completed: completedDates.has(date),
+        };
       });
 
-      setChapters(chaptersMap);
-    } catch (err) {
-      console.error("Error fetching calendar data:", err);
+      setChapters(chaptersData);
+    } catch (error) {
+      console.error("Error fetching chapters:", error);
       setError(
-        err instanceof Error ? err.message : "Failed to fetch calendar data"
+        error instanceof Error ? error.message : "Failed to fetch chapters"
       );
     } finally {
       setLoading(false);
     }
   };
-
   const markAsCompleted = async (date: string) => {
     try {
       const chapterData = chapters[date];
       if (!chapterData) return;
 
-      // Get current user ID
-      const user = await getCurrentUser();
-      const userId = user.userId;
+      // Get current user's Cognito ID directly
+      const { userId } = await getCurrentUser();
 
-      // Create a completed chapter record
-      await client.models.CompletedChapter.create({
-        userId: userId,
-        bookName: chapterData.bookName,
-        chapter: chapterData.chapterNumber.toString(),
-        completedAt: new Date().toISOString(),
-      });
+      if (chapterData.completed) {
+        // If already completed, remove the completion
+        // Find the completed chapter record to delete
+        const { data: completedChapters } =
+          await client.models.CompletedChapter.list({
+            filter: {
+              creatorId: { eq: userId },
+              bookName: { eq: chapterData.bookName },
+              chapter: { eq: chapterData.chapterNumber.toString() },
+            },
+          });
 
-      // Update local state
-      setChapters((prev) => ({
-        ...prev,
-        [date]: {
-          ...prev[date],
-          completed: true,
-        },
-      }));
+        // Delete all matching completed chapter records (in case of duplicates)
+        for (const completedChapter of completedChapters) {
+          const completedDate = completedChapter.completedAt.split("T")[0];
+          if (completedDate === date) {
+            await client.models.CompletedChapter.delete({
+              id: completedChapter.id,
+            });
+          }
+        }
+
+        // Update local state to mark as not completed
+        setChapters((prev) => ({
+          ...prev,
+          [date]: {
+            ...prev[date],
+            completed: false,
+          },
+        }));
+      } else {
+        // If not completed, create a completed chapter record
+        await client.models.CompletedChapter.create({
+          creatorId: userId, // Use Cognito user ID directly
+          bookName: chapterData.bookName,
+          chapter: chapterData.chapterNumber.toString(),
+          completedAt: new Date().toISOString(),
+        });
+
+        // Update local state to mark as completed
+        setChapters((prev) => ({
+          ...prev,
+          [date]: {
+            ...prev[date],
+            completed: true,
+          },
+        }));
+      }
     } catch (err) {
-      console.error("Error marking chapter as completed:", err);
+      console.error("Error toggling chapter completion:", err);
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to mark chapter as completed"
+          : "Failed to toggle chapter completion"
       );
     }
   };
