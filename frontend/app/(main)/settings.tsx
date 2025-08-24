@@ -223,7 +223,11 @@ const settings = () => {
             onPress={handleFeedback}
           />
         </SettingsSection>
-        <Modal isOpen={feedbackModalOpen} withInput>
+        <Modal
+          isOpen={feedbackModalOpen}
+          onClose={() => setFeedbackModal(false)}
+          withInput
+        >
           <View className="bg-background w-full p-4 h-96 rounded-xl items-center justify-center">
             <TouchableOpacity
               onPress={() => {

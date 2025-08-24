@@ -46,7 +46,10 @@ const Home = () => {
           お祈り
         </Text>
         {/* prayer modal */}
-        <Modal isOpen={showPrayerModal}>
+        <Modal
+          isOpen={showPrayerModal}
+          onClose={() => setShowPrayerModal(false)}
+        >
           <View className="w-full p-4 bg-background rounded-xl">
             <TouchableOpacity
               onPress={() => {
