@@ -23,10 +23,13 @@ import {
   LogOut,
   ArrowLeft,
   User,
+  Edit,
 } from "lucide-react-native";
 import { useColorScheme } from "~/lib/useColorScheme";
 import Modal from "~/components/Modal";
 import { Input } from "~/components/ui/input";
+import ChangeName from "~/components/modal/ChangeName";
+import ChangeUserId from "~/components/modal/ChangeUserId";
 
 const settings = () => {
   const router = useRouter();
@@ -37,6 +40,8 @@ const settings = () => {
   const [showTestimony, setShowTestimony] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(colorScheme === "dark");
   const [feedbackModalOpen, setFeedbackModal] = useState(false);
+  const [changeNameModalOpen, setChangeNameModalOpen] = useState(false);
+  const [changeUserIdModalOpen, setChangeUserIdModalOpen] = useState(false);
 
   const handleToggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -61,13 +66,11 @@ const settings = () => {
   };
 
   const handleUserIdChange = () => {
-    Alert.alert("ユーザーID変更", "ユーザーIDを変更しますか？", [
-      { text: "キャンセル", style: "cancel" },
-      {
-        text: "変更",
-        onPress: () => console.log("Navigate to user ID change"),
-      },
-    ]);
+    setChangeUserIdModalOpen(true);
+  };
+
+  const handleNameChange = () => {
+    setChangeNameModalOpen(true);
   };
 
   const handleFeedback = () => {
@@ -164,22 +167,16 @@ const settings = () => {
         {/* Account */}
         <SettingsSection title="アカウント">
           <SettingsItem
+            icon={Edit}
+            title="名前"
+            subtitle="表示名を変更"
+            onPress={handleNameChange}
+          />
+          <SettingsItem
             icon={User}
             title="ユーザーID"
             subtitle="ユーザーIDを変更"
             onPress={handleUserIdChange}
-          />
-          <SettingsItem
-            icon={Mail}
-            title="メールアドレス"
-            subtitle="メールアドレスを変更"
-            onPress={handleEmailChange}
-          />
-          <SettingsItem
-            icon={Lock}
-            title="パスワード"
-            subtitle="パスワードを変更"
-            onPress={handlePasswordChange}
           />
         </SettingsSection>
         <TouchableOpacity
@@ -239,6 +236,24 @@ const settings = () => {
             <Text>pls give feedback</Text>
             <Input className="w-full" />
           </View>
+        </Modal>
+
+        {/* Change Name Modal */}
+        <Modal
+          isOpen={changeNameModalOpen}
+          onClose={() => setChangeNameModalOpen(false)}
+          withInput
+        >
+          <ChangeName onClose={() => setChangeNameModalOpen(false)} />
+        </Modal>
+
+        {/* Change User ID Modal */}
+        <Modal
+          isOpen={changeUserIdModalOpen}
+          onClose={() => setChangeUserIdModalOpen(false)}
+          withInput
+        >
+          <ChangeUserId onClose={() => setChangeUserIdModalOpen(false)} />
         </Modal>
 
         {/* Actions */}
