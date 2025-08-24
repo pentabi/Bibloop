@@ -110,6 +110,13 @@
               "isRequired": false,
               "attributes": []
             },
+            "maximumStreaks": {
+              "name": "maximumStreaks",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
             "completed": {
               "name": "completed",
               "isArray": true,

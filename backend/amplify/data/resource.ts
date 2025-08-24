@@ -91,11 +91,11 @@ const schema = a.schema({
       id: a.string().required(),
       bookName: a.string().required(), // "創世記", "出エジプト記", etc.
       chapter: a.string().required(),
-      userId: a.string().required(),
+      creatorId: a.string().required(),
       user: a.belongsTo("UserProfile", "userId"),
       completedAt: a.datetime().required(),
     })
-    .secondaryIndexes((index) => [index("userId"), index("chapter")])
+    .secondaryIndexes((index) => [index("creatorId"), index("chapter")])
     .authorization((allow) => [
       allow.authenticated().to(["create", "read"]),
       allow.owner(),
