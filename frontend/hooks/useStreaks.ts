@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { generateClient } from "aws-amplify/data";
 import { getCurrentUser } from "aws-amplify/auth";
 import { setUser } from "../redux/slices/userSlice";
+import { RootState } from "../redux/rootReducer";
 import type { Schema } from "../../backend/amplify/data/resource";
 
 const client = generateClient<Schema>();
@@ -14,6 +15,7 @@ export interface UseStreaksReturn {
   error: string | null;
   updateStreak: () => Promise<void>;
   refetch: () => Promise<void>;
+  isAuthenticated: boolean;
 }
 
 export const useStreaks = (): UseStreaksReturn => {
@@ -24,7 +26,17 @@ export const useStreaks = (): UseStreaksReturn => {
 
   const dispatch = useDispatch();
 
+  // Get auth status from Redux
+  const user = useSelector((state: RootState) => state.user);
+
   const calculateStreaks = async () => {
+    // Don't calculate if user is not authenticated yet
+    if (!user.isLoggedIn) {
+      console.log("User not authenticated, skipping streak calculation");
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -200,8 +212,17 @@ export const useStreaks = (): UseStreaksReturn => {
   };
 
   useEffect(() => {
-    calculateStreaks();
-  }, []);
+    // Only calculate streaks when user is authenticated
+    if (user.isLoggedIn) {
+      console.log("User authenticated, calculating streaks");
+      calculateStreaks();
+    } else {
+      console.log(
+        "User not authenticated, skipping initial streak calculation"
+      );
+      setLoading(false);
+    }
+  }, [user.isLoggedIn]);
 
   return {
     currentStreak,
@@ -210,5 +231,6 @@ export const useStreaks = (): UseStreaksReturn => {
     error,
     updateStreak,
     refetch,
+    isAuthenticated: user.isLoggedIn, // Expose auth status
   };
 };
