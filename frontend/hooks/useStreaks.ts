@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { generateClient } from "aws-amplify/data";
 import { getCurrentUser } from "aws-amplify/auth";
+import { setUser } from "../redux/slices/userSlice";
 import type { Schema } from "../../backend/amplify/data/resource";
 
 const client = generateClient<Schema>();
@@ -20,6 +22,8 @@ export const useStreaks = (): UseStreaksReturn => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const dispatch = useDispatch();
+
   const calculateStreaks = async () => {
     try {
       setLoading(true);
@@ -27,6 +31,17 @@ export const useStreaks = (): UseStreaksReturn => {
 
       // Get current user's Cognito ID
       const { userId } = await getCurrentUser();
+      console.log("Current user ID:", userId);
+
+      // Fetch current user profile to get existing max streak
+      const { data: userProfile } = await client.models.UserProfile.get({
+        id: userId,
+      });
+
+      console.log("Found user profile for streak calculation:", userProfile);
+
+      const existingMaxStreak = userProfile?.maximumStreaks || 0;
+      console.log("Existing max streak:", existingMaxStreak);
 
       // Fetch user's completed chapters, sorted by completion date
       const { data: completedChapters } =
@@ -37,7 +52,7 @@ export const useStreaks = (): UseStreaksReturn => {
 
       if (!completedChapters || completedChapters.length === 0) {
         setCurrentStreak(0);
-        setMaxStreak(0);
+        setMaxStreak(existingMaxStreak);
         return;
       }
 
@@ -54,6 +69,8 @@ export const useStreaks = (): UseStreaksReturn => {
         new Set(sortedCompletions.map((c) => c.date))
       ).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
 
+      console.log("Unique completion dates:", uniqueDates);
+
       // Calculate current streak
       let current = 0;
       const today = new Date();
@@ -62,62 +79,59 @@ export const useStreaks = (): UseStreaksReturn => {
         .toISOString()
         .split("T")[0];
 
-      // Check if streak is active (completed today or yesterday)
-      if (
-        uniqueDates.includes(todayStr) ||
-        uniqueDates.includes(yesterdayStr)
-      ) {
-        let checkDate = uniqueDates.includes(todayStr)
-          ? today
-          : new Date(today.getTime() - 24 * 60 * 60 * 1000);
+      console.log("Today:", todayStr);
+      console.log("Yesterday:", yesterdayStr);
 
-        for (const dateStr of uniqueDates) {
-          const completionDate = new Date(dateStr);
-          const expectedDateStr = checkDate.toISOString().split("T")[0];
+      // Start checking from today if completed today, otherwise from yesterday
+      let checkDate = new Date();
+      let startFromToday = false;
 
-          if (dateStr === expectedDateStr) {
-            current++;
-            checkDate = new Date(checkDate.getTime() - 24 * 60 * 60 * 1000); // Go back one day
-          } else {
-            break; // Streak broken
-          }
-        }
+      if (uniqueDates.includes(todayStr)) {
+        // User completed today - start counting from today
+        startFromToday = true;
+        console.log("Starting streak count from today");
+      } else if (uniqueDates.includes(yesterdayStr)) {
+        // User completed yesterday but not today - start from yesterday
+        checkDate = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+        console.log("Starting streak count from yesterday");
+      } else {
+        // No recent completions - streak is broken
+        console.log("No recent completions - streak is 0");
+        setCurrentStreak(0);
+        setMaxStreak(existingMaxStreak);
+        return;
       }
 
-      // Calculate maximum streak
-      let max = 0;
-      let tempStreak = 0;
-      let lastDate: Date | null = null;
+      // Count consecutive days
+      for (const dateStr of uniqueDates) {
+        const expectedDateStr = checkDate.toISOString().split("T")[0];
 
-      for (const dateStr of uniqueDates.reverse()) {
-        // Process chronologically
-        const currentDate = new Date(dateStr);
+        console.log(
+          `Checking: completion date ${dateStr} vs expected ${expectedDateStr}`
+        );
 
-        if (lastDate === null) {
-          tempStreak = 1;
+        if (dateStr === expectedDateStr) {
+          current++;
+          console.log(`✅ Match! Current streak: ${current}`);
+          // Move to previous day
+          checkDate = new Date(checkDate.getTime() - 24 * 60 * 60 * 1000);
         } else {
-          const daysDiff = Math.floor(
-            (currentDate.getTime() - lastDate.getTime()) / (24 * 60 * 60 * 1000)
-          );
-
-          if (daysDiff === 1) {
-            tempStreak++;
-          } else {
-            max = Math.max(max, tempStreak);
-            tempStreak = 1;
-          }
+          // No completion for this date - streak ends
+          console.log(`❌ No completion for ${expectedDateStr} - streak ends`);
+          break;
         }
-
-        lastDate = currentDate;
       }
 
-      max = Math.max(max, tempStreak);
+      console.log("Final current streak:", current);
+
+      // Calculate maximum streak - simply compare current with existing max
+      const newMaxStreak = Math.max(current, existingMaxStreak);
 
       setCurrentStreak(current);
-      setMaxStreak(max);
+      setMaxStreak(newMaxStreak);
 
       // Update UserProfile with the calculated streaks
-      await updateUserProfileStreaks(userId, current, max);
+      await updateUserProfileStreaks(userId, current, newMaxStreak);
     } catch (err) {
       console.error("Error calculating streaks:", err);
       setError(
@@ -134,17 +148,43 @@ export const useStreaks = (): UseStreaksReturn => {
     maxStreaks: number
   ) => {
     try {
-      // Since we're using Cognito user ID directly, the UserProfile ID should match
+      console.log(
+        `Attempting to update streaks: current=${streaks}, max=${maxStreaks} for userId=${userId}`
+      );
+
+      // Use Cognito user ID directly as the UserProfile id
       const { data: userProfile } = await client.models.UserProfile.get({
         id: userId,
       });
 
+      console.log("Found user profile:", userProfile);
+
       if (userProfile) {
-        await client.models.UserProfile.update({
-          id: userId,
-          streaks,
-          maximumStreaks: maxStreaks,
-        });
+        console.log("Updating profile with id:", userProfile.id);
+
+        // Update database using the Cognito user ID as the profile id
+        const { data: updatedProfile } = await client.models.UserProfile.update(
+          {
+            id: userId,
+            streaks,
+            maximumStreaks: maxStreaks,
+          }
+        );
+
+        console.log("Update result:", updatedProfile);
+
+        // Update Redux state with new streak values
+        if (updatedProfile) {
+          dispatch(
+            setUser({
+              streaks,
+              maximumStreaks: maxStreaks,
+            })
+          );
+          console.log("Redux state updated with new streaks");
+        }
+      } else {
+        console.error("No user profile found for userId:", userId);
       }
     } catch (err) {
       console.error("Error updating user profile streaks:", err);

@@ -13,7 +13,8 @@ const Calendar = () => {
   );
 
   // Use the calendar hook to get actual data
-  const { chapters, loading, error, markAsCompleted, refetch } = useCalendar();
+  const { chapters, loading, markingLoading, error, markAsCompleted, refetch } =
+    useCalendar();
 
   // Convert chapters data to calendar marking format
   const getMarkedDates = () => {
@@ -64,6 +65,9 @@ const Calendar = () => {
   };
 
   const handleMarkAsCompleted = async (date: string) => {
+    // Return early if already loading
+    if (markingLoading) return;
+
     try {
       await markAsCompleted(date);
       Alert.alert("完了", "この日の読書を完了としてマークしました！");
@@ -249,16 +253,42 @@ const Calendar = () => {
               </View>
               <View className="flex-row items-center space-x-2">
                 {chapters[selectedDate].completed ? (
-                  <View className="flex-row items-center bg-green-100 px-3 py-1 rounded-full">
-                    <CheckCircle2 size={16} color="#22c55e" />
-                    <Text className="text-green-700 text-sm ml-1">完了</Text>
-                  </View>
+                  <TouchableOpacity
+                    onPress={() => handleMarkAsCompleted(selectedDate)}
+                    disabled={markingLoading}
+                    className={`flex-row items-center px-3 py-1 rounded-full ${
+                      markingLoading ? "bg-gray-100 opacity-50" : "bg-green-100"
+                    }`}
+                  >
+                    <CheckCircle2
+                      size={16}
+                      color={markingLoading ? "#9ca3af" : "#22c55e"}
+                    />
+                    <Text
+                      className={`text-sm ml-1 ${
+                        markingLoading ? "text-gray-500" : "text-green-700"
+                      }`}
+                    >
+                      {markingLoading ? "処理中..." : "完了"}
+                    </Text>
+                  </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
                     onPress={() => handleMarkAsCompleted(selectedDate)}
-                    className="bg-orange-100 px-3 py-1 rounded-full"
+                    disabled={markingLoading}
+                    className={`px-3 py-1 rounded-full ${
+                      markingLoading
+                        ? "bg-gray-100 opacity-50"
+                        : "bg-orange-100"
+                    }`}
                   >
-                    <Text className="text-orange-700 text-sm">完了にする</Text>
+                    <Text
+                      className={`text-sm ${
+                        markingLoading ? "text-gray-500" : "text-orange-700"
+                      }`}
+                    >
+                      {markingLoading ? "処理中..." : "完了にする"}
+                    </Text>
                   </TouchableOpacity>
                 )}
               </View>
