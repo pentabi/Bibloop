@@ -1,4 +1,12 @@
-import { View, Text, TouchableOpacity, ScrollView, Image, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import {
@@ -19,6 +27,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/data-schema";
 import { useImageHandler } from "~/hooks/useImageHandler";
+import { useFriendship } from "~/hooks/useFriendship";
 
 const client = generateClient<Schema>();
 
@@ -33,6 +42,7 @@ const CommunityProfile = () => {
 
   const userId = params.id as string; // Cognito user ID
   const { getImageUrl } = useImageHandler();
+  const { sendFriendRequest, isLoading: friendshipLoading } = useFriendship();
 
   // Load profile image when communityUser changes
   useEffect(() => {
@@ -55,6 +65,26 @@ const CommunityProfile = () => {
 
     loadProfileImage();
   }, [communityUser?.profileImagePath]);
+
+  const handleFollowRequest = async () => {
+    if (!communityUser?.userId) {
+      Alert.alert("エラー", "ユーザー情報が見つかりません");
+      return;
+    }
+
+    try {
+      await sendFriendRequest(communityUser.userId);
+      Alert.alert(
+        "成功",
+        `${communityUser.name || "ユーザー"}にフレンドリクエストを送信しました`,
+        [{ text: "OK" }]
+      );
+      setIsFollowing(true);
+    } catch (error) {
+      console.error("Failed to send friend request:", error);
+      // Error is already handled by the useFriendship hook
+    }
+  };
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -196,17 +226,22 @@ const CommunityProfile = () => {
           {/* Action Buttons */}
           <View className="flex-row gap-3 mb-6">
             <TouchableOpacity
-              onPress={() => setIsFollowing(!isFollowing)}
+              onPress={handleFollowRequest}
+              disabled={friendshipLoading || isFollowing}
               className={`flex-1 rounded-lg py-3 items-center ${
                 isFollowing ? "border border-gray-300" : "bg-blue-600"
-              }`}
+              } ${friendshipLoading ? "opacity-50" : ""}`}
             >
               <Text
                 className={`font-medium ${
                   isFollowing ? "text-gray-900" : "text-white"
                 }`}
               >
-                {isFollowing ? "フォロー中" : "フォローする"}
+                {friendshipLoading
+                  ? "送信中..."
+                  : isFollowing
+                  ? "リクエスト送信済み"
+                  : "フォローする"}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
