@@ -118,7 +118,7 @@ const Home = () => {
           }}
           className="p-8 bg-primary rounded-xl flex-1 "
         >
-          <Text>streaks</Text>
+          <Text>streaks {user.streaks}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {

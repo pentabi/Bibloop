@@ -10,6 +10,7 @@ const schema = a.schema({
       profileImagePath: a.string(),
       points: a.integer(),
       streaks: a.integer(),
+      maximumStreaks: a.integer(),
       completed: a.string().array(),
       isTestimonyPrivate: a.boolean(),
       testimony: a.string(),

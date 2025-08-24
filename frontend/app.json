@@ -17,11 +17,15 @@
         "backgroundColor": "#000000"
       }
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.tabitosatoh.Bibloop",
-      "associatedDomains": ["applinks:myapp"],
+      "associatedDomains": [
+        "applinks:myapp"
+      ],
       "infoPlist": {
         "NSCameraUsageDescription": "This app needs access to your camera to take profile pictures and share photos.",
         "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to select and share photos.",
@@ -38,7 +42,10 @@
               "scheme": "myapp"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ],
       "package": "com.anonymous.frontend"
@@ -68,7 +75,8 @@
           "photosPermission": "The app accesses your photos to let you share them.",
           "cameraPermission": "The app accesses your camera to let you take photos."
         }
-      ]
+      ],
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true

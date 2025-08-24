@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "move-amplify-outputs": "cp ./backend/amplify_outputs.json ./admin/amplify_outputs.json && cp ./backend/amplify_outputs.json ./frontend/amplify_outputs.json"
+    "move": "cp ./backend/amplify_outputs.json ./admin/amplify_outputs.json && cp ./backend/amplify_outputs.json ./frontend/amplify_outputs.json"
   },
   "keywords": [],
   "author": "",
