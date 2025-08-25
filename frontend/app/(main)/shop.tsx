@@ -23,15 +23,15 @@ const Shop = () => {
           <View className="bg-primary/10 rounded-full p-4 mb-4">
             <ShoppingBag size={48} color="#007AFF" />
           </View>
-          
+
           <Text className="text-xl font-bold text-foreground mb-2 text-center">
             ショップ機能
           </Text>
-          
+
           <Text className="text-lg font-semibold text-primary mb-4 text-center">
             近日公開予定！
           </Text>
-          
+
           <Text className="text-sm text-muted-foreground text-center leading-relaxed">
             ポイントを使ってアバターアイテムや{"\n"}
             特別な機能を購入できるショップを{"\n"}

@@ -6,9 +6,12 @@ import {
   Book,
   ChevronLeft,
   ChevronRight,
+  CheckCircle,
+  Check,
 } from "lucide-react-native";
 import { useKougoChapterData } from "~/hooks/useKougoChapterData";
 import { SheetWithComments } from "~/components/bible/SheetWithComments";
+import { useChapterCompletion } from "~/hooks/useChapterCompletion";
 
 const BibleChapter = () => {
   const router = useRouter();
@@ -25,6 +28,10 @@ const BibleChapter = () => {
   const { verses, error, totalChapters, loadKougoChapter } =
     useKougoChapterData(currentBookId, currentChapter);
 
+  // Use chapter completion hook for any chapter
+  const { isCompleted, markingLoading, toggleCompletion } =
+    useChapterCompletion(bookName as string, currentChapter);
+
   const navigateToChapter = (newChapter: number) => {
     router.setParams({
       bookId: bookId!,
@@ -39,13 +46,41 @@ const BibleChapter = () => {
   if (error) {
     return (
       <View className="flex-1 justify-center items-center bg-background p-4">
-        <Text className="text-red-500 text-center mb-4">{error}</Text>
-        <TouchableOpacity
-          onPress={loadKougoChapter}
-          className="bg-blue-500 px-6 py-3 rounded-lg"
+        <View
+          className="bg-red-50 border border-red-200 p-6 rounded-xl"
+          style={{
+            shadowColor: "#EF4444",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 8,
+            elevation: 2,
+          }}
         >
-          <Text className="text-white">再試行</Text>
-        </TouchableOpacity>
+          <View className="items-center mb-4">
+            <View className="bg-red-100 rounded-full p-3 mb-3">
+              <Book size={24} color="#EF4444" />
+            </View>
+            <Text className="text-red-600 text-center font-bold text-lg mb-2">
+              読み込みエラー
+            </Text>
+            <Text className="text-red-500 text-center text-sm leading-5">
+              {error}
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={loadKougoChapter}
+            className="bg-red-500 px-6 py-3 rounded-lg active:scale-95"
+            style={{
+              shadowColor: "#EF4444",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.2,
+              shadowRadius: 4,
+              elevation: 3,
+            }}
+          >
+            <Text className="text-white text-center font-semibold">再試行</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -54,76 +89,74 @@ const BibleChapter = () => {
     <SheetWithComments bookName={bookName || ""} chapter={currentChapter}>
       <View className="flex-1 bg-background">
         {/* Header */}
-        <View className="bg-blue-500 pt-12 pb-4 px-4">
-          <View className="flex-row items-center justify-between">
-            <TouchableOpacity
-              onPress={() => router.back()}
-              className="flex-row items-center"
-            >
-              <ArrowLeft size={24} color="white" />
-              <Text className="text-white ml-2">戻る</Text>
-            </TouchableOpacity>
+        <View className="px-6 pt-16 pb-6 bg-primary">
+          {/* Back Button */}
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="flex-row items-center mb-3"
+          >
+            <ArrowLeft size={18} color="black" />
+            <Text className="text-black ml-2 text-sm font-medium">戻る</Text>
+          </TouchableOpacity>
 
-            <View className="flex-1 items-center">
-              <View className="flex-row items-center">
-                <Book size={20} color="white" />
-                <Text className="text-white text-lg font-bold ml-2">
-                  {bookName}
-                </Text>
-              </View>
-              <Text className="text-white/80 text-sm">第{chapter}章</Text>
+          {/* Chapter Title */}
+          <View className="mb-3">
+            <Text className="text-white text-sm font-medium mb-1">聖書</Text>
+            <View className="flex-row items-baseline">
+              <Text className="text-white font-bold text-2xl mr-2">
+                {bookName}
+              </Text>
+              <Text className="text-white font-bold text-xl">
+                第{chapter}章
+              </Text>
             </View>
-
-            <View className="w-16" />
           </View>
-        </View>
 
-        {/* Chapter Navigation */}
-        <View className="bg-white border-b border-gray-200 px-4 py-3">
+          {/* Compact Chapter Navigation */}
           <View className="flex-row items-center justify-between">
             <TouchableOpacity
               onPress={() =>
                 canGoPrevious && navigateToChapter(currentChapter - 1)
               }
               disabled={!canGoPrevious}
-              className={`flex-row items-center px-4 py-2 rounded-lg ${
-                canGoPrevious ? "bg-blue-100" : "bg-gray-100"
+              className={`flex-row items-center px-3 py-1.5 rounded-lg ${
+                canGoPrevious ? "bg-black/10" : "bg-black/5"
               }`}
             >
               <ChevronLeft
-                size={16}
-                className={canGoPrevious ? "text-blue-600" : "text-gray-400"}
+                size={14}
+                color={canGoPrevious ? "black" : "rgba(0,0,0,0.3)"}
               />
               <Text
-                className={`ml-1 text-sm ${
-                  canGoPrevious ? "text-blue-600" : "text-gray-400"
+                className={`ml-1 text-xs font-medium ${
+                  canGoPrevious ? "text-black" : "text-black/30"
                 }`}
               >
                 前の章
               </Text>
             </TouchableOpacity>
 
-            <Text className="text-gray-600 text-sm">
+            <Text className="text-black/60 text-xs font-medium">
               {currentChapter} / {totalChapters}
             </Text>
 
             <TouchableOpacity
               onPress={() => canGoNext && navigateToChapter(currentChapter + 1)}
               disabled={!canGoNext}
-              className={`flex-row items-center px-4 py-2 rounded-lg ${
-                canGoNext ? "bg-blue-100" : "bg-gray-100"
+              className={`flex-row items-center px-3 py-1.5 rounded-lg ${
+                canGoNext ? "bg-black/10" : "bg-black/5"
               }`}
             >
               <Text
-                className={`mr-1 text-sm ${
-                  canGoNext ? "text-blue-600" : "text-gray-400"
+                className={`mr-1 text-xs font-medium ${
+                  canGoNext ? "text-black" : "text-black/30"
                 }`}
               >
                 次の章
               </Text>
               <ChevronRight
-                size={16}
-                className={canGoNext ? "text-blue-600" : "text-gray-400"}
+                size={14}
+                color={canGoNext ? "black" : "rgba(0,0,0,0.3)"}
               />
             </TouchableOpacity>
           </View>
@@ -131,37 +164,78 @@ const BibleChapter = () => {
 
         {/* Verses */}
         <ScrollView
-          className="flex-1 px-4"
+          className="flex-1 px-6"
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingVertical: 20 }}
+          contentContainerStyle={{ paddingTop: 20, paddingBottom: 100 }}
         >
           {verses.length > 0 ? (
-            <View className="bg-card rounded-xl p-4 border border-border">
-              {verses.map((verse, index) => (
-                <View key={verse.verse} className="mb-4">
-                  <Text className="text-base text-foreground leading-7">
-                    <Text className="font-bold text-blue-600 mr-2">
-                      {verse.verse}.
+            <View>
+              <View className="space-y-3">
+                {verses.map((verse, index) => (
+                  <Text
+                    key={verse.verse}
+                    className="text-xl text-gray-800 mb-3 leading-8"
+                  >
+                    <Text className="text-base text-gray-500 font-medium mr-2">
+                      {verse.verse}.{" "}
                     </Text>
                     {verse.text}
                   </Text>
-                  {index < verses.length - 1 && (
-                    <View className="h-px bg-border/50 mt-4" />
+                ))}
+              </View>
+
+              {/* Completion Toggle */}
+              <View className="mt-8 mb-4">
+                <TouchableOpacity
+                  onPress={toggleCompletion}
+                  disabled={markingLoading}
+                  className={`flex-row items-center justify-center px-6 py-4 rounded-xl ${
+                    isCompleted
+                      ? "bg-green-50 border border-green-200"
+                      : "bg-card border border-border"
+                  }`}
+                  style={{
+                    shadowColor: isCompleted ? "#10B981" : "#000",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: isCompleted ? 0.1 : 0.05,
+                    shadowRadius: 8,
+                    elevation: 2,
+                  }}
+                >
+                  {isCompleted ? (
+                    <View className="w-6 h-6 bg-green-500 rounded-full items-center justify-center">
+                      <Check size={16} color="white" strokeWidth={3} />
+                    </View>
+                  ) : (
+                    <CheckCircle
+                      size={24}
+                      color="#9CA3AF"
+                      fill="none"
+                      strokeWidth={2}
+                    />
                   )}
-                </View>
-              ))}
+                  <Text
+                    className={`ml-3 font-semibold ${
+                      isCompleted ? "text-green-600" : "text-muted-foreground"
+                    }`}
+                  >
+                    {markingLoading
+                      ? "更新中..."
+                      : isCompleted
+                      ? "読了済み"
+                      : "読了としてマーク"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           ) : (
             <View className="items-center justify-center py-20">
-              <Book size={48} className="text-muted-foreground mb-4" />
-              <Text className="text-muted-foreground text-center">
+              <Book size={48} color="#9CA3AF" style={{ marginBottom: 16 }} />
+              <Text className="text-muted-foreground text-center font-medium">
                 この章には節が見つかりませんでした
               </Text>
             </View>
           )}
-
-          {/* Bottom Navigation Spacing */}
-          <View className="h-20" />
         </ScrollView>
       </View>
     </SheetWithComments>

@@ -2,7 +2,14 @@ import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import React from "react";
 import { useDailyReading } from "~/hooks/useDailyReading";
 import { SheetWithComments } from "~/components/bible/SheetWithComments";
-import { RefreshCw, Book, Calendar } from "lucide-react-native";
+import {
+  RefreshCw,
+  Book,
+  Calendar,
+  CheckCircle,
+  Check,
+} from "lucide-react-native";
+import { useChapterCompletion } from "~/hooks/useChapterCompletion";
 
 const Chapter = () => {
   // Use the daily reading hook to get today's actual reading
@@ -16,6 +23,13 @@ const Chapter = () => {
     formatDateForDisplay,
   } = useDailyReading();
 
+  // Use chapter completion hook for any chapter (including substitutes)
+  const { isCompleted, markingLoading, toggleCompletion } =
+    useChapterCompletion(
+      dailyReading?.bookName || "",
+      dailyReading?.chapterNumber || 0
+    );
+
   return (
     <SheetWithComments
       bookName={dailyReading?.bookName || ""}
@@ -28,15 +42,15 @@ const Chapter = () => {
         >
           {/* Date and Chapter */}
           <View className="mb-6">
-            <Text className="text-3xl mb-2 text-accent/90">
+            <Text className="text-3xl mb-2 text-black ">
               {dailyReading ? formatDateForDisplay(dailyReading.date) : ""}
             </Text>
             <View className="flex-row items-end">
-              <Text className="font-bold text-3xl mr-2">
+              <Text className="font-bold text-3xl mr-2 text-black">
                 {dailyReading?.bookName || ""}
               </Text>
-              <Text className="font-bol text-3xl">
-                {dailyReading?.chapterNumber || ""}
+              <Text className="font-bold text-3xl text-black">
+                {dailyReading?.chapterNumber || ""}章
               </Text>
             </View>
           </View>
@@ -127,9 +141,9 @@ const Chapter = () => {
                 {verses.map((verse, index) => (
                   <Text
                     key={verse.verse}
-                    className="text-lg text-gray-800 mb-3 leading-7"
+                    className="text-xl text-gray-800 mb-3 leading-8"
                   >
-                    <Text className="text-sm text-blue-600 font-bold mr-2">
+                    <Text className="text-base text-gray-500 font-medium mr-2">
                       {verse.verse}.{" "}
                     </Text>
                     {verse.text}
@@ -137,14 +151,51 @@ const Chapter = () => {
                 ))}
               </View>
 
-              {/* Refresh button */}
-              <TouchableOpacity
-                onPress={refetch}
-                className="mt-6 bg-gray-100 px-4 py-3 rounded-lg flex-row items-center justify-center"
-              >
-                <RefreshCw size={16} className="text-gray-600 mr-2" />
-                <Text className="text-gray-600 text-sm">更新を確認</Text>
-              </TouchableOpacity>
+              {/* Completion Toggle */}
+              {dailyReading && (
+                <View className="mt-8 mb-4">
+                  <TouchableOpacity
+                    onPress={toggleCompletion}
+                    disabled={markingLoading}
+                    className={`flex-row items-center justify-center px-6 py-4 rounded-xl ${
+                      isCompleted
+                        ? "bg-green-50 border border-green-200"
+                        : "bg-card border border-border"
+                    }`}
+                    style={{
+                      shadowColor: isCompleted ? "#10B981" : "#000",
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: isCompleted ? 0.1 : 0.05,
+                      shadowRadius: 8,
+                      elevation: 2,
+                    }}
+                  >
+                    {isCompleted ? (
+                      <View className="w-6 h-6 bg-green-500 rounded-full items-center justify-center">
+                        <Check size={16} color="white" strokeWidth={3} />
+                      </View>
+                    ) : (
+                      <CheckCircle
+                        size={24}
+                        color="#9CA3AF"
+                        fill="none"
+                        strokeWidth={2}
+                      />
+                    )}
+                    <Text
+                      className={`ml-3 font-semibold ${
+                        isCompleted ? "text-green-600" : "text-muted-foreground"
+                      }`}
+                    >
+                      {markingLoading
+                        ? "更新中..."
+                        : isCompleted
+                        ? "読了済み"
+                        : "読了としてマーク"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           )}
         </View>
