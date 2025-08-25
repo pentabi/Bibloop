@@ -79,28 +79,34 @@ export const useComments = (postId: string) => {
             // Fetch likes for this comment
             const likesResult = await client.models.Like.list({
               filter: {
-                commentId: { eq: comment.id }
-              }
+                commentId: { eq: comment.id },
+              },
             });
 
             const likes = likesResult.data || [];
             const likesCount = likes.length;
-            const isLikedByCurrentUser = currentUser?.id ? 
-              likes.some(like => like.userId === currentUser.id) : false;
+            const isLikedByCurrentUser = currentUser?.id
+              ? likes.some((like) => like.userId === currentUser.id)
+              : false;
 
             return {
               ...comment,
-              creatorName: creatorsMap.get(comment.creatorId)?.name || "匿名ユーザー",
+              creatorName:
+                creatorsMap.get(comment.creatorId)?.name || "匿名ユーザー",
               creatorProfile: creatorsMap.get(comment.creatorId),
               likesCount,
               isLikedByCurrentUser,
               likes,
             };
           } catch (error) {
-            console.warn(`Failed to fetch likes for comment ${comment.id}:`, error);
+            console.warn(
+              `Failed to fetch likes for comment ${comment.id}:`,
+              error
+            );
             return {
               ...comment,
-              creatorName: creatorsMap.get(comment.creatorId)?.name || "匿名ユーザー",
+              creatorName:
+                creatorsMap.get(comment.creatorId)?.name || "匿名ユーザー",
               creatorProfile: creatorsMap.get(comment.creatorId),
               likesCount: 0,
               isLikedByCurrentUser: false,
@@ -156,7 +162,10 @@ export const useComments = (postId: string) => {
   const toggleLike = useCallback(
     async (commentId: string) => {
       if (!currentUser?.id) {
-        handleErrorRef.current(new Error("User not logged in"), "ログインが必要です");
+        handleErrorRef.current(
+          new Error("User not logged in"),
+          "ログインが必要です"
+        );
         return;
       }
 
@@ -166,16 +175,16 @@ export const useComments = (postId: string) => {
           filter: {
             and: [
               { commentId: { eq: commentId } },
-              { userId: { eq: currentUser.id } }
-            ]
-          }
+              { userId: { eq: currentUser.id } },
+            ],
+          },
         });
 
         if (existingLikes.data && existingLikes.data.length > 0) {
           // Unlike - delete the like
           const likeToDelete = existingLikes.data[0];
           await client.models.Like.delete({
-            id: likeToDelete.id
+            id: likeToDelete.id,
           });
           console.log("Comment unliked successfully");
         } else {

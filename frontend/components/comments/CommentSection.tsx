@@ -135,7 +135,7 @@ const CommentSection = ({
               <View key={comment.id}>
                 {/* Main Comment */}
                 <View className="py-4 border-b border-gray-100">
-                  {/* User Info and Like Button */}
+                  {/* User Info */}
                   <View className="flex-row items-center mb-3">
                     <TouchableOpacity
                       onPress={() => {
@@ -168,21 +168,28 @@ const CommentSection = ({
                         )}
                       </Text>
                     </View>
-                    
-                    {/* Like Button */}
+                  </View>
+
+                  {/* Comment Content */}
+                  {/* Like Button */}
+                  <View className="flex-row justify-end mt-3">
                     <TouchableOpacity
                       onPress={() => toggleLike(comment.id)}
                       className="flex-row items-center px-3 py-1"
                     >
-                      <Heart 
-                        size={16} 
-                        color={comment.isLikedByCurrentUser ? "#ef4444" : "#9ca3af"}
+                      <Heart
+                        size={16}
+                        color={
+                          comment.isLikedByCurrentUser ? "#ef4444" : "#9ca3af"
+                        }
                         fill={comment.isLikedByCurrentUser ? "#ef4444" : "none"}
                       />
                       {comment.likesCount > 0 && (
-                        <Text 
+                        <Text
                           className={`text-xs ml-1 ${
-                            comment.isLikedByCurrentUser ? "text-red-500" : "text-gray-500"
+                            comment.isLikedByCurrentUser
+                              ? "text-red-500"
+                              : "text-gray-500"
                           }`}
                         >
                           {comment.likesCount}
@@ -190,8 +197,6 @@ const CommentSection = ({
                       )}
                     </TouchableOpacity>
                   </View>
-
-                  {/* Comment Content */}
                   <Text className="text-gray-700 leading-5 ml-11 text-lg">
                     {comment.content}
                   </Text>
