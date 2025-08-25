@@ -52,6 +52,7 @@ const schema = a.schema({
     .model({
       id: a.string().required(),
       postId: a.string().required(), //the thing being commented on
+      likes: a.integer(),
       isPrivate: a.boolean().required(),
       creatorId: a.string().required(),
       creator: a.belongsTo("UserProfile", "creatorId"),
