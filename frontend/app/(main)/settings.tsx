@@ -25,7 +25,6 @@ import {
   User,
   Edit,
 } from "lucide-react-native";
-import { useColorScheme } from "~/lib/useColorScheme";
 import Modal from "~/components/Modal";
 import { Input } from "~/components/ui/input";
 import ChangeName from "~/components/modal/ChangeName";
@@ -34,18 +33,21 @@ import ChangeUserId from "~/components/modal/ChangeUserId";
 const settings = () => {
   const router = useRouter();
   const user = useSelector((state: RootState) => state.user);
-  const { colorScheme, toggleColorScheme } = useColorScheme();
 
   // Local state for settings
   const [showTestimony, setShowTestimony] = useState(true);
-  const [isDarkMode, setIsDarkMode] = useState(colorScheme === "dark");
+  const [isDarkMode, setIsDarkMode] = useState(false); // Force light mode
   const [feedbackModalOpen, setFeedbackModal] = useState(false);
   const [changeNameModalOpen, setChangeNameModalOpen] = useState(false);
   const [changeUserIdModalOpen, setChangeUserIdModalOpen] = useState(false);
 
   const handleToggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    toggleColorScheme();
+    // Show popup when user tries to enable dark mode
+    Alert.alert(
+      "ダークモード",
+      "ダークモードは今後のアップデートで利用可能になります。現在はライトモードのみご利用いただけます。",
+      [{ text: "OK", style: "default" }]
+    );
   };
 
   const handleEmailChange = () => {
@@ -146,24 +148,22 @@ const settings = () => {
             {user?.userIdentifier || "user@example.com"}
           </Text>
         </View>
-
         {/* Appearance */}
         <SettingsSection title="表示">
           <SettingsItem
-            icon={isDarkMode ? Moon : Sun}
+            icon={Sun}
             title="ダークモード"
-            subtitle={isDarkMode ? "オン" : "オフ"}
+            subtitle="今後のアップデートで利用可能になります"
             rightElement={
               <Switch
-                value={isDarkMode}
+                value={false}
                 onValueChange={handleToggleDarkMode}
                 trackColor={{ false: "#767577", true: "#81b0ff" }}
-                thumbColor={isDarkMode ? "#f5dd4b" : "#f4f3f4"}
+                thumbColor="#f4f3f4"
               />
             }
           />
         </SettingsSection>
-
         {/* Account */}
         <SettingsSection title="アカウント">
           <SettingsItem
@@ -179,7 +179,7 @@ const settings = () => {
             onPress={handleUserIdChange}
           />
         </SettingsSection>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             router.push("/credits");
           }}
@@ -188,7 +188,7 @@ const settings = () => {
         </TouchableOpacity>
 
         {/* Privacy */}
-        <SettingsSection title="プライバシー">
+        {/* <SettingsSection title="プライバシー">
           <SettingsItem
             icon={showTestimony ? Eye : EyeOff}
             title="証を公開"
@@ -209,10 +209,9 @@ const settings = () => {
         </SettingsSection>
         <Text className="self-center">
           also have credits and updates section and stuff
-        </Text>
-
+        </Text> */}
         {/* Support */}
-        <SettingsSection title="サポート">
+        {/* <SettingsSection title="サポート">
           <SettingsItem
             icon={MessageSquare}
             title="フィードバック"
@@ -236,8 +235,7 @@ const settings = () => {
             <Text>pls give feedback</Text>
             <Input className="w-full" />
           </View>
-        </Modal>
-
+        </Modal> */}
         {/* Change Name Modal */}
         <Modal
           isOpen={changeNameModalOpen}
@@ -246,7 +244,6 @@ const settings = () => {
         >
           <ChangeName onClose={() => setChangeNameModalOpen(false)} />
         </Modal>
-
         {/* Change User ID Modal */}
         <Modal
           isOpen={changeUserIdModalOpen}
@@ -255,12 +252,9 @@ const settings = () => {
         >
           <ChangeUserId onClose={() => setChangeUserIdModalOpen(false)} />
         </Modal>
-
-        {/* Actions */}
         <SettingsSection title="">
           <SettingsItem icon={LogOut} title="ログアウト" onPress={signOut} />
         </SettingsSection>
-
         {/* Bottom spacing */}
         <View className="h-20" />
       </ScrollView>

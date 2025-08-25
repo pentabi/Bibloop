@@ -95,28 +95,31 @@ const Home = () => {
 
   return (
     <View className="flex-1 mt-20 p-4 gap-4">
-      <View className="flex-row justify-between">
-        <Text className="self-end"> {user.points} points</Text>
+      <View className="flex-row justify-between items-center mb-2">
+        <Text className="text-sm font-medium text-foreground">{user.points} points</Text>
         <TouchableOpacity
           onPress={() => {
             router.push("/notification");
           }}
+          className="p-2"
         >
-          <Bell />
+          <Bell size={24} color="#000" />
         </TouchableOpacity>
       </View>
-      {/* chapter shortcut */}
+      
+      {/* Chapter Shortcut */}
       <TouchableOpacity
         onPress={() => {
           router.navigate("/daily-reading");
         }}
-        className="p-8 bg-primary rounded-xl"
+        className="p-6 bg-card rounded-xl border border-border"
       >
-        <Text>Chapter shortcut</Text>
+        <Text className="text-lg font-semibold text-foreground">今日の聖書</Text>
+        <Text className="text-sm text-muted-foreground mt-1">デイリーリーディングを開始</Text>
       </TouchableOpacity>
 
       {/* Prayer Requests */}
-      <View>
+      <View className="mb-4">
         <View className="flex-row items-center justify-between mb-3">
           <Text className="text-lg font-semibold text-foreground">お祈り</Text>
         </View>
@@ -166,6 +169,7 @@ const Home = () => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 4 }}
+          className="mb-4"
         >
           <TouchableOpacity
             className="w-12 mr-4 p-4 bg-card rounded-xl border border-border items-center justify-center"
@@ -173,7 +177,7 @@ const Home = () => {
               router.push("/create-prayer");
             }}
           >
-            <Plus />
+            <Plus size={20} color="#000" />
           </TouchableOpacity>
           {prayerRequests.map((prayer) => (
             <TouchableOpacity
@@ -223,33 +227,39 @@ const Home = () => {
         </ScrollView>
       </View>
 
-      {/* streaks and calendar */}
-      <View className="flex-row w-full gap-4">
-        <TouchableOpacity
-          onPress={() => {
-            router.navigate("/calendar");
-          }}
-          className="p-8 bg-primary rounded-xl flex-1 "
-        >
-          <Text>streaks {user.streaks}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            router.navigate("/calendar");
-          }}
-          className="p-8 bg-primary rounded-xl flex-1"
-        >
-          <Text>calendar</Text>
-        </TouchableOpacity>
-      </View>
-      {/* shop */}
+      {/* Streaks and Calendar Combined */}
+      <TouchableOpacity
+        onPress={() => {
+          router.navigate("/calendar");
+        }}
+        className="p-6 bg-card rounded-xl border border-border"
+      >
+        <View className="flex-row items-center justify-between">
+          <View>
+            <Text className="text-lg font-semibold text-foreground">
+              ストリーク & カレンダー
+            </Text>
+            <Text className="text-sm text-muted-foreground mt-1">
+              現在のストリーク: {user.streaks}日
+            </Text>
+          </View>
+          <View className="bg-primary rounded-full w-12 h-12 items-center justify-center">
+            <Text className="text-white font-bold text-lg">{user.streaks}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      {/* Shop */}
       <TouchableOpacity
         onPress={() => {
           router.navigate("/shop");
         }}
-        className="p-8 bg-primary rounded-xl"
+        className="p-6 bg-card rounded-xl border border-border"
       >
-        <Text className="">shop</Text>
+        <Text className="text-lg font-semibold text-foreground">ショップ</Text>
+        <Text className="text-sm text-muted-foreground mt-1">
+          ポイントでアイテムを購入
+        </Text>
       </TouchableOpacity>
     </View>
   );
