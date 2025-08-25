@@ -7,6 +7,7 @@ import {
   filterUserProfileForRedux,
 } from "~/redux/slices/userSlice";
 import { useErrorHandler } from "./useErrorHandler";
+import { useStreaks } from "./useStreaks";
 import type { Schema } from "@/data-schema";
 
 type UserProfile = Schema["UserProfile"]["type"];
@@ -15,6 +16,14 @@ export default function useUserProfile() {
   const dispatch = useDispatch();
   const { handleError } = useErrorHandler();
   const [isLoading, setIsLoading] = useState(false);
+
+  // Add useStreaks hook to provide streak functionality
+  const {
+    currentStreak,
+    maxStreak,
+    updateStreak,
+    loading: streaksLoading,
+  } = useStreaks();
 
   const checkAndCreateUserProfile = useCallback(
     async (userIdentifier: string, userId: string) => {
@@ -41,6 +50,7 @@ export default function useUserProfile() {
           // Create new user profile
           console.log("Creating new user profile");
           const createResult = await client.models.UserProfile.create({
+            id: userId, // Use Cognito user ID as the profile ID
             userIdentifier: userIdentifier,
             userId: userId,
             streaks: 0,
@@ -65,6 +75,9 @@ export default function useUserProfile() {
               finishedOnboarding: !!userProfile.name,
             })
           );
+
+          // Update streaks when user profile is loaded
+          await updateStreak();
 
           //when the redux state is updated, return the value fetched from db
           return {
@@ -116,6 +129,9 @@ export default function useUserProfile() {
               finishedOnboarding: !!updatedProfile.name,
             })
           );
+
+          // Update streaks after profile update
+          await updateStreak();
 
           return updatedProfile;
         }
@@ -170,6 +186,10 @@ export default function useUserProfile() {
     checkAndCreateUserProfile,
     updateUserProfile,
     getUserProfile,
-    isLoading,
+    isLoading: isLoading || streaksLoading,
+    // Expose streak data and functions
+    currentStreak,
+    maxStreak,
+    updateStreak,
   };
 }

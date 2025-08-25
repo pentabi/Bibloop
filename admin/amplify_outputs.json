@@ -1,9 +1,9 @@
 {
   "auth": {
-    "user_pool_id": "us-east-2_q2ut32bDc",
+    "user_pool_id": "us-east-2_12UerDBY4",
     "aws_region": "us-east-2",
-    "user_pool_client_id": "3m29nn1u0r69qjmt7t5kj5d7l2",
-    "identity_pool_id": "us-east-2:234f2f2c-d061-404b-a7b7-329267fc1b36",
+    "user_pool_client_id": "2430b3fvddvf7mpfpggii51p1t",
+    "identity_pool_id": "us-east-2:cb505e98-0852-4aa0-82fb-14a32ac32eda",
     "mfa_methods": [],
     "standard_required_attributes": [],
     "username_attributes": [
@@ -44,12 +44,12 @@
         "profile",
         "aws.cognito.signin.user.admin"
       ],
-      "domain": "716af486e7c50e0724a3.auth.us-east-2.amazoncognito.com"
+      "domain": "33f122dfd0e29e03d224.auth.us-east-2.amazoncognito.com"
     },
     "unauthenticated_identities_enabled": true
   },
   "data": {
-    "url": "https://keeqoyiysfamfnlk62nwgkoxxa.appsync-api.us-east-2.amazonaws.com/graphql",
+    "url": "https://fa226bpp65gcxeumwkennynavq.appsync-api.us-east-2.amazonaws.com/graphql",
     "aws_region": "us-east-2",
     "default_authorization_type": "AMAZON_COGNITO_USER_POOLS",
     "authorization_types": [
@@ -171,6 +171,22 @@
                 ]
               }
             },
+            "likes": {
+              "name": "likes",
+              "isArray": true,
+              "type": {
+                "model": "Like"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "userId"
+                ]
+              }
+            },
             "completedChapters": {
               "name": "completedChapters",
               "isArray": true,
@@ -183,7 +199,7 @@
               "association": {
                 "connectionType": "HAS_MANY",
                 "associatedWith": [
-                  "userId"
+                  "creatorId"
                 ]
               }
             },
@@ -518,6 +534,22 @@
                 ]
               }
             },
+            "likes": {
+              "name": "likes",
+              "isArray": true,
+              "type": {
+                "model": "Like"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "commentId"
+                ]
+              }
+            },
             "parentId": {
               "name": "parentId",
               "isArray": false,
@@ -615,7 +647,8 @@
                     "allow": "private",
                     "operations": [
                       "create",
-                      "read"
+                      "read",
+                      "update"
                     ]
                   },
                   {
@@ -623,6 +656,154 @@
                     "ownerField": "owner",
                     "allow": "owner",
                     "identityClaim": "creatorId",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": false,
+            "primaryKeyFieldName": "id",
+            "sortKeyFieldNames": []
+          }
+        },
+        "Like": {
+          "name": "Like",
+          "fields": {
+            "id": {
+              "name": "id",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true,
+              "attributes": []
+            },
+            "userId": {
+              "name": "userId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true,
+              "attributes": []
+            },
+            "user": {
+              "name": "user",
+              "isArray": false,
+              "type": {
+                "model": "UserProfile"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "userId"
+                ]
+              }
+            },
+            "commentId": {
+              "name": "commentId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true,
+              "attributes": []
+            },
+            "comment": {
+              "name": "comment",
+              "isArray": false,
+              "type": {
+                "model": "Comment"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "commentId"
+                ]
+              }
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true,
+              "attributes": []
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true,
+              "attributes": []
+            }
+          },
+          "syncable": true,
+          "pluralName": "Likes",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "key",
+              "properties": {
+                "fields": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "likesByUserId",
+                "queryField": "listLikeByUserId",
+                "fields": [
+                  "userId"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "likesByCommentId",
+                "queryField": "listLikeByCommentId",
+                "fields": [
+                  "commentId"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "likesByCreatedAt",
+                "queryField": "listLikeByCreatedAt",
+                "fields": [
+                  "createdAt"
+                ]
+              }
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "private",
+                    "operations": [
+                      "create",
+                      "read",
+                      "delete"
+                    ]
+                  },
+                  {
+                    "provider": "userPools",
+                    "ownerField": "owner",
+                    "allow": "owner",
+                    "identityClaim": "userId",
                     "operations": [
                       "create",
                       "update",
@@ -793,8 +974,8 @@
               "isRequired": true,
               "attributes": []
             },
-            "userId": {
-              "name": "userId",
+            "creatorId": {
+              "name": "creatorId",
               "isArray": false,
               "type": "String",
               "isRequired": true,
@@ -811,7 +992,7 @@
               "association": {
                 "connectionType": "BELONGS_TO",
                 "targetNames": [
-                  "userId"
+                  "creatorId"
                 ]
               }
             },
@@ -867,10 +1048,10 @@
             {
               "type": "key",
               "properties": {
-                "name": "completedChaptersByUserId",
-                "queryField": "listCompletedChapterByUserId",
+                "name": "completedChaptersByCreatorId",
+                "queryField": "listCompletedChapterByCreatorId",
                 "fields": [
-                  "userId"
+                  "creatorId"
                 ]
               }
             },
@@ -1042,11 +1223,11 @@
   },
   "storage": {
     "aws_region": "us-east-2",
-    "bucket_name": "amplify-d230fk0vexppqv-8u-bibloopstoragebucket5460-4qlz0win012d",
+    "bucket_name": "amplify-d230fk0vexppqv-10-bibloopstoragebucket5460-d2t63czsqkdn",
     "buckets": [
       {
         "name": "BibloopStorage",
-        "bucket_name": "amplify-d230fk0vexppqv-8u-bibloopstoragebucket5460-4qlz0win012d",
+        "bucket_name": "amplify-d230fk0vexppqv-10-bibloopstoragebucket5460-d2t63czsqkdn",
         "aws_region": "us-east-2",
         "paths": {
           "public/*": {

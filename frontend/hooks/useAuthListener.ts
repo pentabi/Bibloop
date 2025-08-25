@@ -25,7 +25,16 @@ export default function useAuthListener() {
     //function to attempt to getUser
     const getUser = async () => {
       try {
+        // First check if user is actually authenticated
         const user = await getCurrentUser();
+
+        // Only proceed if we successfully got a user
+        if (!user || !user.userId) {
+          dispatch(clearUser());
+          setIsAuthLoaded(true);
+          return;
+        }
+
         const attrs = await fetchUserAttributes();
         console.log({ user, attrs });
 
@@ -49,8 +58,18 @@ export default function useAuthListener() {
         // with setUser action that includes onboarding status
       } catch (error) {
         console.log("Error fetching user attributes:", error);
-        handleError(error, "認証エラーが発生しました");
-        signOutAutomatic();
+
+        // Only handle as error if it's not an authentication error
+        if (
+          error instanceof Error &&
+          error.name !== "UserUnAuthenticatedException"
+        ) {
+          handleError(error, "認証エラーが発生しました");
+          signOutAutomatic();
+        } else {
+          console.log("User not authenticated, clearing user state");
+        }
+
         dispatch(clearUser());
       } finally {
         setIsAuthLoaded(true);

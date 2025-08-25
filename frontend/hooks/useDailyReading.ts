@@ -23,6 +23,9 @@ export interface DailyReadingVerse {
 export const useDailyReading = () => {
   const dispatch = useDispatch();
 
+  // Get auth status from Redux
+  const user = useSelector((state: RootState) => state.user);
+
   // Get today's chapter from Redux
   const {
     chapter: dailyReading,
@@ -98,6 +101,12 @@ export const useDailyReading = () => {
 
   // Fetch today's chapter data and store in Redux
   const fetchDailyReading = useCallback(async () => {
+    // Don't fetch if user is not authenticated yet
+    if (!user.isLoggedIn) {
+      console.log("User not logged in, skipping daily reading fetch");
+      return;
+    }
+
     try {
       dispatch(setLoading(true));
       dispatch(clearError());
@@ -173,13 +182,15 @@ export const useDailyReading = () => {
           : "今日の読書の読み込みに失敗しました";
       dispatch(setError(errorMessage));
 
-      // Set fallback on error
-      const fallbackChapter = getFallbackReading();
-      dispatch(setChapter(fallbackChapter));
+      // Set fallback on error only if authenticated
+      if (user.isLoggedIn) {
+        const fallbackChapter = getFallbackReading();
+        dispatch(setChapter(fallbackChapter));
+      }
     } finally {
       dispatch(setLoading(false));
     }
-  }, [dispatch]);
+  }, [dispatch, user.isLoggedIn]);
 
   // Fetch verses based on current chapter in Redux
   const fetchVerses = useCallback(async () => {
@@ -209,15 +220,22 @@ export const useDailyReading = () => {
     }
   }, [dailyReading?.bookId, dailyReading?.chapterNumber]);
 
-  // Load chapter data if not already loaded
+  // Load chapter data when user logs in or when date changes
   useEffect(() => {
+    // Only fetch if user is logged in
+    if (!user.isLoggedIn) {
+      console.log("User not logged in, waiting for authentication");
+      return;
+    }
+
     const today = getTodayDateString();
 
     // Only fetch if we don't have today's data
     if (!dailyReading || dailyReading.date !== today) {
+      console.log("Fetching daily reading - user is authenticated");
       fetchDailyReading();
     }
-  }, [dailyReading, fetchDailyReading]);
+  }, [user.isLoggedIn, dailyReading, fetchDailyReading]);
 
   // Load verses when chapter changes
   useEffect(() => {
@@ -232,5 +250,6 @@ export const useDailyReading = () => {
     hasFallback: dailyReading?.isFallback || false,
     refetch: fetchDailyReading,
     formatDateForDisplay,
+    isAuthenticated: user.isLoggedIn, // Expose auth status
   };
 };

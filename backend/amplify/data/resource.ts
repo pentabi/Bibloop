@@ -16,6 +16,7 @@ const schema = a.schema({
       testimony: a.string(),
       prayerRequests: a.hasMany("PrayerRequest", "creatorId"),
       comments: a.hasMany("Comment", "creatorId"),
+      likes: a.hasMany("Like", "userId"),
       completedChapters: a.hasMany("CompletedChapter", "creatorId"),
       sentFriendRequests: a.hasMany("Friendship", "requesterId"),
       receivedFriendRequests: a.hasMany("Friendship", "addresseeId"),
@@ -55,6 +56,7 @@ const schema = a.schema({
       isPrivate: a.boolean().required(),
       creatorId: a.string().required(),
       creator: a.belongsTo("UserProfile", "creatorId"),
+      likes: a.hasMany("Like", "commentId"),
       parentId: a.string(),
       content: a.string().required(),
       reportedUser: a.string().array(),
@@ -68,8 +70,27 @@ const schema = a.schema({
       index("createdAt"),
     ])
     .authorization((allow) => [
-      allow.authenticated().to(["create", "read"]),
+      allow.authenticated().to(["create", "read", "update"]),
       allow.owner().identityClaim("creatorId"),
+    ]),
+  Like: a
+    .model({
+      id: a.string().required(),
+      userId: a.string().required(),
+      user: a.belongsTo("UserProfile", "userId"),
+      commentId: a.string().required(),
+      comment: a.belongsTo("Comment", "commentId"),
+      createdAt: a.datetime().required(),
+      updatedAt: a.datetime().required(),
+    })
+    .secondaryIndexes((index) => [
+      index("userId"),
+      index("commentId"),
+      index("createdAt"),
+    ])
+    .authorization((allow) => [
+      allow.authenticated().to(["create", "read", "delete"]),
+      allow.owner().identityClaim("userId"),
     ]),
   PrayerRequest: a
     .model({

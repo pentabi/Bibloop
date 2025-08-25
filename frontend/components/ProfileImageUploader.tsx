@@ -64,9 +64,6 @@ export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
           style={{ width: size, height: size }}
         >
           <ActivityIndicator size="large" color="#007AFF" />
-          <Text className="text-xs text-muted-foreground mt-2">
-            {isUploading ? "アップロード中..." : "読み込み中..."}
-          </Text>
         </View>
       );
     }
@@ -97,42 +94,28 @@ export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
     <View className="items-center">
       {/* Profile Image */}
       <View className="relative">
-        {renderImageContent()}
+        <View
+          className="rounded-full border-2 border-gray-200"
+          style={{
+            width: size + 4,
+            height: size + 4,
+            padding: 2,
+          }}
+        >
+          {renderImageContent()}
+        </View>
 
         {/* Upload Button Overlay */}
         {showUploadButton && (
           <TouchableOpacity
             onPress={handleImageUpload}
             disabled={isUploading}
-            className="absolute bottom-0 right-0 bg-primary rounded-full p-2 border-2 border-background"
+            className="absolute bottom-1 right-1 bg-blue-600 rounded-full p-1.5 border-2 border-white shadow-sm"
             style={{ opacity: isUploading ? 0.6 : 1 }}
           >
-            <Camera size={16} color="white" />
+            <Camera size={12} color="white" />
           </TouchableOpacity>
         )}
-      </View>
-
-      {/* Upload Button (Alternative) */}
-      {showUploadButton && (
-        <TouchableOpacity
-          onPress={handleImageUpload}
-          disabled={isUploading}
-          className="mt-3 bg-primary/10 px-4 py-2 rounded-lg"
-        >
-          <Text className="text-primary text-sm font-medium">
-            {isUploading ? "アップロード中..." : "プロフィール画像を変更"}
-          </Text>
-        </TouchableOpacity>
-      )}
-
-      {/* User Info */}
-      <View className="mt-2 items-center">
-        <Text className="text-foreground font-semibold">
-          {user.name || "名前未設定"}
-        </Text>
-        <Text className="text-muted-foreground text-xs">
-          {user.userIdentifier}
-        </Text>
       </View>
     </View>
   );

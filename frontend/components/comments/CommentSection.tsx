@@ -1,4 +1,4 @@
-import { ArrowDownWideNarrow } from "lucide-react-native";
+import { ArrowDownWideNarrow, Heart } from "lucide-react-native";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "../ui/text";
 import { useRouter } from "expo-router";
@@ -22,7 +22,7 @@ const CommentSection = ({
   const postId = `${bookName}-${chapter}`;
 
   // Use the new custom hook
-  const { comments, isLoading, refetch } = useComments(postId);
+  const { comments, isLoading, refetch, toggleLike } = useComments(postId);
 
   // Add image preloader
   const { preloadImages, getPreloadedImage } = useImagePreloader();
@@ -123,11 +123,8 @@ const CommentSection = ({
           comments
             .sort((a, b) => {
               if (sort === "likes") {
-                // For now, sort by creation date since we don't have likes in the schema yet
-                return (
-                  new Date(b.createdAt).getTime() -
-                  new Date(a.createdAt).getTime()
-                );
+                // Sort by like count (highest first)
+                return b.likesCount - a.likesCount;
               }
               return (
                 new Date(b.createdAt).getTime() -
@@ -142,7 +139,10 @@ const CommentSection = ({
                   <View className="flex-row items-center mb-3">
                     <TouchableOpacity
                       onPress={() => {
-                        router.push("/community-profile");
+                        router.push({
+                          pathname: "/(main)/(socials)/community-profile",
+                          params: { id: comment.creatorId },
+                        });
                       }}
                       className="mr-3"
                     >
@@ -170,15 +170,33 @@ const CommentSection = ({
                     </View>
                   </View>
 
-                  {/* Comment Content */}
-                  <Text className="text-gray-700 leading-5 ml-11 text-lg">
-                    {comment.content}
-                  </Text>
-
-                  {/* Actions */}
-                  <View className="flex-row items-center mt-3 ml-11">
-                    <TouchableOpacity className="flex-row items-center mr-6">
-                      <Text className="text-xs text-gray-500">いいね</Text>
+                  {/* Comment Content with Like Button */}
+                  <View className="flex-row items-start ml-11">
+                    <Text className="flex-1 text-gray-700 leading-5 text-lg pr-2">
+                      {comment.content}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => toggleLike(comment.id)}
+                      className="flex-row items-center px-2 py-1"
+                    >
+                      <Heart
+                        size={16}
+                        color={
+                          comment.isLikedByCurrentUser ? "#ef4444" : "#9ca3af"
+                        }
+                        fill={comment.isLikedByCurrentUser ? "#ef4444" : "none"}
+                      />
+                      {comment.likesCount > 0 && (
+                        <Text
+                          className={`text-xs ml-1 ${
+                            comment.isLikedByCurrentUser
+                              ? "text-red-500"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          {comment.likesCount}
+                        </Text>
+                      )}
                     </TouchableOpacity>
                   </View>
                 </View>
