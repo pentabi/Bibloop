@@ -75,7 +75,7 @@ const AddFriend = () => {
           {/* Input Section */}
           <View className="mb-6">
             <Text className="text-sm font-medium text-foreground mb-2">
-              ユーザーID (Cognito User ID)
+              ユーザーID
             </Text>
             <TextInput
               className={`w-full p-4 bg-background border rounded-lg text-foreground ${
@@ -94,7 +94,7 @@ const AddFriend = () => {
               </Text>
             ) : (
               <Text className="text-xs text-muted-foreground mt-2">
-                ユーザーIDはプロフィール画面で確認できます (Cognito User ID)
+                ユーザーIDはプロフィール画面で確認できます (@の横の文字)
               </Text>
             )}
           </View>

@@ -2,8 +2,16 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { Calendar as RNCalendar } from "react-native-calendars";
-import { ArrowLeft, BookOpen, CheckCircle2, Circle } from "lucide-react-native";
+import {
+  ArrowLeft,
+  BookOpen,
+  CheckCircle2,
+  Circle,
+  Flame,
+  Trophy,
+} from "lucide-react-native";
 import { useCalendar } from "../../hooks/useCalendar";
+import { useStreaks } from "../../hooks/useStreaks";
 
 const Calendar = () => {
   const router = useRouter();
@@ -15,6 +23,9 @@ const Calendar = () => {
   // Use the calendar hook to get actual data
   const { chapters, loading, markingLoading, error, markAsCompleted, refetch } =
     useCalendar();
+
+  // Use streaks hook to get streak data
+  const { currentStreak, maxStreak, loading: streaksLoading } = useStreaks();
 
   // Convert chapters data to calendar marking format
   const getMarkedDates = () => {
@@ -296,41 +307,39 @@ const Calendar = () => {
           </View>
         )}
 
-        {/* Monthly Stats */}
-        <View className="mx-4 mt-4 mb-6">
-          <Text className="text-lg font-semibold text-gray-800 mb-3">
-            今月の進捗
-          </Text>
-          <View className="bg-white rounded-xl border border-gray-200 p-4">
-            <View className="flex-row justify-between items-center">
-              <View className="items-center flex-1">
-                <Text className="text-2xl font-bold text-blue-600">
-                  {Object.values(chapters).filter((d) => d.completed).length}
+        {/* Streaks Display */}
+        <View className="mx-4 mt-4 mb-8">
+          <View className="flex-row gap-x-4">
+            {/* Current Streak */}
+            <View className="flex-1 bg-orange-50 p-6 rounded-xl border border-orange-200">
+              <View className="flex-row items-center justify-center mb-2">
+                <Flame size={24} color="#f97316" />
+                <Text className="text-sm font-medium text-orange-700 ml-2">
+                  現在のストリーク
                 </Text>
-                <Text className="text-sm text-gray-600">読了日数</Text>
               </View>
-              <View className="w-px h-8 bg-gray-200" />
-              <View className="items-center flex-1">
-                <Text className="text-2xl font-bold text-orange-600">
-                  {Object.values(chapters).filter((d) => !d.completed).length}
+              <Text className="text-3xl font-bold text-orange-800 text-center">
+                {streaksLoading ? "..." : currentStreak}
+              </Text>
+              <Text className="text-sm text-orange-600 text-center mt-1">
+                日連続
+              </Text>
+            </View>
+
+            {/* Max Streak */}
+            <View className="flex-1 bg-yellow-50 p-6 rounded-xl border border-yellow-200">
+              <View className="flex-row items-center justify-center mb-2">
+                <Trophy size={24} color="#eab308" />
+                <Text className="text-sm font-medium text-yellow-700 ml-2">
+                  最大ストリーク
                 </Text>
-                <Text className="text-sm text-gray-600">未読日数</Text>
               </View>
-              <View className="w-px h-8 bg-gray-200" />
-              <View className="items-center flex-1">
-                <Text className="text-2xl font-bold text-gray-800">
-                  {Object.values(chapters).length > 0
-                    ? Math.round(
-                        (Object.values(chapters).filter((d) => d.completed)
-                          .length /
-                          Object.values(chapters).length) *
-                          100
-                      )
-                    : 0}
-                  %
-                </Text>
-                <Text className="text-sm text-gray-600">達成率</Text>
-              </View>
+              <Text className="text-3xl font-bold text-yellow-800 text-center">
+                {streaksLoading ? "..." : maxStreak}
+              </Text>
+              <Text className="text-sm text-yellow-600 text-center mt-1">
+                日連続
+              </Text>
             </View>
           </View>
         </View>

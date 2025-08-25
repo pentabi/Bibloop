@@ -12,6 +12,7 @@ export type UserState = {
     UserProfile,
     | "prayerRequests"
     | "comments"
+    | "likes"
     | "completedChapters"
     | "sentFriendRequests"
     | "receivedFriendRequests"
@@ -23,6 +24,7 @@ export const filterUserProfileForRedux = (userProfile: any) => {
   const {
     prayerRequests,
     comments,
+    likes,
     completedChapters,
     sentFriendRequests,
     receivedFriendRequests,
@@ -39,7 +41,9 @@ const initialState: UserState = {
   userId: null,
   name: null,
   profileImagePath: null,
+  points: null,
   streaks: null,
+  maximumStreaks: null,
   completed: null,
   isTestimonyPrivate: null,
   testimony: null,
@@ -77,7 +81,9 @@ export const userSlice = createSlice({
       state.userId = null;
       state.name = null;
       state.profileImagePath = null;
+      state.points = null;
       state.streaks = null;
+      state.maximumStreaks = null;
       state.completed = null;
       state.isTestimonyPrivate = null;
       state.testimony = null;
