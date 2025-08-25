@@ -219,7 +219,7 @@ const Home = () => {
                 </Text>
               </View>
               <Text className="text-emerald-600 text-sm leading-5">
-                デイリーリーディングを開始して、今日の御言葉と出会いましょう
+                今日の御言葉を読みましょう！
               </Text>
             </View>
             <View className="bg-emerald-500 p-4 rounded-full ml-4">
@@ -249,7 +249,7 @@ const Home = () => {
                 ショップ
               </Text>
               <Text className="text-muted-foreground text-xs text-center mt-1">
-                ポイントで購入
+                ポイントでショップ
               </Text>
             </View>
           </TouchableOpacity>
@@ -372,9 +372,7 @@ const Home = () => {
               }}
             >
               {/* Header with consistent styling */}
-              <View
-                className="p-4 pb-2 bg-blue-50"
-              >
+              <View className="p-4 pb-2 bg-blue-50">
                 <View className="flex-row items-center justify-between">
                   <View className="flex-row items-center flex-1">
                     <View className="p-2 rounded-full bg-blue-100">
