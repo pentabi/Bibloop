@@ -170,12 +170,14 @@ const CommentSection = ({
                     </View>
                   </View>
 
-                  {/* Comment Content */}
-                  {/* Like Button */}
-                  <View className="flex-row justify-end mt-3">
+                  {/* Comment Content with Like Button */}
+                  <View className="flex-row items-start ml-11">
+                    <Text className="flex-1 text-gray-700 leading-5 text-lg pr-2">
+                      {comment.content}
+                    </Text>
                     <TouchableOpacity
                       onPress={() => toggleLike(comment.id)}
-                      className="flex-row items-center px-3 py-1"
+                      className="flex-row items-center px-2 py-1"
                     >
                       <Heart
                         size={16}
@@ -197,9 +199,6 @@ const CommentSection = ({
                       )}
                     </TouchableOpacity>
                   </View>
-                  <Text className="text-gray-700 leading-5 ml-11 text-lg">
-                    {comment.content}
-                  </Text>
                 </View>
               </View>
             ))
