@@ -16,6 +16,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "tabitosatoh@gmail.com",
+        "ascAppId": "6751510418",
+        "appleTeamId": "5Y25M32JP9"
+      }
+    }
   }
 }

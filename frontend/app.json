@@ -17,15 +17,15 @@
         "backgroundColor": "#000000"
       }
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
+      "appleId": "tabitosatoh@gmail.com",
+      "ascAppId": "6751510418",
+      "appleTeamId": "5Y25M32JP9",
+
       "supportsTablet": true,
       "bundleIdentifier": "com.tabitosatoh.Bibloop",
-      "associatedDomains": [
-        "applinks:myapp"
-      ],
+      "associatedDomains": ["applinks:myapp"],
       "infoPlist": {
         "NSCameraUsageDescription": "This app needs access to your camera to take profile pictures and share photos.",
         "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to select and share photos.",
@@ -42,10 +42,7 @@
               "scheme": "myapp"
             }
           ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ],
       "package": "com.anonymous.frontend"
