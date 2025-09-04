@@ -137,7 +137,10 @@ const FriendsList = () => {
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    router.push("/(main)/(socials)/community-profile");
+                    router.push({
+                      pathname: "/(main)/(socials)/community-profile",
+                      params: { id: friendData.id },
+                    });
                   }}
                   key={friend.id}
                   className="bg-card rounded-xl p-4 border border-border mb-3"

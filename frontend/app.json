@@ -69,8 +69,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to let you share them.",
-          "cameraPermission": "The app accesses your camera to let you take photos."
+          "photosPermission": "カメラロールを使う許可が必要です",
+          "cameraPermission": "カメラを使う許可が必要です"
         }
       ],
       "expo-sqlite"
