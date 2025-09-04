@@ -131,7 +131,6 @@ const AddFriend = () => {
             💡 ヒント
           </Text>
           <Text className="text-xs text-muted-foreground leading-relaxed">
-            • ユーザーIDはCognito User IDです{"\n"}•
             フレンドリクエストが送信されると、相手に通知が届きます{"\n"}•
             相手が承認すると、お互いのフレンド一覧に表示されます{"\n"}•
             自分のユーザーID: {user.userId || "読み込み中..."}

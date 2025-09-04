@@ -103,7 +103,9 @@ const RootLayout = () => {
   }
 
   return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+    // TODO make it togglable in the future
+    // <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+    <ThemeProvider value={LIGHT_THEME}>
       <View
         className="flex-1 h-full w-full bg-background"
         onLayout={onLayoutRootView}
