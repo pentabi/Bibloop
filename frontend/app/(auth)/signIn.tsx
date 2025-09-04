@@ -166,11 +166,9 @@ const SignIn = () => {
               className="flex-row justify-center gap-1"
             >
               <Text className="text-foreground opacity-50">
-                アカウントがなければ
+                アカウントが無い？
               </Text>
-              <Text className="text-foreground font-semibold">
-                こっちだよ、すみません
-              </Text>
+              <Text className="text-foreground font-semibold">サインイン</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>

@@ -24,11 +24,13 @@ import {
   ArrowLeft,
   User,
   Edit,
+  Trash2,
 } from "lucide-react-native";
 import Modal from "~/components/Modal";
 import { Input } from "~/components/ui/input";
 import ChangeName from "~/components/modal/ChangeName";
 import ChangeUserId from "~/components/modal/ChangeUserId";
+import { useDeleteAccount } from "~/hooks/useDeleteAccount";
 
 const settings = () => {
   const router = useRouter();
@@ -40,6 +42,9 @@ const settings = () => {
   const [feedbackModalOpen, setFeedbackModal] = useState(false);
   const [changeNameModalOpen, setChangeNameModalOpen] = useState(false);
   const [changeUserIdModalOpen, setChangeUserIdModalOpen] = useState(false);
+
+  // Use the delete account hook
+  const { handleDeleteAccount, isDeleting } = useDeleteAccount();
 
   const handleToggleDarkMode = () => {
     // Show popup when user tries to enable dark mode
@@ -102,21 +107,33 @@ const settings = () => {
     subtitle,
     onPress,
     rightElement,
+    isDangerous = false,
   }: {
     icon: any;
     title: string;
     subtitle?: string;
     onPress?: () => void;
     rightElement?: React.ReactNode;
+    isDangerous?: boolean;
   }) => (
     <TouchableOpacity
       className="flex-row items-center p-4 border-b border-border last:border-b-0"
       onPress={onPress}
       disabled={!onPress}
     >
-      <Icon size={20} className="text-foreground mr-3" />
+      <Icon
+        size={20}
+        className={`mr-3 ${isDangerous ? "text-red-500" : "text-foreground"}`}
+        color={isDangerous ? "#ef4444" : undefined}
+      />
       <View className="flex-1">
-        <Text className="text-base font-medium text-foreground">{title}</Text>
+        <Text
+          className={`text-base font-medium ${
+            isDangerous ? "text-red-500" : "text-foreground"
+          }`}
+        >
+          {title}
+        </Text>
         {subtitle && (
           <Text className="text-sm text-muted-foreground mt-1">{subtitle}</Text>
         )}
@@ -254,6 +271,36 @@ const settings = () => {
         </Modal>
         <SettingsSection title="">
           <SettingsItem icon={LogOut} title="ログアウト" onPress={signOut} />
+        </SettingsSection>
+
+        {/* Danger Zone */}
+        <SettingsSection title="危険な操作">
+          <SettingsItem
+            icon={Trash2}
+            title="アカウント削除"
+            subtitle={
+              isDeleting
+                ? "削除中..."
+                : "アカウントとすべてのデータを永久に削除"
+            }
+            onPress={isDeleting ? undefined : handleDeleteAccount}
+            isDangerous={true}
+            rightElement={
+              <View
+                className={`px-2 py-1 rounded ${
+                  isDeleting ? "bg-gray-100" : "bg-red-100"
+                }`}
+              >
+                <Text
+                  className={`text-xs font-medium ${
+                    isDeleting ? "text-gray-500" : "text-red-600"
+                  }`}
+                >
+                  {isDeleting ? "処理中" : "危険"}
+                </Text>
+              </View>
+            }
+          />
         </SettingsSection>
         {/* Bottom spacing */}
         <View className="h-20" />
