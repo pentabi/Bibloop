@@ -46,7 +46,6 @@ const usePlatformSpecificSetup = Platform.select({
 SplashScreen.preventAutoHideAsync();
 
 SplashScreen.setOptions({
-  duration: 1000,
   fade: true,
 });
 const RootLayout = () => {
