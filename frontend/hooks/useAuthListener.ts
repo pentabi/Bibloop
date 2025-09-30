@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchUserAttributes, getCurrentUser } from "aws-amplify/auth";
-import { clearUser, setUser, userLogIn } from "../redux/slices/userSlice";
+import { clearUser } from "../redux/slices/userSlice";
 import { Hub } from "aws-amplify/utils";
 import { signOutAutomatic } from "~/utils/signOut";
 import { useErrorHandler } from "./useErrorHandler";
