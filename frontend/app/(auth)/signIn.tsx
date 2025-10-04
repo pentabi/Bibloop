@@ -17,13 +17,27 @@ import { useDispatch } from "react-redux";
 import { BlurView } from "expo-blur";
 import { ThemeToggle } from "~/components/ThemeToggle";
 import { useErrorHandler } from "~/hooks/useErrorHandler";
+import * as Notifications from "expo-notifications";
 
 const SignIn = () => {
-  const dispatch = useDispatch();
   const { handleError } = useErrorHandler();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+
+  const scheduleNotification = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Hello!",
+        body: "This is a local notification 👋",
+        data: { extraData: "Some extra data" },
+      },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+        seconds: 10,
+      },
+    });
+  };
 
   const handleLogIn = async () => {
     try {
@@ -140,6 +154,13 @@ const SignIn = () => {
             </View>
           </View>
           {/* Submit */}
+          <Button
+            onPress={() => {
+              scheduleNotification();
+            }}
+          >
+            <Text>Push notification</Text>
+          </Button>
           <View className="gap-3">
             <Button onPress={handleLogIn} className="bg-theme">
               <Text className="text-white font-semibold">ログイン</Text>

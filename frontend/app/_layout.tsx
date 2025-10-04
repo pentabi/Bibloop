@@ -21,6 +21,7 @@ import Toast from "~/components/Toast";
 import { useDailyReading } from "~/hooks/useDailyReading";
 import { useDateChange } from "~/hooks/useDateChange";
 import { RestartAlert } from "~/components/RestartAlert";
+import * as Notifications from "expo-notifications";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -59,6 +60,25 @@ const RootLayout = () => {
   // Monitor for date changes and show restart alert
   const { showRestartAlert, dismissAlert } = useDateChange();
 
+  //notification settings
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: true,
+      shouldShowBanner: true,
+      shouldShowList: true,
+    }),
+  });
+
+  //request permission for notification
+  async function requestNotificationPermissions() {
+    const { status } = await Notifications.requestPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission not granted for notifications!");
+    }
+  }
+
   useEffect(() => {
     async function prepare() {
       try {
@@ -75,6 +95,8 @@ const RootLayout = () => {
           dailyReading?.bookName,
           dailyReading?.chapterNumber
         );
+
+        requestNotificationPermissions();
 
         // Small delay for smooth splash screen experience
         await new Promise((resolve) => setTimeout(resolve, 500));
