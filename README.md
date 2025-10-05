@@ -1,3 +1,7 @@
 # Bibloop
 
-# Read the bible with a community
+Install the app here:
+
+# Documentation
+
+# Webapp Instruction
