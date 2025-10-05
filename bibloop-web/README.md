@@ -8,7 +8,7 @@
 
 - [ ] [bibloop を vscode にクローン](doc/CLONE.md)
 - [ ] [自分のブランチを作って、編集したらプルリクエストを作る](doc/BRANCH_AND_MERGE.md)
-- [ ] [ウェブアプリを開く方法]()
+- [ ] [ウェブアプリを開く方法](doc/OPEN_WEBAPP.md)
 
 ## 開発
 
