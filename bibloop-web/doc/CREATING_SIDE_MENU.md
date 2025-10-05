@@ -1,6 +1,6 @@
 #　サイドメニュー
 サンプル動画：
-[動画リンク](assets/サイドメニュー説明.mp4)
+[動画リンク](https://drive.google.com/file/d/1--xsJJ6yfNPixvgkmMlF53ipn1UDlHu4/view?usp=sharing)
 
 ３つの項目
 ダッシュボード
