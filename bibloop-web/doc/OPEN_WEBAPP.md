@@ -3,11 +3,12 @@
 コマンドラインで
 
 ```bash
+cd bibloop-web
 npm install
 npm run dev
 ```
 
-で基本は走る。
+で基本は走るはず。
 
 ## 詳しいことは動画で：
 
