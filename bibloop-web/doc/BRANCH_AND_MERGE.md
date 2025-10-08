@@ -55,3 +55,4 @@ Github に戻って PullRequest を開く
 
 Merge pull request の緑のボタンは押さない。
 これで放置して、あとで僕が変更みて merge する！
+なるほど。理解しました。今学期時間ありそうだからやってみるね！！
