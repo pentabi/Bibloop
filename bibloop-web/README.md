@@ -15,5 +15,7 @@
 - [ ] [目的を把握](doc/GOAL.md)
 - [ ] ログインを作る　（一旦保留でも ok)
 - [ ] ページを3つくらい作ってページからページへ移動できるようにする
+  - [ ] AIに "make navigation for react using react router navigation for 3 pages. Have a menu with 3 buttons saying "Tabito" "Aogu" "Michi" and navigate to designated page."　って聞いたらコード書いてくれるはず
+  - [ ] https://reactrouter.com/home  このウェブサイトみてreact router navigationのこと学ぶ　（日本語でreact router navigationのこと検索したらもっとわかりやすいの出てくるかも）
 - [ ] [サイドメニューを作る](doc/CREATING_SIDE_MENU.md)
 - [ ] 簡単なダッシュボードを作る　（いろんな累計とか出してみる）
