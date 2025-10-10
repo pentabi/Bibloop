@@ -17,5 +17,6 @@
 - [ ] ページを3つくらい作ってページからページへ移動できるようにする
   - [ ] AIに "make navigation for react using react router navigation for 3 pages. Have a menu with 3 buttons saying "Tabito" "Aogu" "Michi" and navigate to designated page."　って聞いたらコード書いてくれるはず
   - [ ] https://reactrouter.com/home  このウェブサイトみてreact router navigationのことをなんとなくでいいから学ぶ　（日本語でreact router navigationのこと検索したらもっとわかりやすいの出てくるかも）
+  - [ ] [デモ動画（変更は破棄してあるので、自分のchatgptとか使ってやってみてね！](https://drive.google.com/file/d/1Vn7Aylco8FRz2XbALR2_XmfY0Pc8g7CY/view?usp=sharing)
 - [ ] [サイドメニューを作る](doc/CREATING_SIDE_MENU.md)
 - [ ] 簡単なダッシュボードを作る　（いろんな累計とか出してみる）
