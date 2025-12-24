@@ -23,10 +23,14 @@ const SignIn = () => {
   const { handleError } = useErrorHandler();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   const handleLogIn = async () => {
+    if (isLoading) return;
     try {
+      setIsLoading(true);
       const result = await amplifySignIn({
         username: email,
         password,
@@ -56,6 +60,8 @@ const SignIn = () => {
       }
 
       handleError(e, "ログインに失敗しました");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -102,7 +108,7 @@ const SignIn = () => {
           </View>
           {/* Form */}
           <View>
-            <Text className="text-lg text-foreground opacity-50">Eメール</Text>
+            <Text className="text-lg text-foreground opacity-70">Eメール</Text>
             <View className="flex-row items-center rounded-2xl relative">
               <View
                 style={{ borderRadius: 16, overflow: "hidden" }}
@@ -119,7 +125,7 @@ const SignIn = () => {
                 </BlurView>
               </View>
             </View>
-            <Text className="text-lg text-foreground opacity-50">
+            <Text className="text-lg text-foreground opacity-70">
               パスワード
             </Text>
             <View className="flex-row items-center relative">
@@ -138,10 +144,22 @@ const SignIn = () => {
                 </BlurView>
               </View>
             </View>
+
+            <TouchableOpacity
+              onPress={() => router.push("/(auth)/reset")}
+              activeOpacity={0.25}
+            >
+              <Text className="opacity-50" style={{ marginTop: 7.5 }}>
+                Forgot the password? Click here to reset.
+              </Text>
+            </TouchableOpacity>
+
           </View>
+          
           {/* Submit */}
           <View className="gap-3">
-            <Button onPress={handleLogIn} className="bg-theme">
+            <Button onPress={handleLogIn} disabled={isLoading} className="bg-theme"> 
+              {/*Disable the button while loading, to prevent the UserAlreadyAuth error*/}
               <Text className="text-white font-semibold">ログイン</Text>
             </Button>
 
