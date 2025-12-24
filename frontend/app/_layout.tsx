@@ -21,8 +21,6 @@ import Toast from "~/components/Toast";
 import { useDailyReading } from "~/hooks/useDailyReading";
 import { useDateChange } from "~/hooks/useDateChange";
 import { RestartAlert } from "~/components/RestartAlert";
-import Purchases, { LOG_LEVEL } from "react-native-purchases";
-import useRevenueCat from "~/hooks/RevenueCat";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -52,7 +50,7 @@ SplashScreen.setOptions({
 });
 const RootLayout = () => {
   const [appIsReady, setAppIsReady] = useState(false);
-  const { isDarkColorScheme } = useColorScheme();
+  const { isDarkColorScheme, setColorScheme } = useColorScheme();
   const isAuthLoaded = useAuthListener();
 
   // Load today's chapter data during splash screen
@@ -71,7 +69,9 @@ const RootLayout = () => {
         while (dailyReadingLoading) {
           await new Promise((resolve) => setTimeout(resolve, 100));
         }
-        useRevenueCat();
+
+        //set to light mode for now
+        setColorScheme("light");
 
         console.log(
           "✅ Today's chapter loaded:",
@@ -92,33 +92,6 @@ const RootLayout = () => {
 
     prepare();
   }, [dailyReadingLoading, dailyReading]);
-
-  //Revenue Cat
-  useEffect(() => {
-    Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
-
-    if (Platform.OS === "ios") {
-      Purchases.configure({ apiKey: "appl_eWtgNGBVWjHVqbtSktECItMeJQg" });
-      // } else if (Platform.OS === 'android') {
-      //    Purchases.configure({apiKey: <revenuecat_project_google_api_key>});
-    }
-    getCustomerInfo();
-    getOfferings();
-  }, []);
-
-  async function getCustomerInfo() {
-    const customerInfo = await Purchases.getCustomerInfo();
-    console.log("customer Info", JSON.stringify(customerInfo, null, 2));
-  }
-
-  async function getOfferings() {
-    const offerings = await Purchases.getOfferings();
-    if (
-      offerings.current !== null &&
-      offerings.current.availablePackages.length !== 0
-    )
-      console.log("get offerings", JSON.stringify(offerings, null, 2));
-  }
 
   const onLayoutRootView = useCallback(() => {
     if (appIsReady) {
