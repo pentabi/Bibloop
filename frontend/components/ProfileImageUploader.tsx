@@ -94,14 +94,7 @@ export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
     <View className="items-center">
       {/* Profile Image */}
       <View className="relative">
-        <View
-          className="rounded-full border-2 border-gray-200"
-          style={{
-            width: size + 4,
-            height: size + 4,
-            padding: 2,
-          }}
-        >
+        <View className="rounded-full border-2 border-gray-200">
           {renderImageContent()}
         </View>
 

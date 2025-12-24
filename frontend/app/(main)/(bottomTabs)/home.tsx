@@ -34,6 +34,8 @@ import {
 } from "~/utils/KougoDb";
 import { usePrayerRequest } from "~/hooks/usePrayerRequest";
 import { useFriendship } from "~/hooks/useFriendship";
+import { Button } from "~/components/ui/button";
+import ProfileImageUploader from "~/components/ProfileImageUploader";
 
 const Home = () => {
   const router = useRouter();
@@ -122,12 +124,15 @@ const Home = () => {
       <View className="pt-16 pb-6 px-6">
         {/* Top Bar */}
         <View className="flex-row justify-between items-center mb-6">
-          <View className="flex-row items-center">
-            <Image
-              source={require("~/assets/images/bibloop-icon.png")}
-              className="w-10 h-10 rounded-full mr-3"
-              style={{ resizeMode: "contain" }}
-            />
+          <View className="flex-row items-center justify-center">
+            <TouchableOpacity
+              className="mr-4 justify-center items-center"
+              onPress={() => {
+                router.navigate("/(main)/(bottomTabs)/user-profile");
+              }}
+            >
+              <ProfileImageUploader size={50} showUploadButton={false} />
+            </TouchableOpacity>
             <View>
               <Text className="text-2xl font-bold text-foreground">
                 おかえりなさい！

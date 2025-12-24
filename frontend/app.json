@@ -4,14 +4,14 @@
     "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/bibloop-icon.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#007AFF",
+      "backgroundColor": "#FFFFFFFF",
       "dark": {
         "image": "./assets/images/splash-dark.png",
         "backgroundColor": "#000000"
@@ -27,9 +27,9 @@
       "bundleIdentifier": "com.tabitosatoh.Bibloop",
       "associatedDomains": ["applinks:myapp"],
       "infoPlist": {
-        "NSCameraUsageDescription": "This app needs access to your camera to take profile pictures and share photos.",
-        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to select and share photos.",
-        "NSPhotoLibraryAddUsageDescription": "This app needs access to save photos to your photo library."
+        "NSCameraUsageDescription": "プロフィール写真の撮影や写真の共有のために、カメラへのアクセスが必要です。",
+        "NSPhotoLibraryUsageDescription": "写真の選択や共有のために、フォトライブラリへのアクセスが必要です。",
+        "NSPhotoLibraryAddUsageDescription": "写真をフォトライブラリに保存するために、アクセスが必要です。"
       }
     },
     "android": {
