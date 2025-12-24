@@ -50,7 +50,7 @@ SplashScreen.setOptions({
 });
 const RootLayout = () => {
   const [appIsReady, setAppIsReady] = useState(false);
-  const { isDarkColorScheme } = useColorScheme();
+  const { isDarkColorScheme, setColorScheme } = useColorScheme();
   const isAuthLoaded = useAuthListener();
 
   // Load today's chapter data during splash screen
@@ -69,6 +69,9 @@ const RootLayout = () => {
         while (dailyReadingLoading) {
           await new Promise((resolve) => setTimeout(resolve, 100));
         }
+
+        //set to light mode for now
+        setColorScheme("light");
 
         console.log(
           "✅ Today's chapter loaded:",

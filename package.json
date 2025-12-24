@@ -1,6 +1,6 @@
 {
   "name": "bibloop",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "# Read the bible with a community",
   "main": "index.js",
   "scripts": {
@@ -9,14 +9,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@aws-amplify/backend": "^1.19.0",
-    "expo": "^54.0.30",
-    "react-native": "^0.83.1"
-  },
-  "devDependencies": {
-    "@types/react": "~19.1.10",
-    "typescript": "~5.9.2"
-  }
+  "license": "ISC"
 }
