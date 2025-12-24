@@ -12,7 +12,9 @@ import {
 import { useKougoChapterData } from "~/hooks/useKougoChapterData";
 import { SheetWithComments } from "~/components/bible/SheetWithComments";
 import { useChapterCompletion } from "~/hooks/useChapterCompletion";
-import { useColorScheme } from "nativewind";
+// import { useColorScheme } from "nativewind";
+import { useThemeColors } from "~/hooks/useThemeColors";
+
 
 const BibleChapter = () => {
   const router = useRouter();
@@ -45,23 +47,7 @@ const BibleChapter = () => {
   const canGoNext = currentChapter < totalChapters;
 
   // Theme handling to switch text color
-  const { colorScheme } = useColorScheme(); // "light" | "dark"
-  const colors = {
-    light: {
-      text: "#1F2937",
-      muted: "#6B7280",
-    },
-    dark: {
-      text: "#FFFFFF",
-      muted: "#D1D5DB",
-    },
-  };
-
-  let theme = colors.light;
-  if (colorScheme === "dark") {
-    theme = colors.dark;
-  }
-
+  const theme = useThemeColors();
 
   if (error) {
     return (
@@ -195,11 +181,11 @@ const BibleChapter = () => {
                   <Text
                     key={verse.verse}
                     className="text-xl mb-3 leading-8"
-                    style={{ color: theme.text }}
+                    style={{ color: theme.foreground }}
                   >
                     <Text
                       className="text-base font-medium mr-2"
-                      style={{ color: theme.muted }}
+                      style={{ color: theme.foreground }}
                     >
                       {verse.verse}.{" "}
                     </Text>

@@ -31,6 +31,7 @@ import { Input } from "~/components/ui/input";
 import ChangeName from "~/components/modal/ChangeName";
 import ChangeUserId from "~/components/modal/ChangeUserId";
 import { useDeleteAccount } from "~/hooks/useDeleteAccount";
+import { useThemeColors } from "~/hooks/useThemeColors";
 
 const settings = () => {
   const router = useRouter();
@@ -54,6 +55,8 @@ const settings = () => {
       [{ text: "OK", style: "default" }]
     );
   };
+
+  const theme = useThemeColors();
 
   const handleEmailChange = () => {
     Alert.alert("メールアドレス変更", "メールアドレスを変更しますか？", [
@@ -150,7 +153,7 @@ const settings = () => {
       {/* Header */}
       <View className="flex-row items-center p-4 pt-16 bg-card border-b border-border">
         <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <ArrowLeft size={24} className="text-foreground" />
+          <ArrowLeft size={24} className="text-foreground" color={theme.foreground} />
         </TouchableOpacity>
         <Text className="text-xl font-bold text-foreground">設定</Text>
       </View>
