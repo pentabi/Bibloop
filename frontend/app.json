@@ -33,6 +33,7 @@
       }
     },
     "android": {
+      "edgeToEdgeEnabled": true,
       "intentFilters": [
         {
           "action": "VIEW",
@@ -63,7 +64,7 @@
             "image": "./assets/images/splash-dark.png",
             "backgroundColor": "#000000"
           },
-          "imageWidth": 200
+          "imageWidth": 400
         }
       ],
       [
