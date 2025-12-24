@@ -12,6 +12,7 @@ import {
 import { useKougoChapterData } from "~/hooks/useKougoChapterData";
 import { SheetWithComments } from "~/components/bible/SheetWithComments";
 import { useChapterCompletion } from "~/hooks/useChapterCompletion";
+import { useColorScheme } from "nativewind";
 
 const BibleChapter = () => {
   const router = useRouter();
@@ -42,6 +43,25 @@ const BibleChapter = () => {
 
   const canGoPrevious = currentChapter > 1;
   const canGoNext = currentChapter < totalChapters;
+
+  // Theme handling to switch text color
+  const { colorScheme } = useColorScheme(); // "light" | "dark"
+  const colors = {
+    light: {
+      text: "#1F2937",
+      muted: "#6B7280",
+    },
+    dark: {
+      text: "#FFFFFF",
+      muted: "#D1D5DB",
+    },
+  };
+
+  let theme = colors.light;
+  if (colorScheme === "dark") {
+    theme = colors.dark;
+  }
+
 
   if (error) {
     return (
@@ -171,17 +191,22 @@ const BibleChapter = () => {
           {verses.length > 0 ? (
             <View>
               <View className="space-y-3">
-                {verses.map((verse, index) => (
+                {verses.map((verse) => (
                   <Text
                     key={verse.verse}
-                    className="text-xl text-gray-800 mb-3 leading-8"
+                    className="text-xl mb-3 leading-8"
+                    style={{ color: theme.text }}
                   >
-                    <Text className="text-base text-gray-500 font-medium mr-2">
+                    <Text
+                      className="text-base font-medium mr-2"
+                      style={{ color: theme.muted }}
+                    >
                       {verse.verse}.{" "}
                     </Text>
                     {verse.text}
                   </Text>
                 ))}
+
               </View>
 
               {/* Completion Toggle */}
