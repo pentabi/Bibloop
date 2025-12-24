@@ -49,7 +49,7 @@
     "@rn-primitives/toggle": "^1.2.0",
     "@rn-primitives/toggle-group": "^1.2.0",
     "@rn-primitives/tooltip": "~1.2.0",
-    "aws-amplify": "^6.15.3",
+    "aws-amplify": "^6.15.9",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "expo": "~53.0.25",

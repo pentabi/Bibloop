@@ -9,9 +9,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "react-native-purchases": "^9.6.7",
-    "react-native-purchases-ui": "^9.6.7"
-  }
+  "license": "ISC"
 }
