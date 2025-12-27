@@ -28,12 +28,15 @@ const CommentSection = ({
   const [filter, setFilter] = useState("all");
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [friendIds, setFriendIds] = useState<string[]>([]);
+  const { comments, isLoading } = useSelector(
+    (state: RootState) => state.comments
+  );
 
   // Create a unique postId for this Bible chapter
   const postId = `${bookName}-${chapter}`;
 
   // Use the new custom hook
-  const { comments, isLoading, refetch, toggleLike } = useComments(postId);
+  const { refetch, toggleLike } = useComments(postId);
 
   // Add image preloader
   const { preloadImages, getPreloadedImage } = useImagePreloader();
@@ -237,7 +240,7 @@ const CommentSection = ({
             </TouchableOpacity>
           </View>
         ) : (
-          filteredComments
+          [...filteredComments]
             .sort((a, b) => {
               if (sort === "likes") {
                 // Sort by like count (highest first)

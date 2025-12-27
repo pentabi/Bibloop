@@ -19,7 +19,6 @@ export const SheetWithComments = ({
   chapter,
 }: SheetWithCommentsProps) => {
   const ref = useRef<BottomSheetRefProps>(null);
-  const [refreshKey, setRefreshKey] = useState(0);
   const [isCommentsActive, setIsCommentsActive] = useState(false);
 
   // Create a unique postId for this Bible chapter
@@ -37,11 +36,6 @@ export const SheetWithComments = ({
     }
   };
 
-  const handleCommentSubmitted = () => {
-    // Refresh comments by updating the key
-    //TODO: comment submitted
-  };
-
   return (
     <>
       <CommentButton
@@ -49,16 +43,8 @@ export const SheetWithComments = ({
         onPress={handleOpenBottomSheet}
       />
       {children}
-      <BottomSheet
-        ref={ref}
-        postId={postId}
-        onCommentSubmitted={handleCommentSubmitted}
-      >
-        <CommentSection
-          bookName={bookName}
-          chapter={chapter}
-          key={refreshKey}
-        />
+      <BottomSheet ref={ref} postId={postId}>
+        <CommentSection bookName={bookName} chapter={chapter} />
       </BottomSheet>
     </>
   );

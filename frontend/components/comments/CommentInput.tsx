@@ -12,19 +12,17 @@ import { client } from "~/lib/amplify-client";
 import { useErrorHandler } from "~/hooks/useErrorHandler";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/rootReducer";
+import { useDispatch } from "react-redux";
+import { addComment } from "~/redux/slices/commentsSlice";
 
 interface CommentInputProps {
   showComments: boolean;
   postId?: string;
-  onCommentSubmitted?: () => void;
 }
 
-const CommentInput = ({
-  showComments,
-  postId,
-  onCommentSubmitted,
-}: CommentInputProps) => {
+const CommentInput = ({ showComments, postId }: CommentInputProps) => {
   const user = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
   const [commentText, setCommentText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { handleError } = useErrorHandler();
@@ -64,9 +62,26 @@ const CommentInput = ({
 
       console.log("Comment created successfully:", result);
 
+      if (result.data) {
+        dispatch(
+          addComment({
+            id: result.data.id,
+            postId: postId,
+            content: commentText.trim(),
+            creatorId: user.id ?? "",
+            creatorName: user.name || "あなた",
+            creatorProfile: {
+              profileImagePath: user.profileImagePath ?? undefined,
+            },
+            likesCount: 0,
+            isLikedByCurrentUser: false,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          })
+        );
+      }
       // Clear input and call callback
       setCommentText("");
-      onCommentSubmitted?.();
     } catch (error) {
       console.error("Failed to submit comment:", error);
       handleError(error, "コメントの投稿に失敗しました");

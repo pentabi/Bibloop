@@ -4,6 +4,12 @@ import { useErrorHandler } from "./useErrorHandler";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/rootReducer";
 import type { Schema } from "../../backend/amplify/data/resource";
+import {
+  setComments,
+  setLoading,
+  toggleCommentLike,
+} from "~/redux/slices/commentsSlice";
+import { useDispatch } from "react-redux";
 
 type Comment = Schema["Comment"]["type"];
 type UserProfile = Schema["UserProfile"]["type"];
@@ -16,15 +22,12 @@ interface CommentWithCreator extends Omit<Comment, "creator" | "likes"> {
   isLikedByCurrentUser: boolean;
   likes?: Like[];
 }
-
 export const useComments = (postId: string) => {
-  const [comments, setComments] = useState<CommentWithCreator[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const { handleError } = useErrorHandler();
   const currentUser = useSelector((state: RootState) => state.user);
   const handleErrorRef = useRef(handleError);
+  const dispatch = useDispatch();
 
-  // Keep the error handler ref up to date
   useEffect(() => {
     handleErrorRef.current = handleError;
   }, [handleError]);
@@ -32,11 +35,10 @@ export const useComments = (postId: string) => {
   const loadComments = useCallback(async () => {
     if (!postId) return;
 
-    setIsLoading(true);
+    dispatch(setLoading(true));
     try {
       console.log("Fetching comments for postId:", postId);
 
-      // Fetch comments filtered by postId and status
       const commentsResult = await client.models.Comment.list({
         filter: {
           and: [{ postId: { eq: postId } }, { status: { eq: "active" } }],
@@ -44,7 +46,7 @@ export const useComments = (postId: string) => {
       });
 
       if (!commentsResult.data || commentsResult.data.length === 0) {
-        setComments([]);
+        dispatch(setComments([]));
         return;
       }
 
@@ -52,10 +54,12 @@ export const useComments = (postId: string) => {
       const creatorIds = [
         ...new Set(commentsResult.data.map((comment) => comment.creatorId)),
       ];
-      console.log("Creator IDs:", creatorIds);
 
-      // Fetch all creators one by one (since 'in' filter may not be supported)
-      const creatorsMap = new Map<string, UserProfile>();
+      // Fetch all creators
+      const creatorsMap = new Map<
+        string,
+        { id: string; name: string | null; profileImagePath: string | null }
+      >();
 
       await Promise.all(
         creatorIds.map(async (creatorId) => {
@@ -64,7 +68,12 @@ export const useComments = (postId: string) => {
               id: creatorId,
             });
             if (creatorResult.data) {
-              creatorsMap.set(creatorId, creatorResult.data);
+              // Only extract serializable data
+              creatorsMap.set(creatorId, {
+                id: creatorResult.data.id,
+                name: creatorResult.data.name,
+                profileImagePath: creatorResult.data.profileImagePath,
+              });
             }
           } catch (error) {
             console.warn(`Failed to fetch creator ${creatorId}:`, error);
@@ -73,10 +82,9 @@ export const useComments = (postId: string) => {
       );
 
       // Combine comments with creator info and like data
-      const commentsWithCreators: CommentWithCreator[] = await Promise.all(
+      const commentsWithCreators = await Promise.all(
         commentsResult.data.map(async (comment) => {
           try {
-            // Fetch likes for this comment
             const likesResult = await client.models.Like.list({
               filter: {
                 commentId: { eq: comment.id },
@@ -89,14 +97,26 @@ export const useComments = (postId: string) => {
               ? likes.some((like) => like.userId === currentUser.id)
               : false;
 
+            const creator = creatorsMap.get(comment.creatorId);
+
+            // Return only serializable data - no functions or lazy loaders
             return {
-              ...comment,
-              creatorName:
-                creatorsMap.get(comment.creatorId)?.name || "匿名ユーザー",
-              creatorProfile: creatorsMap.get(comment.creatorId),
+              id: comment.id,
+              postId: comment.postId,
+              content: comment.content,
+              creatorId: comment.creatorId,
+              creatorName: creator?.name || "匿名ユーザー",
+              creatorProfile: creator
+                ? {
+                    id: creator.id,
+                    name: creator.name,
+                    profileImagePath: creator.profileImagePath,
+                  }
+                : undefined,
               likesCount,
               isLikedByCurrentUser,
-              likes,
+              createdAt: comment.createdAt,
+              updatedAt: comment.updatedAt,
             };
           } catch (error) {
             console.warn(
@@ -104,26 +124,29 @@ export const useComments = (postId: string) => {
               error
             );
             return {
-              ...comment,
-              creatorName:
-                creatorsMap.get(comment.creatorId)?.name || "匿名ユーザー",
-              creatorProfile: creatorsMap.get(comment.creatorId),
+              id: comment.id,
+              postId: comment.postId,
+              content: comment.content,
+              creatorId: comment.creatorId,
+              creatorName: "匿名ユーザー",
+              creatorProfile: undefined,
               likesCount: 0,
               isLikedByCurrentUser: false,
-              likes: [],
+              createdAt: comment.createdAt,
+              updatedAt: comment.updatedAt,
             };
           }
         })
       );
 
-      setComments(commentsWithCreators);
+      dispatch(setComments(commentsWithCreators));
     } catch (error) {
       console.error("Error loading comments:", error);
       handleErrorRef.current(error, "コメントの読み込みに失敗しました");
     } finally {
-      setIsLoading(false);
+      dispatch(setLoading(false));
     }
-  }, [postId]);
+  }, [postId, currentUser?.id, dispatch]);
 
   const createComment = useCallback(
     async (
@@ -169,6 +192,8 @@ export const useComments = (postId: string) => {
         return;
       }
 
+      dispatch(toggleCommentLike(commentId));
+
       try {
         // Check if user already liked this comment
         const existingLikes = await client.models.Like.list({
@@ -210,8 +235,6 @@ export const useComments = (postId: string) => {
   }, [loadComments]);
 
   return {
-    comments,
-    isLoading,
     refetch: loadComments,
     createComment,
     toggleLike,
