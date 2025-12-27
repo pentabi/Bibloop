@@ -39,8 +39,7 @@ export const SheetWithComments = ({
 
   const handleCommentSubmitted = () => {
     // Refresh comments by updating the key
-    setRefreshKey((prev) => prev + 1);
-    console.log("postIDSubmit:", postId);
+    //TODO: comment submitted
   };
 
   return (

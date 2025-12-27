@@ -11,10 +11,10 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#FFFFFFFF",
+      "backgroundColor": "#FFFFFF",
       "dark": {
         "image": "./assets/images/splash-dark.png",
-        "backgroundColor": "#000000"
+        "backgroundColor": "#FFFFFF"
       }
     },
     "assetBundlePatterns": ["**/*"],
@@ -58,11 +58,11 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#007AFF",
+          "backgroundColor": "#FFFFFF",
           "image": "./assets/images/splash.png",
           "dark": {
             "image": "./assets/images/splash-dark.png",
-            "backgroundColor": "#000000"
+            "backgroundColor": "#FFFFFF"
           },
           "imageWidth": 400
         }

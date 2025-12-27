@@ -231,7 +231,7 @@ export const useFriendship = () => {
     [handleError]
   );
 
-  // Get friends list
+  // Get friends list (with their profile info)
   const getFriendsList = useCallback(async () => {
     if (!currentUser.id) return [];
 
@@ -310,12 +310,48 @@ export const useFriendship = () => {
     }
   }, [currentUser.id, handleError]);
 
+  // Get friend IDs only (lightweight version)
+  const getFriendIds = useCallback(async (): Promise<string[]> => {
+    if (!currentUser.id) return [];
+
+    try {
+      const result = await client.models.Friendship.list({
+        filter: {
+          and: [
+            {
+              or: [
+                { requesterId: { eq: currentUser.id } },
+                { addresseeId: { eq: currentUser.id } },
+              ],
+            },
+            { status: { eq: "accepted" } },
+          ],
+        },
+      });
+
+      if (!result.data) return [];
+
+      // Extract friend IDs without fetching profiles
+      const friendIds = result.data.map((friendship) =>
+        friendship.requesterId === currentUser.id
+          ? friendship.addresseeId
+          : friendship.requesterId
+      );
+
+      return friendIds;
+    } catch (error) {
+      console.error("Error fetching friend IDs:", error);
+      return [];
+    }
+  }, [currentUser.id]);
+
   return {
     sendFriendRequest,
     getPendingRequests,
     acceptFriendRequest,
     declineFriendRequest,
     getFriendsList,
+    getFriendIds,
     isLoading,
   };
 };

@@ -9,20 +9,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import {
-  Heart,
-  MessageCircle,
-  Share,
-  UserPlus,
-  Users,
-  BookOpen,
-  Calendar,
-  MapPin,
-  MoreHorizontal,
-  ArrowLeft,
-  Settings,
-  User,
-} from "lucide-react-native";
+import { ArrowLeft } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/data-schema";

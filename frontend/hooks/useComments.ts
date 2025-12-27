@@ -197,9 +197,6 @@ export const useComments = (postId: string) => {
           } as any);
           console.log("Comment liked successfully");
         }
-
-        // Refresh comments to update like counts
-        await loadComments();
       } catch (error) {
         console.error("Error toggling like:", error);
         handleErrorRef.current(error, "いいねの処理に失敗しました");

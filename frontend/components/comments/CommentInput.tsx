@@ -67,8 +67,6 @@ const CommentInput = ({
       // Clear input and call callback
       setCommentText("");
       onCommentSubmitted?.();
-
-      Alert.alert("成功", "コメントが投稿されました！");
     } catch (error) {
       console.error("Failed to submit comment:", error);
       handleError(error, "コメントの投稿に失敗しました");
@@ -97,7 +95,6 @@ const CommentInput = ({
         className="p-4 bg-white min-h-[60px]"
         style={animatedStyle}
       >
-        <Text className="text-blue-600 mb-2">コメントセクション</Text>
         <View className="flex-row">
           <Input
             placeholder="コメントを入力..."

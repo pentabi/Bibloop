@@ -12,7 +12,6 @@ import {
   User,
   MapPin,
   Calendar,
-  Heart,
   Settings,
   Edit3,
   Check,

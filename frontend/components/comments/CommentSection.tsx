@@ -1,11 +1,19 @@
-import { ArrowDownWideNarrow, Heart } from "lucide-react-native";
+import {
+  ArrowDownWideNarrow,
+  Filter,
+  Heart,
+  RefreshCcw,
+} from "lucide-react-native";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "../ui/text";
 import { useRouter } from "expo-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useComments } from "~/hooks/useComments";
 import { ProfileAvatar } from "~/components/ProfileAvatar";
 import { useImagePreloader } from "~/hooks/useImagePreloader";
+import { useFriendship } from "~/hooks/useFriendship";
+import { useSelector } from "react-redux";
+import { RootState } from "~/redux/rootReducer";
 
 const CommentSection = ({
   bookName,
@@ -17,6 +25,9 @@ const CommentSection = ({
   const router = useRouter();
   const [sort, setSort] = useState("date");
   const [showSortMenu, setShowSortMenu] = useState(false);
+  const [filter, setFilter] = useState("all");
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [friendIds, setFriendIds] = useState<string[]>([]);
 
   // Create a unique postId for this Bible chapter
   const postId = `${bookName}-${chapter}`;
@@ -26,6 +37,9 @@ const CommentSection = ({
 
   // Add image preloader
   const { preloadImages, getPreloadedImage } = useImagePreloader();
+
+  // Get friends list
+  const { getFriendIds } = useFriendship();
 
   // Preload profile images when comments load
   useEffect(() => {
@@ -42,59 +56,162 @@ const CommentSection = ({
     }
   }, [comments]);
 
+  const currentUser = useSelector((state: RootState) => state.user);
+
+  // Fetch friends on mount
+  useEffect(() => {
+    const fetchFriends = async () => {
+      const friendIds = await getFriendIds();
+      // Extract friend IDs (the other user in the friendship)
+      const friendIdsIncludingMe = [...friendIds, currentUser.id ?? ""];
+      setFriendIds(friendIdsIncludingMe);
+    };
+    fetchFriends();
+  }, [currentUser.id]);
+
+  // Filter comments based on selected filter
+  const filteredComments = useMemo(() => {
+    if (filter === "friend") {
+      return comments.filter((comment) =>
+        friendIds.includes(comment.creatorId)
+      );
+    }
+    return comments;
+  }, [comments, filter, friendIds]);
+
   return (
     <View className="flex-1 bg-white">
       {/* Overlay to detect touches outside dropdown */}
-      {showSortMenu && (
+      {(showSortMenu || showFilterMenu) && (
         <TouchableOpacity
           className="absolute inset-0 z-40"
-          onPress={() => setShowSortMenu(false)}
+          onPress={() => {
+            setShowSortMenu(false);
+            setShowFilterMenu(false);
+          }}
           activeOpacity={1}
         />
       )}
 
       {/* Header */}
       <View className="px-4 py-3 border-b border-gray-200 relative z-50">
-        <View className="flex-row items-center justify-between">
-          <TouchableOpacity
-            className="p-2 flex-row items-center"
-            onPress={() => setShowSortMenu(!showSortMenu)}
-          >
-            <ArrowDownWideNarrow size={20} color="#666" />
-          </TouchableOpacity>
-          <Text className="text-lg font-semibold text-gray-800">
+        <View className="flex-row items-center justify-between ">
+          <View className="flex-row  gap-4">
+            <TouchableOpacity
+              className="py-2 pl-2 flex-row items-center"
+              onPress={() => {
+                setShowSortMenu(!showSortMenu);
+                setShowFilterMenu(false);
+              }}
+            >
+              <ArrowDownWideNarrow size={20} color="#666" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="py-2 flex-row items-center"
+              onPress={() => {
+                setShowFilterMenu(!showFilterMenu);
+                setShowSortMenu(false);
+              }}
+            >
+              <Filter size={20} color="#666" />
+            </TouchableOpacity>
+          </View>
+          <Text className="text-lg text-center flex-1 font-semibold text-gray-800 ">
             {bookName} {chapter}章のコメント
           </Text>
-          <Text className="text-sm text-gray-500">{comments.length}件</Text>
+          <View className="flex-row gap-2 items-center justify-center ">
+            <TouchableOpacity
+              onPress={() => {
+                refetch();
+              }}
+            >
+              <RefreshCcw size={20} color={"#666"} />
+            </TouchableOpacity>
+            <Text className="text-sm text-gray-500">{comments.length}件</Text>
+          </View>
         </View>
-
-        {/* Chapter Info */}
-        <Text className="text-xs text-gray-400 mt-1">
-          {comments.length === 0
-            ? "この章にはまだコメントがありません"
-            : `${comments.length}件のコメント`}
-        </Text>
 
         {/* Sort Menu */}
         {showSortMenu && (
           <View className="absolute top-12 left-4 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-[150px]">
             <TouchableOpacity
-              className="px-4 py-3 border-b border-gray-100"
+              className={`px-4 py-3 border-b border-gray-100 ${
+                sort === "recent" ? "bg-gray-200" : ""
+              }`}
               onPress={() => {
                 setSort("recent");
                 setShowSortMenu(false);
               }}
             >
-              <Text className="text-sm text-gray-700">最新順</Text>
+              <Text
+                className={`text-sm ${
+                  sort === "recent"
+                    ? "text-gray-900 font-medium"
+                    : "text-gray-700"
+                }`}
+              >
+                最新順
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className="px-4 py-3"
+              className={`px-4 py-3 ${sort === "likes" ? "bg-gray-200" : ""}`}
               onPress={() => {
                 setSort("likes");
                 setShowSortMenu(false);
               }}
             >
-              <Text className="text-sm text-gray-700">いいね順</Text>
+              <Text
+                className={`text-sm ${
+                  sort === "likes"
+                    ? "text-gray-900 font-medium"
+                    : "text-gray-700"
+                }`}
+              >
+                いいね順
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {/* Filter Menu */}
+        {showFilterMenu && (
+          <View className="absolute top-12 left-4 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-[150px]">
+            <TouchableOpacity
+              className={`px-4 py-3 border-b border-gray-100 ${
+                filter === "all" ? "bg-gray-200" : ""
+              }`}
+              onPress={() => {
+                setFilter("all");
+                setShowFilterMenu(false);
+              }}
+            >
+              <Text
+                className={`text-sm ${
+                  filter === "all"
+                    ? "text-gray-900 font-medium"
+                    : "text-gray-700"
+                }`}
+              >
+                全て
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className={`px-4 py-3 ${
+                filter === "friend" ? "bg-gray-200" : ""
+              }`}
+              onPress={() => {
+                setFilter("friend");
+                setShowFilterMenu(false);
+              }}
+            >
+              <Text
+                className={`text-sm ${
+                  filter === "friend"
+                    ? "text-gray-900 font-medium"
+                    : "text-gray-700"
+                }`}
+              >
+                フレンド
+              </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -106,7 +223,7 @@ const CommentSection = ({
           <View className="flex-1 items-center justify-center py-8">
             <Text className="text-gray-500">読み込み中...</Text>
           </View>
-        ) : comments.length === 0 ? (
+        ) : filteredComments.length === 0 ? (
           <View className="flex-1 items-center justify-center py-8">
             <Text className="text-gray-500 text-center mb-4">
               この章にはまだコメントがありません{"\n"}
@@ -120,7 +237,7 @@ const CommentSection = ({
             </TouchableOpacity>
           </View>
         ) : (
-          comments
+          filteredComments
             .sort((a, b) => {
               if (sort === "likes") {
                 // Sort by like count (highest first)
@@ -179,16 +296,9 @@ const CommentSection = ({
                       onPress={() => toggleLike(comment.id)}
                       className="flex-row items-center px-2 py-1"
                     >
-                      <Heart
-                        size={16}
-                        color={
-                          comment.isLikedByCurrentUser ? "#ef4444" : "#9ca3af"
-                        }
-                        fill={comment.isLikedByCurrentUser ? "#ef4444" : "none"}
-                      />
                       {comment.likesCount > 0 && (
                         <Text
-                          className={`text-xs ml-1 ${
+                          className={`text-xs mr-1 ${
                             comment.isLikedByCurrentUser
                               ? "text-red-500"
                               : "text-gray-500"
@@ -197,6 +307,13 @@ const CommentSection = ({
                           {comment.likesCount}
                         </Text>
                       )}
+                      <Heart
+                        size={16}
+                        color={
+                          comment.isLikedByCurrentUser ? "#ef4444" : "#9ca3af"
+                        }
+                        fill={comment.isLikedByCurrentUser ? "#ef4444" : "none"}
+                      />
                     </TouchableOpacity>
                   </View>
                 </View>

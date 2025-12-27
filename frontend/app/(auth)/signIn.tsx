@@ -15,7 +15,6 @@ import { H1 } from "~/components/ui/typography";
 import { Button } from "~/components/ui/button";
 import { useDispatch } from "react-redux";
 import { BlurView } from "expo-blur";
-import { ThemeToggle } from "~/components/ThemeToggle";
 import { useErrorHandler } from "~/hooks/useErrorHandler";
 
 const SignIn = () => {
@@ -104,7 +103,6 @@ const SignIn = () => {
           <View className="h-40" />
           <View className="gap-3">
             <H1>ログイン</H1>
-            <ThemeToggle></ThemeToggle>
           </View>
           {/* Form */}
           <View>
@@ -153,12 +151,15 @@ const SignIn = () => {
                 Forgot the password? Click here to reset.
               </Text>
             </TouchableOpacity>
-
           </View>
-          
+
           {/* Submit */}
           <View className="gap-3">
-            <Button onPress={handleLogIn} disabled={isLoading} className="bg-theme"> 
+            <Button
+              onPress={handleLogIn}
+              disabled={isLoading}
+              className="bg-theme"
+            >
               {/*Disable the button while loading, to prevent the UserAlreadyAuth error*/}
               <Text className="text-white font-semibold">ログイン</Text>
             </Button>
