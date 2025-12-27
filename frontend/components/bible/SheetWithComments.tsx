@@ -20,6 +20,7 @@ export const SheetWithComments = ({
 }: SheetWithCommentsProps) => {
   const ref = useRef<BottomSheetRefProps>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isCommentsActive, setIsCommentsActive] = useState(false);
 
   // Create a unique postId for this Bible chapter
   const postId = `${bookName}-${chapter}`;
@@ -28,9 +29,11 @@ export const SheetWithComments = ({
     const isActive = ref.current?.isActive();
     if (isActive) {
       ref.current?.scrollTo(0);
+      setIsCommentsActive(false);
     } else {
       // Open to about 1/3 of screen height for better visibility
       ref.current?.scrollTo(-SCREEN_HEIGHT / 3);
+      setIsCommentsActive(true);
     }
   };
 
@@ -42,7 +45,10 @@ export const SheetWithComments = ({
 
   return (
     <>
-      <CommentButton onPress={handleOpenBottomSheet} />
+      <CommentButton
+        isActive={isCommentsActive}
+        onPress={handleOpenBottomSheet}
+      />
       {children}
       <BottomSheet
         ref={ref}
